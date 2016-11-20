@@ -38,7 +38,18 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AssetManager.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Gui\DrawingHelper.cs" />
+    <Compile Include="Gui\Elements\GuiButton.cs" />
+    <Compile Include="Gui\Elements\GuiLabel.cs" />
+    <Compile Include="Gui\Elements\GuiList.cs" />
+    <Compile Include="Gui\Elements\GuiTextField.cs" />
+    <Compile Include="Gui\Events\ClickEvent.cs" />
+    <Compile Include="Gui\GuiElement.cs" />
+    <Compile Include="Gui\GuiScreen.cs" />
+    <Compile Include="Gui\ScreenManager.cs" />
+    <Compile Include="InputHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,6 +65,9 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Gui\Screens\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

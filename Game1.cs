@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Ebilkill.Gui;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -7,12 +8,13 @@ namespace MaxOfEmpires
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class MaxOfEmpires : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private InputHelper inputHelper;
 
-        public Game1()
+        public MaxOfEmpires()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -26,8 +28,7 @@ namespace MaxOfEmpires
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            inputHelper = new InputHelper();
             base.Initialize();
         }
 
@@ -40,7 +41,9 @@ namespace MaxOfEmpires
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // Init AssetManager and DrawingHelper
+            AssetManager.Init(Content);
+            DrawingHelper.Init(GraphicsDevice);
         }
 
         /// <summary>
@@ -59,9 +62,7 @@ namespace MaxOfEmpires
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-
-            // TODO: Add your update logic here
-
+            inputHelper.Update(gameTime);
             base.Update(gameTime);
         }
 
