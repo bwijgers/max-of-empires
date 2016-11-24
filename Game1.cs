@@ -13,6 +13,7 @@ namespace MaxOfEmpires
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private InputHelper inputHelper;
+        private BattleGrid battleGrid;
 
         public MaxOfEmpires()
         {
@@ -29,6 +30,10 @@ namespace MaxOfEmpires
         protected override void Initialize()
         {
             inputHelper = new InputHelper();
+
+            GraphicsDevice.Viewport = new Viewport(0, 0, 1280, 768);
+            battleGrid = new BattleGrid(15, 15);
+
             base.Initialize();
         }
 
@@ -47,6 +52,9 @@ namespace MaxOfEmpires
 
             // Initialize the key inputs
             InitializeKeys();
+
+            // Init the battle grid
+            battleGrid.InitField();
         }
 
         /// <summary>
@@ -78,7 +86,9 @@ namespace MaxOfEmpires
         {
             GraphicsDevice.Clear(Color.White);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            battleGrid.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
