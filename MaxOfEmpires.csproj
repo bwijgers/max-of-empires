@@ -50,6 +50,7 @@
     <Compile Include="Gui\GuiScreen.cs" />
     <Compile Include="Gui\ScreenManager.cs" />
     <Compile Include="InputHelper.cs" />
+    <Compile Include="KeyManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
