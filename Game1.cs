@@ -44,6 +44,9 @@ namespace MaxOfEmpires
             // Init AssetManager and DrawingHelper
             AssetManager.Init(Content);
             DrawingHelper.Init(GraphicsDevice);
+
+            // Initialize the key inputs
+            InitializeKeys();
         }
 
         /// <summary>
@@ -63,6 +66,7 @@ namespace MaxOfEmpires
         protected override void Update(GameTime gameTime)
         {
             inputHelper.Update(gameTime);
+            KeyManager.Instance.Update(gameTime, inputHelper);
             base.Update(gameTime);
         }
 
@@ -77,6 +81,11 @@ namespace MaxOfEmpires
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        private void InitializeKeys()
+        {
+
         }
     }
 }
