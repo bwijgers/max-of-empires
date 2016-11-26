@@ -39,7 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="MaxOfEmpires.cs" />
     <Compile Include="Gui\DrawingHelper.cs" />
     <Compile Include="Gui\Elements\GuiButton.cs" />
     <Compile Include="Gui\Elements\GuiLabel.cs" />
