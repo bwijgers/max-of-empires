@@ -39,6 +39,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
+    <Compile Include="GameObjects\GameObject.cs" />
+    <Compile Include="GameObjects\GameObjectGrid.cs" />
+    <Compile Include="GameObjects\GameObjectList.cs" />
     <Compile Include="MaxOfEmpires.cs" />
     <Compile Include="Gui\DrawingHelper.cs" />
     <Compile Include="Gui\Elements\GuiButton.cs" />
