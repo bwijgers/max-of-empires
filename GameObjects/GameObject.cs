@@ -49,6 +49,14 @@ namespace MaxOfEmpires.GameObjects
         }
 
         /// <summary>
+        /// Called when a new turn should be calculated.
+        /// </summary>
+        /// <param name="turn">The current turn.</param>
+        /// <param name="player">The player whose turn it is</param>
+        public virtual void TurnUpdate(uint turn, bool player) {
+        }
+
+        /// <summary>
         /// Handles input for this object.
         /// </summary>
         /// <param name="helper">The InputHelper. Use only for mouse input.</param>
