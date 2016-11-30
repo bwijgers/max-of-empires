@@ -1,4 +1,5 @@
 ﻿using Ebilkill.Gui;
+using MaxOfEmpires.GameStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -74,7 +75,11 @@ namespace MaxOfEmpires
         protected override void Update(GameTime gameTime)
         {
             inputHelper.Update(gameTime);
-            KeyManager.Instance.Update(gameTime, inputHelper);
+
+            // Update current gamestate
+            GameStateManager.Update(gameTime);
+            GameStateManager.HandleInput(inputHelper, KeyManager.Instance);
+
             base.Update(gameTime);
         }
 
@@ -87,7 +92,8 @@ namespace MaxOfEmpires
             GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin();
-            battleGrid.Draw(spriteBatch);
+            battleGrid.Draw(spriteBatch);// Draw the current game state
+            GameStateManager.Draw(gameTime, spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

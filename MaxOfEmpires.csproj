@@ -40,7 +40,12 @@
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
     <Compile Include="BattleGrid.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="GameObjects\GameObject.cs" />
+    <Compile Include="GameObjects\GameObjectGrid.cs" />
+    <Compile Include="GameObjects\GameObjectList.cs" />
+    <Compile Include="MaxOfEmpires.cs" />
+    <Compile Include="GameStates\GameState.cs" />
+    <Compile Include="GameStates\GameStateManager.cs" />
     <Compile Include="Gui\DrawingHelper.cs" />
     <Compile Include="Gui\Elements\GuiButton.cs" />
     <Compile Include="Gui\Elements\GuiLabel.cs" />
