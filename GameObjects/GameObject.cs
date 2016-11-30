@@ -52,8 +52,9 @@ namespace MaxOfEmpires.GameObjects
         /// Called when a new turn should be calculated.
         /// </summary>
         /// <param name="turn">The current turn.</param>
-        /// <param name="player">The player whose turn it is</param>
-        public virtual void TurnUpdate(uint turn, bool player) {
+        /// <param name="player">The player whose turn it is.</param>
+        public virtual void TurnUpdate(uint turn, bool player)
+        {
         }
 
         /// <summary>
