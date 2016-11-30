@@ -25,7 +25,7 @@ namespace MaxOfEmpires.GameObjects
         /// <summary>
         /// The grid. A digital-- Wait, I did this already.
         /// </summary>
-        private GameObject[,] grid;
+        protected GameObject[,] grid;
 
         /// <summary>
         /// Creates a new GameObjectGrid.
@@ -119,6 +119,13 @@ namespace MaxOfEmpires.GameObjects
         {
             // Just update everything in the grid
             ForEach((obj, x, y) => obj?.Update(time));
+        }
+
+        /// <see cref="GameObject.TurnUpdate(uint, bool)"/>
+        public override void TurnUpdate(uint turn, bool player)
+        {
+            // Just TurnUpdate everything in the grid
+            ForEach((obj, x, y) => obj?.TurnUpdate(turn, player));
         }
 
         /// <summary>

@@ -14,7 +14,6 @@ namespace MaxOfEmpires
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private InputHelper inputHelper;
-        private BattleGrid battleGrid;
 
         public MaxOfEmpires()
         {
@@ -33,7 +32,6 @@ namespace MaxOfEmpires
             inputHelper = new InputHelper();
 
             GraphicsDevice.Viewport = new Viewport(0, 0, 1280, 768);
-            battleGrid = new BattleGrid(15, 15);
 
             base.Initialize();
         }
@@ -51,11 +49,14 @@ namespace MaxOfEmpires
             AssetManager.Init(Content);
             DrawingHelper.Init(GraphicsDevice);
 
+            // Adds battleState to the GamestateManager
+            GameStateManager.AddState("battleState", new BattleState());
+            GameStateManager.SwitchState("battleState");
+
             // Initialize the key inputs
             InitializeKeys();
 
             // Init the battle grid
-            battleGrid.InitField();
         }
 
         /// <summary>
@@ -92,8 +93,7 @@ namespace MaxOfEmpires
             GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin();
-            battleGrid.Draw(spriteBatch);// Draw the current game state
-            GameStateManager.Draw(gameTime, spriteBatch);
+            GameStateManager.Draw(gameTime, spriteBatch);// Draw the current game state
             spriteBatch.End();
 
             base.Draw(gameTime);

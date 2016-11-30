@@ -34,6 +34,7 @@ namespace MaxOfEmpires.GameStates
             {
                 currentState = stateDict[name];
                 CurrentState.Reset();
+                return;
             }
             throw new KeyNotFoundException("GameState with name '" + name + "' does not exist.");
         }
