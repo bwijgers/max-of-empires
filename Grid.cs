@@ -11,8 +11,11 @@ namespace MaxOfEmpires
 {
     class Grid : GameObjectGrid
     {
+        private Point selectedTile;
+
         public Grid(int width, int height, string id = "") : base(width, height, id)// TODO: make this load from a file or something similar
         {
+            selectedTile = InvalidTile;
         }
 
         public void InitField()
@@ -27,14 +30,14 @@ namespace MaxOfEmpires
             }
         }
 
-        public override void Draw(GameTime time, SpriteBatch s)
+        private Point InvalidTile => new Point(-1, -1);
+        public Tile SelectedTile
         {
-            for (int x = 0; x < Width; ++x)
+            get
             {
-                for (int y = 0; y < Height; ++y)
-                {
-                    (grid[x, y] as Tile)?.Draw(time, s);
-                }
+                if (grid[selectedTile.X, selectedTile.Y] is Tile)
+                    return grid[selectedTile.X, selectedTile.Y] as Tile;
+                return null;
             }
         }
     }

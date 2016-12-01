@@ -28,5 +28,8 @@ namespace MaxOfEmpires
             terrain.Draw(x, y, s);
         }
 
+        public Terrain Terrain => terrain;
+        //public Unit Unit => unit;
+        //public Building building => building;
     }
 }
