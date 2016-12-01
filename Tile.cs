@@ -13,8 +13,8 @@ namespace MaxOfEmpires
     {
         private int x, y;
         private Terrain terrain;
-        //private Unit unit;
-        //private Building Building; 
+        private Unit unit;
+        private Building building; 
 
         public Tile(Terrain terrain, int x, int y)
         {
@@ -28,8 +28,10 @@ namespace MaxOfEmpires
             terrain.Draw(x, y, s);
         }
 
+        public Building Building => building;
+        public bool BuiltOn => building != null;
+        public bool Occupied => Unit != null;
         public Terrain Terrain => terrain;
-        //public Unit Unit => unit;
-        //public Building building => building;
+        public Unit Unit => unit;
     }
 }
