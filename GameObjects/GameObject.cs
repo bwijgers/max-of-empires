@@ -14,15 +14,15 @@ namespace MaxOfEmpires.GameObjects
     abstract class GameObject
     {
         /// <summary>
+        /// The internal name of this object.
+        /// </summary>
+        private string id;
+
+        /// <summary>
         /// The parent object of this GameObject. Is most likely a GameObjectList
         /// </summary>
         /// <see cref="GameObjectList"/>
         private GameObject parent;
-
-        /// <summary>
-        /// The internal name of this object.
-        /// </summary>
-        private string id;
 
         /// <summary>
         /// Base constructor for new GameObjects. They can require to have some sort of id string.
@@ -41,23 +41,6 @@ namespace MaxOfEmpires.GameObjects
         public abstract void Draw(GameTime time, SpriteBatch s);
 
         /// <summary>
-        /// Called when this object should be updated. Should do things like animation.
-        /// </summary>
-        /// <param name="time">The current/elapsed game time.</param>
-        public virtual void Update(GameTime time)
-        {
-        }
-
-        /// <summary>
-        /// Called when a new turn should be calculated.
-        /// </summary>
-        /// <param name="turn">The current turn.</param>
-        /// <param name="player">The player whose turn it is.</param>
-        public virtual void TurnUpdate(uint turn, bool player)
-        {
-        }
-
-        /// <summary>
         /// Handles input for this object.
         /// </summary>
         /// <param name="helper">The InputHelper. Use only for mouse input.</param>
@@ -71,6 +54,36 @@ namespace MaxOfEmpires.GameObjects
         /// </summary>
         public virtual void Reset() // Most important for GameStates in our case; might want to remove this, if never used. 
         {
+        }
+
+        /// <summary>
+        /// Called when a new turn should be calculated.
+        /// </summary>
+        /// <param name="turn">The current turn.</param>
+        /// <param name="player">The player whose turn it is.</param>
+        public virtual void TurnUpdate(uint turn, bool player)
+        {
+        }
+
+        /// <summary>
+        /// Called when this object should be updated. Should do things like animation.
+        /// </summary>
+        /// <param name="time">The current/elapsed game time.</param>
+        public virtual void Update(GameTime time)
+        {
+        }
+
+        /// <summary>
+        /// Returns the gameworld this object is in. Essentially returns the list at the top of the hierarchy.
+        /// </summary>
+        public GameObject GameWorld
+        {
+            get
+            {
+                if (Parent == null)
+                    return this;
+                return Parent;
+            }
         }
 
         /// <summary>
@@ -90,19 +103,6 @@ namespace MaxOfEmpires.GameObjects
             set
             {
                 parent = value;
-            }
-        }
-
-        /// <summary>
-        /// Returns the gameworld this object is in. Essentially returns the list at the top of the hierarchy.
-        /// </summary>
-        public GameObject GameWorld
-        {
-            get
-            {
-                if (Parent == null)
-                    return this;
-                return Parent;
             }
         }
     }

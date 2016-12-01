@@ -21,6 +21,11 @@ namespace MaxOfEmpires
             currentMouse = previousMouse = Mouse.GetState();
         }
 
+        public bool KeyPressed(Keys k, bool v = true)
+        {
+            return currentKeyboard.IsKeyDown(k) && previousKeyboard.IsKeyUp(k);
+        }
+
         public bool MouseLeftButtonPressed()
         {
             return currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released;
@@ -29,11 +34,6 @@ namespace MaxOfEmpires
         public bool MouseRightButtonPressed()
         {
             return currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released;
-        }
-
-        public bool KeyPressed(Keys k, bool v = true)
-        {
-            return currentKeyboard.IsKeyDown(k) && previousKeyboard.IsKeyUp(k);
         }
 
         public void Update(GameTime time)
@@ -47,7 +47,7 @@ namespace MaxOfEmpires
             currentKeyboard = Keyboard.GetState();
         }
 
-        public Vector2 MousePosition => currentMouse.Position.ToVector2();
         public Dictionary<Keys, char> AlphabetKeys => alphabetKeys;
+        public Vector2 MousePosition => currentMouse.Position.ToVector2();
     }
 }

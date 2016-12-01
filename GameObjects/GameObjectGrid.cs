@@ -114,13 +114,6 @@ namespace MaxOfEmpires.GameObjects
             return true;
         }
 
-        /// <see cref="GameObject.Update(GameTime)"/>
-        public override void Update(GameTime time)
-        {
-            // Just update everything in the grid
-            ForEach((obj, x, y) => obj?.Update(time));
-        }
-
         /// <see cref="GameObject.TurnUpdate(uint, bool)"/>
         public override void TurnUpdate(uint turn, bool player)
         {
@@ -128,14 +121,21 @@ namespace MaxOfEmpires.GameObjects
             ForEach((obj, x, y) => obj?.TurnUpdate(turn, player));
         }
 
-        /// <summary>
-        /// The width of this grid, being the amount of elements in the x-direction.
-        /// </summary>
-        public int Width => grid.GetLength(0);
+        /// <see cref="GameObject.Update(GameTime)"/>
+        public override void Update(GameTime time)
+        {
+            // Just update everything in the grid
+            ForEach((obj, x, y) => obj?.Update(time));
+        }
 
         /// <summary>
         /// The height of this grid, being the amount of elements in the y-direction.
         /// </summary>
         public int Height => grid.GetLength(1);
+
+        /// <summary>
+        /// The width of this grid, being the amount of elements in the x-direction.
+        /// </summary>
+        public int Width => grid.GetLength(0);
     }
 }

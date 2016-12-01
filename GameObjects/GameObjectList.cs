@@ -83,17 +83,17 @@ namespace MaxOfEmpires.GameObjects
             ForEach(child => child?.Reset());
         }
 
-        public override void Update(GameTime time)
-        {
-            // Updating this list means just update all children.
-            ForEach(child => child?.Update(time));
-        }
-
         /// <see cref="GameObject.TurnUpdate(uint, bool)"/>
         public override void TurnUpdate(uint turn, bool player)
         {
             // Just TurnUpdate everything in the grid
             ForEach(child => child?.TurnUpdate(turn, player));
+        }
+
+        public override void Update(GameTime time)
+        {
+            // Updating this list means just update all children.
+            ForEach(child => child?.Update(time));
         }
     }
 }

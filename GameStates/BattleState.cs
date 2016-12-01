@@ -10,13 +10,14 @@ namespace MaxOfEmpires.GameStates
 {
     class BattleState : GameState
     {
-
         private Grid battleGrid;
+
         public BattleState()
         {
             battleGrid = new Grid(15, 15);
             battleGrid.InitField();
         }
+
         public override void Draw(GameTime time, SpriteBatch s)
         {
             battleGrid.Draw(time, s);
@@ -25,5 +26,7 @@ namespace MaxOfEmpires.GameStates
         public override void Update(GameTime time)
         {
         }
+
+        public Grid BattleGrid => battleGrid;
     }
 }
