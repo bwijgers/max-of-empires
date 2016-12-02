@@ -25,6 +25,7 @@ namespace MaxOfEmpires.GameStates
 
         public override void Update(GameTime time)
         {
+            battleGrid.Update(time);
         }
 
         public Grid BattleGrid => battleGrid;

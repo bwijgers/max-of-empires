@@ -11,6 +11,9 @@ namespace MaxOfEmpires
 {
     class Grid : GameObjectGrid
     {
+        /// <summary>
+        /// The coords of the currently selected Tile within the grid.
+        /// </summary>
         private Point selectedTile;
 
         public Grid(int width, int height, string id = "") : base(width, height, id)// TODO: make this load from a file or something similar
@@ -18,6 +21,9 @@ namespace MaxOfEmpires
             selectedTile = InvalidTile;
         }
 
+        /// <summary>
+        /// Initializes the field.
+        /// </summary>
         public void InitField()
         {
             // Initialize the terrain

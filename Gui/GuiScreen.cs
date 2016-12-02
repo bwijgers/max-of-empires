@@ -57,7 +57,7 @@ namespace Ebilkill.Gui
 
         public virtual void update(GameTime gameTime, InputHelper inputHelper)
         {
-            if (inputHelper.MouseLeftButtonPressed())
+            if (inputHelper.MouseLeftButtonPressed)
             {
                 // Set no element active if none has been pressed
                 activeElement = -1;

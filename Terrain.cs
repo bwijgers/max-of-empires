@@ -10,7 +10,8 @@ namespace MaxOfEmpires
 {
     class Terrain
     {
-        //private static Terrain plains = new Terrain(TerrainType.PLAINS);
+        private static Terrain plains = new Terrain(TerrainType.PLAINS);
+        public static Terrain Plains => plains;
 
         private enum TerrainType
         {
@@ -31,7 +32,5 @@ namespace MaxOfEmpires
         {
             s.Draw(tex, new Rectangle(x * tex.Width, y * tex.Height, tex.Width, tex.Height), Color.White);
         }
-
-        public static Terrain Plains => new Terrain(TerrainType.PLAINS);
     }
 }
