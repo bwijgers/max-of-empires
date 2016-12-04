@@ -30,16 +30,16 @@ namespace Ebilkill.Gui
             }
         }
 
-        public void draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        public void draw(SpriteBatch spriteBatch)
         {
-            CurrentScreen?.draw(spriteBatch, graphicsDevice);
+            CurrentScreen?.draw(spriteBatch);
         }
 
         public void update(GameTime gameTime, InputHelper inputHelper)
         {
             foreach (GuiScreen s in screenDict.Values)
             {
-                s.update(gameTime, inputHelper);
+                s.update(inputHelper);
             }
         }
 

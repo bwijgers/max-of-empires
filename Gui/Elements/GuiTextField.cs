@@ -18,7 +18,7 @@ namespace Ebilkill.Gui.Elements
             text = "";
         }
 
-        public override void drawElement(SpriteBatch spriteBatch, GraphicsDevice graphics)
+        public override void drawElement(SpriteBatch spriteBatch)
         {
             DrawingHelper.Instance.DrawRectangle(spriteBatch, Bounds, Color.Black);
             DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle(Bounds.Location + new Point(1, 1), Bounds.Size - new Point(2, 2)), Color.White);

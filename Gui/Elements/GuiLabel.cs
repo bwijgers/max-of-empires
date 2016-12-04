@@ -73,7 +73,7 @@ namespace Ebilkill.Gui.Elements
             this.labelColor = labelColor;
         }
 
-        public override void drawElement(SpriteBatch spriteBatch, GraphicsDevice graphics)
+        public override void drawElement(SpriteBatch spriteBatch)
         {
             if (!Visible)
                 return;

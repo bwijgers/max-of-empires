@@ -35,7 +35,7 @@ namespace Ebilkill.Gui
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to draw the element with.</param>
         /// <param name="graphics">The GraphicsDevice used by the game window.</param>
-        public abstract void drawElement(SpriteBatch spriteBatch, GraphicsDevice graphics);
+        public abstract void drawElement(SpriteBatch spriteBatch);
 
         public virtual void onClick(ClickEvent @event)
         {

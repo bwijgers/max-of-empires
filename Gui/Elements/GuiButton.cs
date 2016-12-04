@@ -9,6 +9,7 @@ using MaxOfEmpires;
 /// -----------------------------------------------
 /// -------------------Button.cs-------------------
 /// ---------------Made by: CallitMez--------------
+/// --------------Updated by: Ebilkill-------------
 /// ----------------Made for RPGGame---------------
 /// -------------------12-10-2016------------------
 /// ------------github.com/CallitMez/RPG-----------
@@ -47,16 +48,30 @@ namespace Ebilkill.Gui.Elements
 
         public override void loadContent(AssetManager content)
         {
-            sprite = content.getAsset<Texture2D>(spriteName);
+            if (spriteName != null)
+                sprite = content.getAsset<Texture2D>(spriteName);
+            else
+                sprite = null;
         }
 
-        public override void drawElement(SpriteBatch spriteBatch, GraphicsDevice graphics)
+        private void drawBackground(SpriteBatch spriteBatch)
         {
+            if (sprite != null)
+                spriteBatch.Draw(sprite, Bounds, Color.White);
+            else
+                DrawingHelper.Instance.DrawRectangle(spriteBatch, Bounds, new Color(0xDD, 0xDD, 0xDD, 0xFF));
+        }
+
+        public override void drawElement(SpriteBatch spriteBatch)
+        {
+            // Only draw if visible
             if (!Visible)
                 return;
-            spriteBatch.Draw(sprite, Bounds, Color.White);
+
+            // Draw the background
+            drawBackground(spriteBatch);
             if (label != null)
-                label.drawElement(spriteBatch, graphics);
+                label.drawElement(spriteBatch);
         }
 
         public override void onClick(ClickEvent e)

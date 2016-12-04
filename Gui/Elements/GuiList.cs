@@ -152,17 +152,17 @@ namespace Ebilkill.Gui.Elements
             calculateLabelPositions();
         }
 
-        public override void drawElement(SpriteBatch spriteBatch, GraphicsDevice graphics)
+        public override void drawElement(SpriteBatch spriteBatch)
         {
             if (!Visible)
                 return;
 
             for (int i = currentTop; i < currentTop + displayableItemsCount && i < labelList.Count; ++i)
             {
-                labelList[i].drawElement(spriteBatch, graphics);
+                labelList[i].drawElement(spriteBatch);
             }
-            up.drawElement(spriteBatch, graphics);
-            down.drawElement(spriteBatch, graphics);
+            up.drawElement(spriteBatch);
+            down.drawElement(spriteBatch);
         }
 
         public override void loadContent(AssetManager content)

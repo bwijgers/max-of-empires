@@ -45,17 +45,16 @@ namespace Ebilkill.Gui
             }
         }
 
-        public virtual void draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        public virtual void draw(SpriteBatch spriteBatch)
         {
-            graphicsDevice.Clear(Color.White);
             // Draw all elements
             foreach (GuiElement element in elements)
             {
-                element.drawElement(spriteBatch, graphicsDevice);
+                element.drawElement(spriteBatch);
             }
         }
 
-        public virtual void update(GameTime gameTime, InputHelper inputHelper)
+        public virtual void update(InputHelper inputHelper)
         {
             if (inputHelper.MouseLeftButtonPressed)
             {
