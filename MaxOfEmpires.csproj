@@ -46,6 +46,7 @@
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\GameObjectGrid.cs" />
     <Compile Include="GameObjects\GameObjectList.cs" />
+    <Compile Include="Units\Stats.cs" />
     <Compile Include="Units\Swordsman.cs" />
     <Compile Include="Units\Unit.cs" />
     <Compile Include="MaxOfEmpires.cs" />
