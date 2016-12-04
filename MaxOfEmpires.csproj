@@ -41,11 +41,13 @@
     <Compile Include="AssetManager.cs" />
     <Compile Include="GameStates\BattleState.cs" />
     <Compile Include="Building.cs" />
+    <Compile Include="GameStates\Overlays\OverlayBattleState.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\GameObjectGrid.cs" />
     <Compile Include="GameObjects\GameObjectList.cs" />
-    <Compile Include="Unit.cs" />
+    <Compile Include="Units\Swordsman.cs" />
+    <Compile Include="Units\Unit.cs" />
     <Compile Include="MaxOfEmpires.cs" />
     <Compile Include="GameStates\GameState.cs" />
     <Compile Include="GameStates\GameStateManager.cs" />
@@ -74,6 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\FE-Sprites\plains.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\FE-Sprites\swordsman.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />

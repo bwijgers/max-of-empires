@@ -16,9 +16,63 @@ namespace MaxOfEmpires
         /// </summary>
         private Point selectedTile;
 
+        private bool currentPlayer;
+
         public Grid(int width, int height, string id = "") : base(width, height, id)// TODO: make this load from a file or something similar
         {
             selectedTile = InvalidTile;
+            currentPlayer = true;
+        }
+
+        public override void Draw(GameTime time, SpriteBatch s)
+        {
+            base.Draw(time, s);
+
+            Ebilkill.Gui.DrawingHelper.Instance.DrawRectangle(s, new Rectangle(new Point(selectedTile.X * 32, selectedTile.Y * 32), new Point(32)), new Color(0x00, 0x00, 0xFF, 0x88));
+        }
+
+        public override void HandleInput(InputHelper helper, KeyManager keyManager)
+        {
+            // Check if the player clicked
+            if (helper.MouseLeftButtonPressed)
+            {
+                // Get the current grid position the player clicked at
+                Point gridPos = (helper.MousePosition / 32).ToPoint();
+
+                // Just unselect this tile if the user clicks this again.
+                if (gridPos.Equals(selectedTile))
+                {
+                    selectedTile = InvalidTile;
+                    return;
+                }
+
+                // If the player had a tile selected and it contains a Unit...
+                if (SelectedTile != null && SelectedTile.Occupied)
+                {
+                    // ... move the Unit there, if the square is not occupied and the unit is capable...
+                    if (!(this[gridPos] as Tile).Occupied && SelectedTile.Unit.Move(gridPos.X, gridPos.Y))
+                    {
+                        (this[gridPos] as Tile).SetUnit(SelectedTile.Unit);
+                        SelectedTile.SetUnit(null);
+                    }
+
+                    // ... And set the selected tile back to an invalid tile.
+                    selectedTile = InvalidTile;
+                    return;
+                }
+
+                // Check if the tile they clicked is valid;
+                if (gridPos.X < 0 || gridPos.X >= Width || gridPos.Y < 0 || gridPos.Y > Height)
+                {
+                    // if it's not, reflect this in the selectedTile;
+                    selectedTile = InvalidTile;
+                }
+                else if ((this[gridPos] as Tile).Occupied && (this[gridPos] as Tile).Unit.Owner == currentPlayer)
+                {
+                    // if it is, make sure the selected tile is the tile the player clicked, if there is a Unit here.
+                    selectedTile = gridPos;
+                }
+            }
         }
 
         /// <summary>
@@ -31,9 +85,19 @@ namespace MaxOfEmpires
             {
                 for (int y = 0; y < Height; ++y)
                 {
-                    grid[x, y] = new Tile(Terrain.Plains, x, y);
+                    this[x, y] = new Tile(Terrain.Plains, x, y);
                 }
             }
+
+            (this[4, 4] as Tile).SetUnit(new Units.Swordsman(4, 4, true));
+            (this[10, 10] as Tile).SetUnit(new Units.Swordsman(10, 10, false));
+        }
+
+        public override void TurnUpdate(uint turn, bool player)
+        {
+            base.TurnUpdate(turn, player);
+
+            this.currentPlayer = player;
         }
 
         private Point InvalidTile => new Point(-1, -1);
@@ -41,8 +105,15 @@ namespace MaxOfEmpires
         {
             get
             {
-                if (grid[selectedTile.X, selectedTile.Y] is Tile)
-                    return grid[selectedTile.X, selectedTile.Y] as Tile;
+                // Make sure the tile is in bounds.
+                if (selectedTile.X < 0 || selectedTile.X >= Width || selectedTile.Y < 0 || selectedTile.Y >= Height)
+                    return null;
+
+                // Check if the position actually is a tile, although it should be.
+                if (this[selectedTile.X, selectedTile.Y] is Tile)
+                    return this[selectedTile.X, selectedTile.Y] as Tile;
+
+                // Return null if there is no selected tile.
                 return null;
             }
         }

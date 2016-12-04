@@ -32,6 +32,7 @@ namespace MaxOfEmpires
             inputHelper = new InputHelper();
 
             GraphicsDevice.Viewport = new Viewport(0, 0, 1280, 768);
+            IsMouseVisible = true;
 
             base.Initialize();
         }

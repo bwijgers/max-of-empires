@@ -1,4 +1,5 @@
 ﻿using MaxOfEmpires.GameObjects;
+using MaxOfEmpires.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,42 @@ namespace MaxOfEmpires
         public override void Draw(GameTime time, SpriteBatch s)
         {
             terrain.Draw(x, y, s);
+            building?.Draw(time, s);
+            unit?.Draw(time, s);
+        }
+
+        public void SetUnit(Unit u)
+        {
+            // Check to make sure the unit is not overriding another unit.
+            if (Occupied && u != null)
+                return;
+
+            // Set the unit 
+            unit = u;
+
+            // Set the unit's position, if it is not null
+            if(unit != null)
+                unit.GridPos = new Point(x, y);
+        }
+
+        public override void TurnUpdate(uint turn, bool player)
+        {
+            if (Occupied)
+                Unit.TurnUpdate(turn, player);
+
+            if (BuiltOn)
+                Building.TurnUpdate(turn, player);
+        }
+
+        /// <summary>
+        /// Returns the Unit occupying this Tile.
+        /// </summary>
+        public Unit Unit
+        {
+            get
+            {
+                return unit;
+            }
         }
 
         /// <summary>
@@ -68,10 +105,5 @@ namespace MaxOfEmpires
         /// Returns the Terrain of this Tile.
         /// </summary>
         public Terrain Terrain => terrain;
-
-        /// <summary>
-        /// Returns the Unit occupying this Tile.
-        /// </summary>
-        public Unit Unit => unit;
     }
 }

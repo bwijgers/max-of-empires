@@ -25,7 +25,7 @@ namespace MaxOfEmpires.GameObjects
         /// <summary>
         /// The grid. A digital-- Wait, I did this already.
         /// </summary>
-        protected GameObject[,] grid;
+        private GameObject[,] grid;
 
         /// <summary>
         /// Creates a new GameObjectGrid.
@@ -95,25 +95,6 @@ namespace MaxOfEmpires.GameObjects
             ForEach((obj, x, y) => obj?.Reset());
         }
 
-        /// <summary>
-        /// Sets an element in the grid. Returns a success code.
-        /// </summary>
-        /// <param name="obj">The object to place in the grid.</param>
-        /// <param name="x">The x-position to place the object in.</param>
-        /// <param name="y">The y-position to place the object in.</param>
-        /// <param name="force">Whether to force placement; if true, ignores whatever is in the position already and overwrites it.</param>
-        /// <returns>True if this object was placed at the specified position, false otherwise.</returns>
-        public bool SetElementInGrid(GameObject obj, int x, int y, bool force = false)
-        {
-            // If we can't place this object here, return false
-            if (!force && grid[x, y] != null)
-                return false;
-
-            // Place the object here and return true
-            grid[x, y] = obj;
-            return true;
-        }
-
         /// <see cref="GameObject.TurnUpdate(uint, bool)"/>
         public override void TurnUpdate(uint turn, bool player)
         {
@@ -137,5 +118,34 @@ namespace MaxOfEmpires.GameObjects
         /// The width of this grid, being the amount of elements in the x-direction.
         /// </summary>
         public int Width => grid.GetLength(0);
+
+        public GameObject this[int x, int y]
+        {
+            get
+            {
+                if (x < 0 || x > Width || y < 0 || y > Height)
+                    return null;
+                return grid[x, y];
+            }
+            protected set
+            {
+                if (x >= 0 && x < Width && y >= 0 && y < Height)
+                {
+                    grid[x, y] = value;
+                }
+            }
+        }
+
+        public GameObject this[Point p]
+        {
+            get
+            {
+                return this[p.X, p.Y];
+            }
+            protected set
+            {
+                this[p.X, p.Y] = value;
+            }
+        }
     }
 }
