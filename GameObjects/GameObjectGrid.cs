@@ -119,16 +119,26 @@ namespace MaxOfEmpires.GameObjects
         /// </summary>
         public int Width => grid.GetLength(0);
 
+        /// <summary>
+        /// Gets the GameObject at the specified position of this GameObjectGrid.
+        /// </summary>
+        /// <param name="x">The x-coord of the position.</param>
+        /// <param name="y">The y-coord of the position.</param>
+        /// <returns>The GameObject at this position, or null if there is no such GameObject.</returns>
         public GameObject this[int x, int y]
         {
             get
             {
+                // Check if the position is in bounds; return null if it is not.
                 if (x < 0 || x > Width || y < 0 || y > Height)
                     return null;
+
+                // Return the corresponding Gameobject.
                 return grid[x, y];
             }
             protected set
             {
+                // Only set the GameObject at the position if it is a valid position.
                 if (x >= 0 && x < Width && y >= 0 && y < Height)
                 {
                     grid[x, y] = value;
@@ -136,14 +146,21 @@ namespace MaxOfEmpires.GameObjects
             }
         }
 
+        /// <summary>
+        /// Gets the GameObject at the specified position of this GameObjectGrid.
+        /// </summary>
+        /// <param name="p">The position.</param>
+        /// <returns>The GameObject at this position, or null if there is no such GameObject.</returns>
         public GameObject this[Point p]
         {
             get
             {
+                // We already have such a nice indexer; let's use that c:
                 return this[p.X, p.Y];
             }
             protected set
             {
+                // Same as with the get.
                 this[p.X, p.Y] = value;
             }
         }

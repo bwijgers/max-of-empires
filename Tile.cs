@@ -13,9 +13,9 @@ namespace MaxOfEmpires
     class Tile : GameObject
     {
         /// <summary>
-        /// The x and y positions of this Tile in the containing Grid.
+        /// The current Building on this Tile. Can be null.
         /// </summary>
-        private int x, y;
+        private Building building;
 
         /// <summary>
         /// The Terrain of this Tile.
@@ -28,9 +28,9 @@ namespace MaxOfEmpires
         private Unit unit;
 
         /// <summary>
-        /// The current Building on this Tile. Can be null.
+        /// The x and y positions of this Tile in the containing Grid.
         /// </summary>
-        private Building building; 
+        private int x, y;
 
         /// <summary>
         /// Creates a new Tile at a specified position with a specified Terrain.
@@ -52,6 +52,10 @@ namespace MaxOfEmpires
             unit?.Draw(time, s);
         }
 
+        /// <summary>
+        /// Sets a Unit on this tile. Also updates that Unit's GridPos to this Tile's position.
+        /// </summary>
+        /// <param name="u">The Unit to set on this Tile.</param>
         public void SetUnit(Unit u)
         {
             // Check to make sure the unit is not overriding another unit.
@@ -68,22 +72,13 @@ namespace MaxOfEmpires
 
         public override void TurnUpdate(uint turn, bool player)
         {
+            // Update the Unit at this position if it exists.
             if (Occupied)
                 Unit.TurnUpdate(turn, player);
 
+            // Update the Building at this position if it exists.
             if (BuiltOn)
                 Building.TurnUpdate(turn, player);
-        }
-
-        /// <summary>
-        /// Returns the Unit occupying this Tile.
-        /// </summary>
-        public Unit Unit
-        {
-            get
-            {
-                return unit;
-            }
         }
 
         /// <summary>
@@ -105,5 +100,16 @@ namespace MaxOfEmpires
         /// Returns the Terrain of this Tile.
         /// </summary>
         public Terrain Terrain => terrain;
+
+        /// <summary>
+        /// Returns the Unit occupying this Tile.
+        /// </summary>
+        public Unit Unit
+        {
+            get
+            {
+                return unit;
+            }
+        }
     }
 }

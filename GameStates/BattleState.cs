@@ -13,27 +13,39 @@ namespace MaxOfEmpires.GameStates
     
     class BattleState : GameState
     {
+        /// <summary>
+        /// The battlegrid.
+        /// </summary>
         private Grid battleGrid;
+
+        /// <summary>
+        /// The overlay. Things like buttons are defined here. everything other than the grid is in here.
+        /// </summary>
         private Overlays.OverlayBattleState overlay;
+
+        /// <summary>
+        /// The current turn in this battle.
+        /// </summary>
         private uint turnNum;
+
         private bool currentPlayer; // false if player 2, true if player 1.
         private bool shouldTurnUpdate; // True if the next update should initiate a turn update.
 
         public BattleState()
         {
-            // Initialize the battlefield
+            // Initialize the battlefield.
             battleGrid = new Grid(15, 15);
             battleGrid.InitField();
 
-            // Initialize the overlay
+            // Initialize the overlay.
             overlay = new Overlays.OverlayBattleState();
             InitOverlay();
 
-            // Player 1 starts
+            // Player 1 starts.
             currentPlayer = true;
 
-            // Turn number starts at 0
-            turnNum = 0;
+            // Turn number starts at 1.
+            turnNum = 1;
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
@@ -48,6 +60,9 @@ namespace MaxOfEmpires.GameStates
             overlay.update(helper);
         }
 
+        /// <summary>
+        /// Initializes the overlay. Add all GuiElements here.
+        /// </summary>
         private void InitOverlay()
         {
             GuiButton buttonEndTurn = GuiButton.createButtonWithLabel(new Point(500, 10), "End turn", null, "font");
@@ -55,6 +70,9 @@ namespace MaxOfEmpires.GameStates
             overlay.addElement(buttonEndTurn);
         }
 
+        /// <summary>
+        /// Called when the turn is updated. Sets the current player to the other player and then calls Grid.TurnUpdate.
+        /// </summary>
         public void TurnUpdate()
         {
             currentPlayer = !currentPlayer;
@@ -71,6 +89,9 @@ namespace MaxOfEmpires.GameStates
             }
         }
 
+        /// <summary>
+        /// Accessor for the BattleGrid.
+        /// </summary>
         public Grid BattleGrid => battleGrid;
     }
 }

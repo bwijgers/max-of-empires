@@ -28,7 +28,10 @@ namespace MaxOfEmpires
         {
             base.Draw(time, s);
 
+            // Draws an overlay so the player knows which unit is selected.
             Ebilkill.Gui.DrawingHelper.Instance.DrawRectangle(s, new Rectangle(new Point(selectedTile.X * 32, selectedTile.Y * 32), new Point(32)), new Color(0x00, 0x00, 0xFF, 0x88));
+
+            // TODO: add drawing to all positions the player can place the unit at.
         }
 
         public override void HandleInput(InputHelper helper, KeyManager keyManager)
@@ -89,6 +92,7 @@ namespace MaxOfEmpires
                 }
             }
 
+            // Place a swordsman for each player on the field.
             (this[4, 4] as Tile).SetUnit(new Units.Swordsman(4, 4, true));
             (this[10, 10] as Tile).SetUnit(new Units.Swordsman(10, 10, false));
         }
@@ -97,23 +101,28 @@ namespace MaxOfEmpires
         {
             base.TurnUpdate(turn, player);
 
+            // So the grid knows who is the current player. Useful for selecting units that are your own. 
             this.currentPlayer = player;
         }
 
+        /// <summary>
+        /// Property defining a position which is invalid. Unselects tiles.
+        /// </summary>
         private Point InvalidTile => new Point(-1, -1);
+
+        /// <summary>
+        /// Gets the selected tile.
+        /// </summary>
         public Tile SelectedTile
         {
             get
             {
-                // Make sure the tile is in bounds.
-                if (selectedTile.X < 0 || selectedTile.X >= Width || selectedTile.Y < 0 || selectedTile.Y >= Height)
-                    return null;
-
                 // Check if the position actually is a tile, although it should be.
-                if (this[selectedTile.X, selectedTile.Y] is Tile)
-                    return this[selectedTile.X, selectedTile.Y] as Tile;
+                // GameObject this[Point] checks whether the position is in bounds.
+                if (this[selectedTile] is Tile)
+                    return this[selectedTile] as Tile;
 
-                // Return null if there is no selected tile.
+                // Return null if there is no selected tile, or the selected tile is out of bounds.
                 return null;
             }
         }
