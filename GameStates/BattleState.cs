@@ -65,9 +65,8 @@ namespace MaxOfEmpires.GameStates
         /// </summary>
         private void InitOverlay()
         {
-            GuiButton buttonEndTurn = GuiButton.createButtonWithLabel(new Point(500, 10), "End turn", null, "font");
-            buttonEndTurn.ClickHandler = () => shouldTurnUpdate = true;
-            overlay.addElement(buttonEndTurn);
+            // Add a click handler to the end turn button.
+            overlay.buttonEndTurn.ClickHandler = () => { shouldTurnUpdate = true; };
         }
 
         /// <summary>
@@ -77,6 +76,8 @@ namespace MaxOfEmpires.GameStates
         {
             currentPlayer = !currentPlayer;
             battleGrid.TurnUpdate(turnNum, currentPlayer);
+
+            overlay.labelCurrentPlayer.setLabelText("Current player: " + (currentPlayer ? "Blue" : "Red"));
         }
 
         public override void Update(GameTime time)

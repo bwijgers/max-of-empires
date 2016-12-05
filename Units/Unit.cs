@@ -47,7 +47,14 @@ namespace MaxOfEmpires.Units
             this.x = x;
             this.y = y;
             this.owner = owner;
-            texture = AssetManager.Instance.getAsset<Texture2D>(@"FE-sprites/" + resName); // Load the Unit's texture based on the name supplied.
+
+            // Get the texture based on the player (blue for p1, red for p2)
+            StringBuilder texName = new StringBuilder();
+            texName.Append(@"FE-Sprites\").Append(resName).Append('_');
+            texName.Append(owner ? "blue" : "red");
+
+            // Load the Unit's texture based on the name supplied and the player controlling the unit.
+            texture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString()); 
         }
 
         /// <summary>
@@ -65,7 +72,8 @@ namespace MaxOfEmpires.Units
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
-            s.Draw(texture, DrawPos, Color.White);
+            Color drawColor = HasMoved ? Color.Gray : Color.White;
+            s.Draw(texture, DrawPos, drawColor);
         }
 
         /// <summary>
