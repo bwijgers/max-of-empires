@@ -11,12 +11,14 @@ namespace MaxOfEmpires
 {
     class Grid : GameObjectGrid
     {
+        private bool currentPlayer;
+
         /// <summary>
         /// The coords of the currently selected Tile within the grid.
         /// </summary>
         private Point selectedTile;
 
-        private bool currentPlayer;
+        private Point[] walkablePositions;
 
         public Grid(int width, int height, string id = "") : base(width, height, id)// TODO: make this load from a file or something similar
         {
@@ -31,7 +33,12 @@ namespace MaxOfEmpires
             // Draws an overlay so the player knows which unit is selected.
             Ebilkill.Gui.DrawingHelper.Instance.DrawRectangle(s, new Rectangle(new Point(selectedTile.X * 32, selectedTile.Y * 32), new Point(32)), new Color(0x00, 0x00, 0xFF, 0x88));
 
-            // TODO: add drawing to all positions the player can place the unit at.
+            // Add an overlay to all positions the selected Unit can walk to, if there are such positions.
+            if (walkablePositions != null)
+            {
+                foreach (Point p in walkablePositions)
+                    Ebilkill.Gui.DrawingHelper.Instance.DrawRectangle(s, new Rectangle(new Point(p.X * 32, p.Y * 32), new Point(32)), new Color(0x00, 0x00, 0xFF, 0x88));
+            }
         }
 
         public override void HandleInput(InputHelper helper, KeyManager keyManager)
@@ -43,37 +50,34 @@ namespace MaxOfEmpires
                 Point gridPos = (helper.MousePosition / 32).ToPoint();
 
                 // Just unselect this tile if the user clicks this again.
-                if (gridPos.Equals(selectedTile))
+                if (gridPos.Equals(selectedTile) || !IsInGrid(gridPos))
                 {
-                    selectedTile = InvalidTile;
+                    SelectTile(InvalidTile);
                     return;
                 }
+
+                // Get the tile that was clicked
+                Tile clickedTile = this[gridPos] as Tile;
 
                 // If the player had a tile selected and it contains a Unit...
                 if (SelectedTile != null && SelectedTile.Occupied)
                 {
                     // ... move the Unit there, if the square is not occupied and the unit is capable...
-                    if (!(this[gridPos] as Tile).Occupied && SelectedTile.Unit.Move(gridPos.X, gridPos.Y))
+                    if (!clickedTile.Occupied && SelectedTile.Unit.Move(gridPos.X, gridPos.Y))
                     {
-                        (this[gridPos] as Tile).SetUnit(SelectedTile.Unit);
+                        clickedTile.SetUnit(SelectedTile.Unit);
                         SelectedTile.SetUnit(null);
                     }
 
                     // ... And set the selected tile back to an invalid tile.
-                    selectedTile = InvalidTile;
+                    SelectTile(InvalidTile);
                     return;
                 }
-
-                // Check if the tile they clicked is valid;
-                if (gridPos.X < 0 || gridPos.X >= Width || gridPos.Y < 0 || gridPos.Y > Height)
-                {
-                    // if it's not, reflect this in the selectedTile;
-                    selectedTile = InvalidTile;
-                }
-                else if ((this[gridPos] as Tile).Occupied && (this[gridPos] as Tile).Unit.Owner == currentPlayer)
+                else if (clickedTile.Occupied && clickedTile.Unit.Owner == currentPlayer && clickedTile.Unit.HasAction)
                 {
                     // if it is, make sure the selected tile is the tile the player clicked, if there is a Unit here.
-                    selectedTile = gridPos;
+                    SelectTile(gridPos);
+                    this.walkablePositions = clickedTile.Unit.GetWalkablePositions();
                 }
             }
         }
@@ -95,6 +99,19 @@ namespace MaxOfEmpires
             // Place a swordsman for each player on the field.
             (this[4, 4] as Tile).SetUnit(new Units.Swordsman(4, 4, true));
             (this[10, 10] as Tile).SetUnit(new Units.Swordsman(10, 10, false));
+        }
+
+        /// <summary>
+        /// Selects a Tile within this Grid.
+        /// </summary>
+        /// <param name="p">The position of the Tile to select.</param>
+        public void SelectTile(Point p)
+        {
+            selectedTile = p;
+            if (selectedTile == InvalidTile)
+            {
+                this.walkablePositions = null;
+            }
         }
 
         public override void TurnUpdate(uint turn, bool player)

@@ -73,6 +73,27 @@ namespace MaxOfEmpires.GameObjects
         }
 
         /// <summary>
+        /// Checks whether a certain position exists within this GameObjectGrid.
+        /// </summary>
+        /// <param name="p">The position to check for.</param>
+        /// <returns>True if the position exists within the grid, false otherwise.</returns>
+        public bool IsInGrid(Point p)
+        {
+            return IsInGrid(p.X, p.Y);
+        }
+
+        /// <summary>
+        /// Checks whether a certain position exists within this GameObjectGrid.
+        /// </summary>
+        /// <param name="x">The x-coordinate of the position to check for.</param>
+        /// <param name="y">The y-coordinate of the position to check for.</param>
+        /// <returns>True if the position exists within the grid, false otherwise.</returns>
+        public bool IsInGrid(int x, int y)
+        {
+            return x >= 0 && x < Width && y >= 0 && y < Height;
+        }
+
+        /// <summary>
         /// Gets the object at the specified position, or null if there is no such object.
         /// </summary>
         /// <param name="x">The X-position to check at.</param>
@@ -81,7 +102,7 @@ namespace MaxOfEmpires.GameObjects
         public GameObject ObjectAt(int x, int y)
         {
             // If the coords are in bounds, return the object at the coords.
-            if (x >= 0 && y >= 0 && x < Width && y < Height)
+            if (IsInGrid(x, y))
                 return grid[x, y];
 
             // Otherwise, return null
@@ -129,19 +150,17 @@ namespace MaxOfEmpires.GameObjects
         {
             get
             {
-                // Check if the position is in bounds; return null if it is not.
-                if (x < 0 || x > Width || y < 0 || y > Height)
-                    return null;
-
-                // Return the corresponding Gameobject.
-                return grid[x, y];
+                return ObjectAt(x, y);
             }
             protected set
             {
                 // Only set the GameObject at the position if it is a valid position.
-                if (x >= 0 && x < Width && y >= 0 && y < Height)
+                if (IsInGrid(x, y))
                 {
                     grid[x, y] = value;
+
+                    // Also set the parent of the value to this GameObjectGrid
+                    value.Parent = this;
                 }
             }
         }

@@ -77,6 +77,32 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
+        /// Gets all positions this Unit can walk to. Used for overlay and actually moving.
+        /// </summary>
+        /// <returns>All valid positions for this Unit to walk to within its walking distance.</returns>
+        public Point[] GetWalkablePositions()
+        {
+            List<Point> retVal = new List<Point>();
+            for (int y = MovesLeft; y >= -MovesLeft; --y)
+            {
+                // y is the amount of moves used to move along the y-axis. x must be the moves left. 
+                int movesLeft = MovesLeft - Math.Abs(y);
+
+                for (int x = -movesLeft; x < movesLeft + 1; ++x)
+                {
+                    int xWalkPos = x + GridPos.X;
+                    int yWalkPos = y + GridPos.Y;
+                    if ((GameWorld as GameObjectGrid).IsInGrid(xWalkPos, yWalkPos))
+                    {
+                        retVal.Add(new Point(xWalkPos, yWalkPos));
+                    }
+                }
+            }
+
+            return retVal.ToArray();
+        }
+
+        /// <summary>
         /// Moves this Unit to the specified position. Returns false if this Unit can't reach the specified position.
         /// Assumes the specified position is not occupied.
         /// </summary>
@@ -133,6 +159,11 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
+        /// Whether this unit can still perform an action this turn. 
+        /// </summary>
+        public bool HasAction => !HasAttacked || !HasMoved;
+
+        /// <summary>
         /// Whether this Unit has attacked this turn.
         /// </summary>
         public bool HasAttacked => hasAttacked;
@@ -140,7 +171,17 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// Whether this Unit can still move this turn.
         /// </summary>
-        public bool HasMoved => movesLeft <= 0;
+        public bool HasMoved => MovesLeft <= 0;
+
+        /// <summary>
+        /// The amount of tiles this Unit can still run this turn.
+        /// </summary>
+        public int MovesLeft => movesLeft;
+
+        /// <summary>
+        /// The amount of tiles this Unit can run each turn.
+        /// </summary>
+        public int MoveSpeed => moveSpeed;
 
         /// <summary>
         /// The owner of this Unit. True => player 1, false => player 2.

@@ -82,7 +82,7 @@ namespace MaxOfEmpires.GameObjects
             {
                 if (Parent == null)
                     return this;
-                return Parent;
+                return Parent.GameWorld;
             }
         }
 

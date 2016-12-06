@@ -65,9 +65,12 @@ namespace MaxOfEmpires
             // Set the unit 
             unit = u;
 
-            // Set the unit's position, if it is not null
+            // Set the unit's position and parent, if it is not null
             if(unit != null)
+            {
                 unit.GridPos = new Point(x, y);
+                unit.Parent = this;
+            }
         }
 
         public override void TurnUpdate(uint turn, bool player)
