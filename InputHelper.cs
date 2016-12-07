@@ -41,7 +41,12 @@ namespace MaxOfEmpires
             currentKeyboard = Keyboard.GetState();
         }
 
-        public Dictionary<Keys, char> AlphabetKeys => alphabetKeys;
+        public bool IsKeyDown(Keys k)
+        {
+            return currentKeyboard.IsKeyDown(k);
+        }
+
+        public Dictionary<Keys, char> TextKeys => alphabetKeys;
         public bool MouseLeftButtonPressed => currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released;
         public Vector2 MousePosition => currentMouse.Position.ToVector2();
         public bool MouseRightButtonPressed => currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released;

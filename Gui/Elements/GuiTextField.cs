@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Text;
 
 namespace Ebilkill.Gui.Elements
 {
@@ -28,11 +29,18 @@ namespace Ebilkill.Gui.Elements
         public override void handleKeyboardInput(InputHelper helper)
         {
             bool changed = false;
-            foreach (Keys k in helper.AlphabetKeys.Keys)
+            foreach (Keys k in helper.TextKeys.Keys)
             {
                 if (helper.KeyPressed(k, false))
                 {
-                    text += helper.AlphabetKeys[k];
+                    char toAdd = helper.TextKeys[k];
+
+                    if (helper.IsKeyDown(Keys.LeftShift) || helper.IsKeyDown(Keys.RightShift))
+                    {
+                        toAdd = new StringBuilder().Append(toAdd).ToString().ToUpper()[0];
+                    }
+
+                    text += toAdd;
                     changed = true;
                 }
             }
