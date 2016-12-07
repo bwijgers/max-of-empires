@@ -77,7 +77,7 @@ namespace MaxOfEmpires
                 {
                     // if it is, make sure the selected tile is the tile the player clicked, if there is a Unit here.
                     SelectTile(gridPos);
-                    this.walkablePositions = clickedTile.Unit.GetWalkablePositions();
+                    this.walkablePositions = clickedTile.Unit.ReachableTiles();
                 }
             }
         }

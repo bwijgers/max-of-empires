@@ -45,6 +45,16 @@ namespace MaxOfEmpires
             this.y = y;
         }
 
+        public bool Passable(Unit unit)
+        {
+            return !Occupied || Unit.Owner == unit.Owner;
+        }
+
+        public int cost(Unit unit)
+        {
+            return 1;
+        }
+
         public override void Draw(GameTime time, SpriteBatch s)
         {
             terrain.Draw(x, y, s);

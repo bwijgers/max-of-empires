@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MaxOfEmpires.Units
 {
-    abstract class Unit : GameObject
+    abstract partial class Unit : GameObject
     {
         /// <summary>
         /// Whether this unit has attacked. Units can only attack once.
@@ -118,7 +118,7 @@ namespace MaxOfEmpires.Units
             }
 
             // Get the distance to the specified position.
-            int distance = DistanceTo(x, y);
+            int distance = ShortestPath(new Point(x,y)).cost;
 
             // Check if we can move to this position before actually just moving there. CanMoveTo decrements MovesLeft as well, if it is possible to move to the position.
             if(distance <= movesLeft)
