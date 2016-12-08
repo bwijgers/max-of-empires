@@ -50,7 +50,7 @@ namespace MaxOfEmpires
             return !Occupied || Unit.Owner == unit.Owner;
         }
 
-        public int cost(Unit unit)
+        public int Cost(Unit unit)
         {
             return 1;
         }

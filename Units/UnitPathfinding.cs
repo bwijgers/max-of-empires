@@ -33,6 +33,8 @@ namespace MaxOfEmpires.Units
         private void AddSurroundingTiles(PathToTile startPath, List<PathToTile> newPaths)
         {
             List<PathToTile> returnList = new List<PathToTile>();
+
+            //Creates list and fills it with the points surrounding the starttile
             List<Point> surroundingPoints = new List<Point>();
             surroundingPoints.Add(startPath.target + new Point(1, 0));
             surroundingPoints.Add(startPath.target + new Point(0, 1));
@@ -49,17 +51,21 @@ namespace MaxOfEmpires.Units
                 Tile tile = (GameWorld as Grid)[p] as Tile;
                 if (tile.Passable(this))
                 {
+                    //forms new path to each point
                     int startPathLength = startPath.path == null ? 0 : startPath.path.Length;
                     Point[] pathAsPoints = new Point[startPathLength + 1];
                     startPath.path?.CopyTo(pathAsPoints, 0);
                     pathAsPoints[startPathLength] = p;
-                    int cost = tile.cost(this) + startPath.cost;
+                    int cost = tile.Cost(this) + startPath.cost;
                     PathToTile newPathToTile = new PathToTile(p, pathAsPoints, cost);
                     PathToTile shortestPathToTile = shortestPaths.Find(path => path.target.Equals(p));
+                    
+                    //if the current found path is shorter than an existent path, overrides it.
                     if (shortestPathToTile != null)
                     {
                         if (cost < shortestPathToTile.cost)
                         {
+                            newPaths.Remove(shortestPathToTile);
                             newPaths.Add(newPathToTile);
                             shortestPaths.Add(newPathToTile);
                         }
