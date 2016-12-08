@@ -45,10 +45,10 @@ namespace MaxOfEmpires
             this.y = y;
         }
         /// <summary>
-        /// returns the movement cost for a specified unit to move to this tile.
+        /// The movement cost for a specified Unit to move to this Tile.
         /// </summary>
-        /// <param name="unit">the unit for whom you want to know the movement cost</param>
-        /// <returns></returns>
+        /// <param name="unit">The Unit for which you want to know the movement cost.</param>
+        /// <returns>The movement cost on this Tile for the specified Unit.</returns>
         public int Cost(Unit unit)
         {
             return 1;
@@ -62,10 +62,10 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
-        /// returns wether or not this tile is passable for a certain unit
+        /// Whether or not this Tile is passable for a certain unit. 
         /// </summary>
-        /// <param name="unit">the unit for whom you want to know if this tile is passable</param>
-        /// <returns></returns>
+        /// <param name="unit">The Unit for which you want to know if this Tile is passable.</param>
+        /// <returns>True if the Unit can pass through this Tile, false otherwise.</returns>
         public bool Passable(Unit unit)
         {
             return !Occupied || Unit.Owner == unit.Owner;
