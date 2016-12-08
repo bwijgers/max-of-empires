@@ -121,6 +121,10 @@ namespace MaxOfEmpires.Units
         /// <returns>the furthest point it can move to</returns>
         public Point MoveTowardsTarget()
         {
+            if(((GameWorld as Grid)[target] as Tile).Occupied)
+            {
+                target = GridPos;
+            }
             if (!(GridPos == target))
             {
                 GeneratePaths(GridPos);
