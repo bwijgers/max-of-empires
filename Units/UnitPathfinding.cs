@@ -131,20 +131,24 @@ namespace MaxOfEmpires.Units
                 Point reachableTarget = GridPos;
                 while (!foundPath)
                 {
+                    //if it can't move at all
                     if(!(ShortestPath(Path[i]).cost <= MovesLeft))
                     {
                         return GridPos;
                     }
+                    //if it can move until the end of the path
                     if (ShortestPath(Path[i]).cost <= MovesLeft && i+1 == Path.Length)
                     {
                         foundPath = true;
                         reachableTarget = Path[i];
                     }
+                    //if it can only complete a part of the path
                     else if (ShortestPath(Path[i]).cost <= MovesLeft && !(ShortestPath(Path[i + 1]).cost <= MovesLeft))
                     {
                         foundPath = true;
                         reachableTarget = Path[i];
                     }
+                    //take one more "step" on the path
                     else
                     {
                         i++;
