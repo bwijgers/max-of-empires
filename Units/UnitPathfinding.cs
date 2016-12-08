@@ -34,7 +34,7 @@ namespace MaxOfEmpires.Units
         {
             List<PathToTile> returnList = new List<PathToTile>();
 
-            //Creates list and fills it with the points surrounding the starttile
+            //Creates list of points and fills it with the points surrounding the starttile
             List<Point> surroundingPoints = new List<Point>();
             surroundingPoints.Add(startPath.target + new Point(1, 0));
             surroundingPoints.Add(startPath.target + new Point(0, 1));
@@ -70,6 +70,7 @@ namespace MaxOfEmpires.Units
                             shortestPaths.Add(newPathToTile);
                         }
                     }
+                    //if there is no known path to the specified point, adds this path to the list.
                     else
                     {
                         newPaths.Add(newPathToTile);

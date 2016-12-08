@@ -44,12 +44,11 @@ namespace MaxOfEmpires
             this.x = x;
             this.y = y;
         }
-
-        public bool Passable(Unit unit)
-        {
-            return !Occupied || Unit.Owner == unit.Owner;
-        }
-
+        /// <summary>
+        /// returns the movement cost for a specified unit to move to this tile.
+        /// </summary>
+        /// <param name="unit">the unit for whom you want to know the movement cost</param>
+        /// <returns></returns>
         public int Cost(Unit unit)
         {
             return 1;
@@ -60,6 +59,16 @@ namespace MaxOfEmpires
             terrain.Draw(x, y, s);
             building?.Draw(time, s);
             unit?.Draw(time, s);
+        }
+
+        /// <summary>
+        /// returns wether or not this tile is passable for a certain unit
+        /// </summary>
+        /// <param name="unit">the unit for whom you want to know if this tile is passable</param>
+        /// <returns></returns>
+        public bool Passable(Unit unit)
+        {
+            return !Occupied || Unit.Owner == unit.Owner;
         }
 
         /// <summary>
