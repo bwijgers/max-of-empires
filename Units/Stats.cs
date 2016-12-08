@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Units
 {
-    struct Stats
+    class Stats
     {
         public int hp;
         public int maxHp;
@@ -14,6 +14,15 @@ namespace MaxOfEmpires.Units
         public int hit; // chance
         public int dodge; // chance
         public int def; // damage
+
+        public Stats(int hp, int att, int hit, int dodge, int def)
+        {
+            this.hp = this.maxHp = hp;
+            this.att = att;
+            this.hit = hit;
+            this.dodge = dodge;
+            this.def = def;
+        }
 
         //public int crit; // crit chance
         //public int avoid; // crit chance

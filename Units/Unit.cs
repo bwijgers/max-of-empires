@@ -58,6 +58,60 @@ namespace MaxOfEmpires.Units
             texture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString()); 
         }
 
+        public void Attack(Point attackPos)
+        {
+            // Get the gameWorld and the Tile to attack a Unit on. 
+            Grid gameWorld = GameWorld as Grid;
+            Tile toAttack = gameWorld[attackPos] as Tile;
+
+            // Check if the attacking tile actually has a Unit to attack. 
+            // Also check if the Unit can actually attack the enemy from here.
+            if (!toAttack.Occupied && IsInRange(attackPos))
+            {
+                return; // This should *never* happen. 
+            }
+
+            // Actually damage the enemy unit.
+            Unit enemy = toAttack.Unit;
+            DealDamage(enemy);
+
+            // Don't do anything else if the enemy is dead. 
+            if (enemy.IsDead)
+                return;
+
+            // Enemy can retaliate. Right?
+            if (enemy.IsInRange(GridPos))
+            {
+                // Okay, retaliate. 
+                enemy.DealDamage(this);
+            }
+
+            // Unit has attacked
+            hasAttacked = true;
+        }
+
+        private void DealDamage(Unit enemy)
+        {
+            // Check if we hit at all
+            int hitChance = stats.hit - enemy.stats.dodge;
+            if (hitChance < 100)
+            {
+                double randDouble = MaxOfEmpires.Random.NextDouble();
+                if (randDouble * 100 > hitChance)
+                {
+                    return; // we missed :c
+                }
+            }
+
+            // We hit :D Damage the enemy
+            int damageToDeal = stats.att - enemy.stats.def;
+
+            if (damageToDeal > 0)
+            {
+                enemy.stats.hp -= damageToDeal;
+            }
+        }
+
         /// <summary>
         /// Calculates the distance from this Unit's position to the specified position.
         /// </summary>
@@ -75,6 +129,11 @@ namespace MaxOfEmpires.Units
         {
             Color drawColor = HasMoved ? Color.Gray : Color.White;
             s.Draw(texture, DrawPos, drawColor);
+        }
+
+        public bool IsInRange(Point p)
+        {
+            return DistanceTo(p.X, p.Y) == Range;
         }
 
         /// <summary>
@@ -151,6 +210,8 @@ namespace MaxOfEmpires.Units
         /// </summary>
         public bool HasMoved => MovesLeft <= 0;
 
+        public bool IsDead => stats.hp <= 0;
+
         /// <summary>
         /// The amount of tiles this Unit can still run this turn.
         /// </summary>
@@ -166,10 +227,22 @@ namespace MaxOfEmpires.Units
         /// </summary>
         public bool Owner => owner;
 
+        public int Range => 1;
+
         /// <summary>
         /// The Stats of this Unit. 
         /// </summary>
         /// <see cref="Units.Stats"/>
-        public Stats Stats => stats;
+        public Stats Stats
+        {
+            get
+            {
+                return stats;
+            }
+            protected set
+            {
+                stats = value;
+            }
+        }
     }
 }

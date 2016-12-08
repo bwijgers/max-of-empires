@@ -27,7 +27,7 @@ namespace MaxOfEmpires
             currentPlayer = true;
         }
 
-        public void CheckMoveUnit(Point newPos, Unit unit)
+        public bool CheckMoveUnit(Point newPos, Unit unit)
         {
             Tile tile = (GameWorld as Grid)[newPos] as Tile;
             Tile oriTile = (GameWorld as Grid)[unit.GridPos] as Tile;
@@ -35,8 +35,45 @@ namespace MaxOfEmpires
             {
                 tile.SetUnit(unit);
                 oriTile.SetUnit(null);
+                return true;
             }
 
+            return false;
+        }
+
+        public bool CheckAttackUnit(Point tileToAttack, Unit attackingUnit)
+        {
+            // Cannot attack more than once a turn. 
+            if (attackingUnit.HasAttacked)
+                return false;
+
+            Tile toAttack = this[tileToAttack] as Tile;
+
+            // Make sure the attack square is occupied by an enemy unit
+            if(!toAttack.Occupied || toAttack.Unit.Owner == attackingUnit.Owner)
+            {
+                return false; // nothing to attack
+            }
+
+            // Make sure the attack square is in range of the attacking unit
+            if (!attackingUnit.IsInRange(tileToAttack))
+            {
+                return false;
+            }
+
+            // We can actually attack this? Nice :D
+            attackingUnit.Attack(tileToAttack);
+
+            // After a battle, check if there are dead Units, and remove these if they are dead
+            ForEach((obj, x, y) => {
+                Tile t = obj as Tile;
+                if (t.Occupied && t.Unit.IsDead)
+                {
+                    t.SetUnit(null);
+                }
+            });
+
+            return true;
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
@@ -75,13 +112,15 @@ namespace MaxOfEmpires
                 // If the player had a tile selected and it contains a Unit...
                 if (SelectedTile != null && SelectedTile.Occupied)
                 {
-                    // ... move the Unit there, if the square is not occupied and the unit is capable, then unselect the tile. 
+                    // ... move the Unit there, if the square is not occupied and the unit is capable, then unselect the tile.
                     SelectedTile.Unit.setTarget = gridPos;
                     Point movePos = SelectedTile.Unit.MoveTowardsTarget();
-                    CheckMoveUnit(movePos, SelectedTile.Unit);
 
-                    SelectTile(InvalidTile);
-                    return;
+                    if(CheckMoveUnit(movePos, SelectedTile.Unit) || CheckAttackUnit(gridPos, SelectedTile.Unit))
+                    {
+                        SelectTile(InvalidTile);
+                        return;
+                    }
                 }
 
                 // Check if the player clicked a tile with a Unit on it, and select it if it's there. 

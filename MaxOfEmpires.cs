@@ -3,6 +3,7 @@ using MaxOfEmpires.GameStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace MaxOfEmpires
 {
@@ -14,6 +15,7 @@ namespace MaxOfEmpires
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private InputHelper inputHelper;
+        private static Random random = new Random();
 
         public MaxOfEmpires()
         {
@@ -104,5 +106,7 @@ namespace MaxOfEmpires
         {
 
         }
+
+        public static Random Random => random;
     }
 }

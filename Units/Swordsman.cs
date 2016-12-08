@@ -11,6 +11,7 @@ namespace MaxOfEmpires.Units
         public Swordsman(int x, int y, bool owner) : base(x, y, owner, "swordsman")
         {
             this.moveSpeed = 4;
+            Stats = new Stats(10, 5, 100, 10, 2);
         }
     }
 }
