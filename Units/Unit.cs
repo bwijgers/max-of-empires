@@ -47,9 +47,10 @@ namespace MaxOfEmpires.Units
             this.x = x;
             this.y = y;
             this.owner = owner;
+            target = new Point(x, y);
 
-            // Get the texture based on the player (blue for p1, red for p2)
-            StringBuilder texName = new StringBuilder();
+        // Get the texture based on the player (blue for p1, red for p2)
+        StringBuilder texName = new StringBuilder();
             texName.Append(@"FE-Sprites\").Append(resName).Append('_');
             texName.Append(owner ? "blue" : "red");
 
@@ -107,7 +108,10 @@ namespace MaxOfEmpires.Units
 
         public override void TurnUpdate(uint turn, bool player)
         {
-            movesLeft = moveSpeed;
+            if(owner == player)
+            {
+                movesLeft = moveSpeed;
+            }
             hasAttacked = false;
         }
 

@@ -87,7 +87,7 @@ namespace MaxOfEmpires.Units
         public void GeneratePaths(Point startPosition)
         {
             List<PathToTile> newPaths;
-            PathToTile startPath = new PathToTile(startPosition, null, 0);
+            PathToTile startPath = new PathToTile(startPosition, new Point[0], 0);
             newPaths = new List<PathToTile>();
             shortestPaths = new List<PathToTile>();
             newPaths.Add(startPath);
@@ -121,25 +121,41 @@ namespace MaxOfEmpires.Units
         /// <returns>the furthest point it can move to</returns>
         public Point MoveTowardsTarget()
         {
-            GeneratePaths(GridPos);
-            Point[] Path = ShortestPath(target).path;
-            Point temporalTarget = GridPos;
-            int i = 0;
-            bool foundPath = false;
-            Point reachableTarget = GridPos;
-            while (!foundPath)
+            if (!(GridPos == target))
             {
-                if (ShortestPath(Path[i]).cost <= MovesLeft && (!(ShortestPath(Path[i + 1]).cost <= MovesLeft) || i == Path.Length))
+                GeneratePaths(GridPos);
+                Point[] Path = ShortestPath(target).path;
+                Point temporalTarget = GridPos;
+                int i = 0;
+                bool foundPath = false;
+                Point reachableTarget = GridPos;
+                while (!foundPath)
                 {
-                    foundPath = true;
-                    reachableTarget = Path[i];
+                    if(!(ShortestPath(Path[i]).cost <= MovesLeft))
+                    {
+                        return GridPos;
+                    }
+                    if (ShortestPath(Path[i]).cost <= MovesLeft && i+1 == Path.Length)
+                    {
+                        foundPath = true;
+                        reachableTarget = Path[i];
+                    }
+                    else if (ShortestPath(Path[i]).cost <= MovesLeft && !(ShortestPath(Path[i + 1]).cost <= MovesLeft))
+                    {
+                        foundPath = true;
+                        reachableTarget = Path[i];
+                    }
+                    else
+                    {
+                        i++;
+                    }
                 }
-                else
-                {
-                    i++;
-                }
+                return reachableTarget;
             }
-            return reachableTarget;
+            else
+            {
+                return target;
+            }
         }
 
         /// <summary>
