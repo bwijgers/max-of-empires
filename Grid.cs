@@ -26,6 +26,17 @@ namespace MaxOfEmpires
             currentPlayer = true;
         }
 
+        public void CheckMoveUnit(Point newPos, Tile clickedTile)
+        {
+            if (!clickedTile.Occupied && SelectedTile.Unit.Move(newPos.X, newPos.Y))
+            {
+                clickedTile.SetUnit(SelectedTile.Unit);
+                SelectedTile.SetUnit(null);
+            }
+
+            SelectTile(InvalidTile);
+        }
+
         public override void Draw(GameTime time, SpriteBatch s)
         {
             base.Draw(time, s);
@@ -62,22 +73,16 @@ namespace MaxOfEmpires
                 // If the player had a tile selected and it contains a Unit...
                 if (SelectedTile != null && SelectedTile.Occupied)
                 {
-                    // ... move the Unit there, if the square is not occupied and the unit is capable...
-                    if (!clickedTile.Occupied && SelectedTile.Unit.Move(gridPos.X, gridPos.Y))
-                    {
-                        clickedTile.SetUnit(SelectedTile.Unit);
-                        SelectedTile.SetUnit(null);
-                    }
-
-                    // ... And set the selected tile back to an invalid tile.
-                    SelectTile(InvalidTile);
+                    // ... move the Unit there, if the square is not occupied and the unit is capable, then unselect the tile. 
+                    CheckMoveUnit(gridPos, clickedTile);
                     return;
                 }
+
+                // Check if the player clicked a tile with a Unit on it, and select it if it's there. 
                 else if (clickedTile.Occupied && clickedTile.Unit.Owner == currentPlayer && clickedTile.Unit.HasAction)
                 {
-                    // if it is, make sure the selected tile is the tile the player clicked, if there is a Unit here.
                     SelectTile(gridPos);
-                    this.walkablePositions = clickedTile.Unit.ReachableTiles();
+                    walkablePositions = clickedTile.Unit.ReachableTiles();
                 }
             }
         }
