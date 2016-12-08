@@ -1,4 +1,5 @@
 ﻿using MaxOfEmpires.GameObjects;
+using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -26,15 +27,16 @@ namespace MaxOfEmpires
             currentPlayer = true;
         }
 
-        public void CheckMoveUnit(Point newPos, Tile clickedTile)
+        public void CheckMoveUnit(Point newPos, Unit unit)
         {
-            if (!clickedTile.Occupied && SelectedTile.Unit.Move(newPos.X, newPos.Y))
+            Tile tile = (GameWorld as Grid)[newPos] as Tile;
+            Tile oriTile = (GameWorld as Grid)[unit.GridPos] as Tile;
+            if (!tile.Occupied && unit.Move(newPos.X, newPos.Y))
             {
-                clickedTile.SetUnit(SelectedTile.Unit);
-                SelectedTile.SetUnit(null);
+                tile.SetUnit(unit);
+                oriTile.SetUnit(null);
             }
 
-            SelectTile(InvalidTile);
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
@@ -74,7 +76,11 @@ namespace MaxOfEmpires
                 if (SelectedTile != null && SelectedTile.Occupied)
                 {
                     // ... move the Unit there, if the square is not occupied and the unit is capable, then unselect the tile. 
-                    CheckMoveUnit(gridPos, clickedTile);
+                    SelectedTile.Unit.setTarget = gridPos;
+                    Point movePos = SelectedTile.Unit.MoveTowardsTarget();
+                    CheckMoveUnit(movePos, SelectedTile.Unit);
+
+                    SelectTile(InvalidTile);
                     return;
                 }
 
@@ -125,6 +131,21 @@ namespace MaxOfEmpires
 
             // So the grid knows who is the current player. Useful for selecting units that are your own. 
             this.currentPlayer = player;
+
+            //makes the units go towards their target
+            ForEach((obj, x, y) => {
+                Tile tile = obj as Tile;
+                if(tile.Occupied)
+                {
+                    Units.Unit unit = tile.Unit;
+                    if(unit.Owner != player)
+                    {
+                        Point movePos = unit.MoveTowardsTarget();
+                        CheckMoveUnit(movePos, unit);
+                    }
+                }
+            });
+            
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace MaxOfEmpires.Units
     abstract partial class Unit:GameObjects.GameObject
     {
         private List<PathToTile> shortestPaths;
-
+        private Point target;
 
         private class PathToTile
         {
@@ -87,7 +87,7 @@ namespace MaxOfEmpires.Units
         public void GeneratePaths(Point startPosition)
         {
             List<PathToTile> newPaths;
-            PathToTile startPath = new PathToTile(startPosition, null, 0);
+            PathToTile startPath = new PathToTile(startPosition, new Point[0], 0);
             newPaths = new List<PathToTile>();
             shortestPaths = new List<PathToTile>();
             newPaths.Add(startPath);
@@ -116,6 +116,57 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
+        /// determines the furthest point it can move to.
+        /// </summary>
+        /// <returns>the furthest point it can move to</returns>
+        public Point MoveTowardsTarget()
+        {
+            if(((GameWorld as Grid)[target] as Tile).Occupied)
+            {
+                target = GridPos;
+            }
+            if (!(GridPos == target))
+            {
+                GeneratePaths(GridPos);
+                Point[] Path = ShortestPath(target).path;
+                Point temporalTarget = GridPos;
+                int i = 0;
+                bool foundPath = false;
+                Point reachableTarget = GridPos;
+                while (!foundPath)
+                {
+                    //if it can't move at all
+                    if(!(ShortestPath(Path[i]).cost <= MovesLeft))
+                    {
+                        return GridPos;
+                    }
+                    //if it can move until the end of the path
+                    if (ShortestPath(Path[i]).cost <= MovesLeft && i+1 == Path.Length)
+                    {
+                        foundPath = true;
+                        reachableTarget = Path[i];
+                    }
+                    //if it can only complete a part of the path
+                    else if (ShortestPath(Path[i]).cost <= MovesLeft && !(ShortestPath(Path[i + 1]).cost <= MovesLeft))
+                    {
+                        foundPath = true;
+                        reachableTarget = Path[i];
+                    }
+                    //take one more "step" on the path
+                    else
+                    {
+                        i++;
+                    }
+                }
+                return reachableTarget;
+            }
+            else
+            {
+                return target;
+            }
+        }
+
+        /// <summary>
         /// Returns the positions of all reachable tiles.
         /// </summary>
         /// <returns></returns>
@@ -130,6 +181,22 @@ namespace MaxOfEmpires.Units
             }
             return retVal;
         }
+
+
+        /// <summary>
+        /// Target location.
+        /// </summary>
+        public Point setTarget
+        {
+            set
+            {
+                if ((GameWorld as Grid).IsInGrid(value))
+                {
+                    target = value;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Returns the PathToTile to the specified coördinates.
