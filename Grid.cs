@@ -1,4 +1,5 @@
 ﻿using MaxOfEmpires.GameObjects;
+using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -26,7 +27,7 @@ namespace MaxOfEmpires
             currentPlayer = true;
         }
 
-        public void CheckMoveUnit(Point newPos, Units.Unit unit)
+        public void CheckMoveUnit(Point newPos, Unit unit)
         {
             Tile tile = (GameWorld as Grid)[newPos] as Tile;
             Tile oriTile = (GameWorld as Grid)[unit.GridPos] as Tile;
