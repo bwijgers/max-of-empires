@@ -44,12 +44,31 @@ namespace MaxOfEmpires
             this.x = x;
             this.y = y;
         }
+        /// <summary>
+        /// The movement cost for a specified Unit to move to this Tile.
+        /// </summary>
+        /// <param name="unit">The Unit for which you want to know the movement cost.</param>
+        /// <returns>The movement cost on this Tile for the specified Unit.</returns>
+        public int Cost(Unit unit)
+        {
+            return 1;
+        }
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
             terrain.Draw(x, y, s);
             building?.Draw(time, s);
             unit?.Draw(time, s);
+        }
+
+        /// <summary>
+        /// Whether or not this Tile is passable for a certain unit. 
+        /// </summary>
+        /// <param name="unit">The Unit for which you want to know if this Tile is passable.</param>
+        /// <returns>True if the Unit can pass through this Tile, false otherwise.</returns>
+        public bool Passable(Unit unit)
+        {
+            return !Occupied || Unit.Owner == unit.Owner;
         }
 
         /// <summary>
