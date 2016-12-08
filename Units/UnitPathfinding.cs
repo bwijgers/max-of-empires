@@ -10,7 +10,7 @@ namespace MaxOfEmpires.Units
     abstract partial class Unit:GameObjects.GameObject
     {
         private List<PathToTile> shortestPaths;
-
+        private Point target;
 
         private class PathToTile
         {
@@ -116,6 +116,33 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
+        /// determines the furthest point it can move to.
+        /// </summary>
+        /// <returns>the furthest point it can move to</returns>
+        public Point MoveTowardsTarget()
+        {
+            GeneratePaths(GridPos);
+            Point[] Path = ShortestPath(target).path;
+            Point temporalTarget = GridPos;
+            int i = 0;
+            bool foundPath = false;
+            Point reachableTarget = GridPos;
+            while (!foundPath)
+            {
+                if (ShortestPath(Path[i]).cost <= MovesLeft && (!(ShortestPath(Path[i + 1]).cost <= MovesLeft) || i == Path.Length))
+                {
+                    foundPath = true;
+                    reachableTarget = Path[i];
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            return reachableTarget;
+        }
+
+        /// <summary>
         /// Returns the positions of all reachable tiles.
         /// </summary>
         /// <returns></returns>
@@ -130,6 +157,22 @@ namespace MaxOfEmpires.Units
             }
             return retVal;
         }
+
+
+        /// <summary>
+        /// Target location.
+        /// </summary>
+        public Point setTarget
+        {
+            set
+            {
+                if ((GameWorld as Grid).IsInGrid(value))
+                {
+                    target = value;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Returns the PathToTile to the specified coördinates.
