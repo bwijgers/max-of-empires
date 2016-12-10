@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Ebilkill.Gui;
 
 namespace MaxOfEmpires.Units
 {
@@ -127,8 +128,49 @@ namespace MaxOfEmpires.Units
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
+            // Draw the Unit based on whether it still has moves left; gray if there are no moves left.
             Color drawColor = HasMoved ? Color.Gray : Color.White;
             s.Draw(texture, DrawPos, drawColor);
+
+            // Draw a health bar
+            DrawHealthBar(s);
+        }
+
+        /// <summary>
+        /// Draws a healthbar for this Unit.
+        /// </summary>
+        /// <param name="s">The spritebatch to draw with.</param>
+        private void DrawHealthBar(SpriteBatch s)
+        {
+            DrawingHelper.Instance.DrawRectangle(s, GetRectangleHealthBar(true), Color.Red);
+            DrawingHelper.Instance.DrawRectangle(s, GetRectangleHealthBar(false), Color.Blue);
+        }
+
+        /// <summary>
+        /// A rectangle for drawing the healthbar. Returns the width based on whether it's the foreground or background of the bar.
+        /// </summary>
+        /// <param name="background">Whether this is the foreground or the background layer of the healthbar.</param>
+        /// <returns>The Rectangle on which this layer of the healthbar should be drawn.</returns>
+        private Rectangle GetRectangleHealthBar(bool background)
+        {
+            // Base coords
+            int x = (int) DrawPos.X;
+            int y = (int)DrawPos.Y + 26;
+
+            // Base sizes
+            int height = 6;
+            int width = 32;
+
+            // Makes the foreground smaller based on hp/maxhp
+            if (!background)
+            {
+                double widthMult = stats.hp;
+                widthMult /= stats.maxHp;
+                width = (int) (width * widthMult);
+            }
+
+            // Returns the calculated Rectangle
+            return new Rectangle(x, y, width, height);
         }
 
         public bool IsInRange(Point p)
