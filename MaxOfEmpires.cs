@@ -15,7 +15,7 @@ namespace MaxOfEmpires
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private InputHelper inputHelper;
-        private static Random random = new Random();
+        private static Random random = new Random((int) DateTime.Now.Ticks);
 
         public MaxOfEmpires()
         {
