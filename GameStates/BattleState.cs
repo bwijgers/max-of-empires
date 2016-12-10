@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using Ebilkill.Gui.Elements;
+using MaxOfEmpires.Units;
 
 namespace MaxOfEmpires.GameStates
 {
@@ -59,11 +60,23 @@ namespace MaxOfEmpires.GameStates
             // Handle input for the grid (things like moving and attacking units)
             battleGrid.HandleInput(helper, manager);
 
-            // Get the tile the mouse is over, and show the Unit's information. 
-            Tile t = battleGrid.GetTileUnderMouse(helper);
-            if (t != null)
+            // Get the selected Unit
+            Unit u = battleGrid.SelectedTile?.Unit;
+
+            // Print the selected Unit's information, if it exists
+            if (u != null)
             {
-                overlay.PrintUnitInfo(t.Unit);
+                overlay.PrintUnitInfo(u);
+            }
+            // if there is no selected Unit...
+            else
+            {
+                // ... get the tile the mouse is over, and show the Unit's information, if this Unit exists. 
+                Tile t = battleGrid.GetTileUnderMouse(helper);
+                if (t != null)
+                {
+                    overlay.PrintUnitInfo(t.Unit);
+                }
             }
 
             // Update the overlay
