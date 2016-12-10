@@ -104,27 +104,32 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
-        /// Returns the Building built on this Tile.
+        /// The Building built on this Tile.
         /// </summary>
         public Building Building => building;
 
         /// <summary>
-        /// Checks whether there is a Building on this Tile.
+        /// Whether there is a Building on this Tile.
         /// </summary>
         public bool BuiltOn => building != null;
 
         /// <summary>
-        /// Checks whether there is a Unit on this Tile.
+        /// The position in the Grid of this Tile.
+        /// </summary>
+        public Point GridPos => new Point(x, y);
+
+        /// <summary>
+        /// Whether there is a Unit on this Tile.
         /// </summary>
         public bool Occupied => Unit != null;
 
         /// <summary>
-        /// Returns the Terrain of this Tile.
+        /// The Terrain of this Tile.
         /// </summary>
         public Terrain Terrain => terrain;
 
         /// <summary>
-        /// Returns the Unit occupying this Tile.
+        /// The Unit occupying this Tile.
         /// </summary>
         public Unit Unit
         {

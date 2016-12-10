@@ -56,7 +56,17 @@ namespace MaxOfEmpires.GameStates
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
         {
+            // Handle input for the grid (things like moving and attacking units)
             battleGrid.HandleInput(helper, manager);
+
+            // Get the tile the mouse is over, and show the Unit's information. 
+            Tile t = battleGrid.GetTileUnderMouse(helper);
+            if (t != null)
+            {
+                overlay.PrintUnitInfo(t.Unit);
+            }
+
+            // Update the overlay
             overlay.update(helper);
         }
 

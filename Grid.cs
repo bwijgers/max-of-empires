@@ -76,6 +76,30 @@ namespace MaxOfEmpires
             return true;
         }
 
+        /// <summary>
+        /// Finds a Tile under the mouse within this Grid.
+        /// </summary>
+        /// <param name="helper">The InputHelper. Used for mouse position.</param>
+        /// <param name="onClick">Whether this is called on click. Used to see if a Tile should be deselected.</param>
+        /// <returns>The Tile under the mouse, or null if there is no such Tile.</returns>
+        public Tile GetTileUnderMouse(InputHelper helper, bool onClick = false)
+        {
+            // Get the current grid position the player clicked at
+            Point gridPos = (helper.MousePosition / 32).ToPoint();
+
+            // Just unselect this tile if the user clicks this again.
+            if (gridPos.Equals(selectedTile) && onClick)
+            {
+                SelectTile(InvalidTile);
+                return null;
+            }
+
+            // If the tile doesn't exist, return null as well. This is checked implicitly.
+            // Get the tile that is hovered over
+            Tile clickedTile = this[gridPos] as Tile;
+            return clickedTile;
+        }
+
         public override void Draw(GameTime time, SpriteBatch s)
         {
             base.Draw(time, s);
@@ -96,27 +120,21 @@ namespace MaxOfEmpires
             // Check if the player clicked
             if (helper.MouseLeftButtonPressed)
             {
-                // Get the current grid position the player clicked at
-                Point gridPos = (helper.MousePosition / 32).ToPoint();
+                // Get the current Tile under the mouse
+                Tile clickedTile = GetTileUnderMouse(helper, true);
 
-                // Just unselect this tile if the user clicks this again.
-                if (gridPos.Equals(selectedTile) || !IsInGrid(gridPos))
-                {
-                    SelectTile(InvalidTile);
+                // Do nothing if there is no clicked tile.
+                if (clickedTile == null)
                     return;
-                }
-
-                // Get the tile that was clicked
-                Tile clickedTile = this[gridPos] as Tile;
 
                 // If the player had a tile selected and it contains a Unit...
                 if (SelectedTile != null && SelectedTile.Occupied)
                 {
                     // ... move the Unit there, if the square is not occupied and the unit is capable, then unselect the tile.
-                    SelectedTile.Unit.setTarget = gridPos;
+                    SelectedTile.Unit.setTarget = clickedTile.GridPos;
                     Point movePos = SelectedTile.Unit.MoveTowardsTarget();
 
-                    if(CheckMoveUnit(movePos, SelectedTile.Unit) || CheckAttackUnit(gridPos, SelectedTile.Unit))
+                    if(CheckMoveUnit(movePos, SelectedTile.Unit) || CheckAttackUnit(clickedTile.GridPos, SelectedTile.Unit))
                     {
                         SelectTile(InvalidTile);
                         return;
@@ -126,7 +144,7 @@ namespace MaxOfEmpires
                 // Check if the player clicked a tile with a Unit on it, and select it if it's there. 
                 else if (clickedTile.Occupied && clickedTile.Unit.Owner == currentPlayer && clickedTile.Unit.HasAction)
                 {
-                    SelectTile(gridPos);
+                    SelectTile(clickedTile.GridPos);
                     walkablePositions = clickedTile.Unit.ReachableTiles();
                 }
             }
