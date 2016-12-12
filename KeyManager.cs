@@ -42,6 +42,25 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
+        /// Checks whether the a certain key on the keyboard was pressed during last update.
+        /// </summary>
+        /// <param name="name">The name of the key to check for.</param>
+        /// <param name="helper">The InputHelper to use for keyboard input.</param>
+        /// <returns>True if the specified key was pressed, false otherwise.</returns>
+        /// <exception cref="ArgumentException">When the specified name is not found.</exception>
+        public bool KeyPressed(string name, InputHelper helper)
+        {
+            // Make sure the name supplied is registered
+            if(!keysByName.ContainsKey(name))
+            {
+                throw new ArgumentException("Key '" + name + "' was not registered but was asked for.");
+            }
+
+            // Return whether the specified key was pressed this update.
+            return helper.KeyPressed(keysByName[name]);
+        }
+
+        /// <summary>
         /// Registers a key to a name and a handler.
         /// </summary>
         /// <param name="name">The name to register the key by.</param>

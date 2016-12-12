@@ -169,7 +169,7 @@ namespace MaxOfEmpires
             }
 
             // Check if the overlays should be rendered.
-            if(keyManager.IsKeyDown("unitTargetOverlay", helper))
+            if(keyManager.KeyPressed("unitTargetOverlay", helper))
             {
                 CreateUnitTargetOverlays();
             }
