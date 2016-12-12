@@ -81,7 +81,7 @@ namespace MaxOfEmpires.Units
                 return;
 
             // Enemy can retaliate. Right?
-            if (enemy.IsInRange(GridPos))
+            if (enemy.IsInRange(PositionInGrid))
             {
                 // Okay, retaliate. 
                 enemy.DealDamage(this);
@@ -224,7 +224,7 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The position in the Grid this Unit occupies.
         /// </summary>
-        public Point GridPos
+        public Point PositionInGrid
         {
             get
             {

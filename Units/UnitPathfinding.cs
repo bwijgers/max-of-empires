@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Units
 {
-    abstract partial class Unit:GameObjects.GameObject
+    abstract partial class Unit : GameObjects.GameObject
     {
         private List<PathToTile> shortestPaths;
         private Point target;
@@ -27,14 +27,14 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
-        /// adds the paths to the tiles surrounding the specified tile to the list.
+        /// Adds the paths to the tiles surrounding the specified tile to the list.
         /// </summary>
-        /// <param name="startPath">PathToTile to the tile from which you want the neighboring tiles</param>
+        /// <param name="startPath">PathToTile to the tile from which you want the neighboring tiles.</param>
         private void AddSurroundingTiles(PathToTile startPath, List<PathToTile> newPaths)
         {
             List<PathToTile> returnList = new List<PathToTile>();
 
-            //Creates list of points and fills it with the points surrounding the starttile
+            // Creates list of points and fills it with the points surrounding the starttile
             List<Point> surroundingPoints = new List<Point>();
             surroundingPoints.Add(startPath.target + new Point(1, 0));
             surroundingPoints.Add(startPath.target + new Point(0, 1));
@@ -51,7 +51,7 @@ namespace MaxOfEmpires.Units
                 Tile tile = (GameWorld as Grid)[p] as Tile;
                 if (tile.Passable(this))
                 {
-                    //forms new path to each point
+                    // Forms new path to each point
                     int startPathLength = startPath.path == null ? 0 : startPath.path.Length;
                     Point[] pathAsPoints = new Point[startPathLength + 1];
                     startPath.path?.CopyTo(pathAsPoints, 0);
@@ -60,7 +60,7 @@ namespace MaxOfEmpires.Units
                     PathToTile newPathToTile = new PathToTile(p, pathAsPoints, cost);
                     PathToTile shortestPathToTile = shortestPaths.Find(path => path.target.Equals(p));
                     
-                    //if the current found path is shorter than an existent path, overrides it.
+                    // If the current found path is shorter than an existent path, overrides it.
                     if (shortestPathToTile != null)
                     {
                         if (cost < shortestPathToTile.cost)
@@ -70,7 +70,7 @@ namespace MaxOfEmpires.Units
                             shortestPaths.Add(newPathToTile);
                         }
                     }
-                    //if there is no known path to the specified point, adds this path to the list.
+                    // If there is no known path to the specified point, adds this path to the list.
                     else
                     {
                         newPaths.Add(newPathToTile);
@@ -116,43 +116,48 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
-        /// determines the furthest point it can move to.
+        /// Determines the furthest point it can move to.
         /// </summary>
-        /// <returns>the furthest point it can move to</returns>
+        /// <returns>The furthest point it can move to</returns>
         public Point MoveTowardsTarget()
         {
+            // If the target tile is occupied, unset target. 
             if(((GameWorld as Grid)[target] as Tile).Occupied)
             {
-                target = GridPos;
+                target = PositionInGrid;
+                return target;
             }
-            if (!(GridPos == target))
+
+            if (PositionInGrid != target)
             {
-                GeneratePaths(GridPos);
+                GeneratePaths(PositionInGrid);
                 Point[] Path = ShortestPath(target).path;
-                Point temporalTarget = GridPos;
                 int i = 0;
                 bool foundPath = false;
-                Point reachableTarget = GridPos;
+                Point reachableTarget = PositionInGrid;
                 while (!foundPath)
                 {
-                    //if it can't move at all
-                    if(!(ShortestPath(Path[i]).cost <= MovesLeft))
+                    // If it can't move at all
+                    if (ShortestPath(Path[i]).cost > MovesLeft)
                     {
-                        return GridPos;
+                        return PositionInGrid;
                     }
-                    //if it can move until the end of the path
+
+                    // If it can move until the end of the path
                     if (ShortestPath(Path[i]).cost <= MovesLeft && i+1 == Path.Length)
                     {
                         foundPath = true;
                         reachableTarget = Path[i];
                     }
-                    //if it can only complete a part of the path
-                    else if (ShortestPath(Path[i]).cost <= MovesLeft && !(ShortestPath(Path[i + 1]).cost <= MovesLeft))
+
+                    // If it can only complete a part of the path
+                    else if (ShortestPath(Path[i]).cost <= MovesLeft && ShortestPath(Path[i + 1]).cost > MovesLeft)
                     {
                         foundPath = true;
                         reachableTarget = Path[i];
                     }
-                    //take one more "step" on the path
+
+                    // Take one more "step" on the path
                     else
                     {
                         i++;
@@ -167,12 +172,12 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
-        /// Returns the positions of all reachable tiles.
+        /// Gets the position of all the Tiles this Unit can reach with the moves left this turn.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>All reachable Tiles this turn/</returns>
         public Point[] ReachableTiles()
         {
-            GeneratePaths(GridPos);
+            GeneratePaths(PositionInGrid);
             List<PathToTile> reachablePaths = shortestPaths.FindAll(path => path.cost <= MovesLeft);
             Point[] retVal = new Point[reachablePaths.Count];
             for (int i = 0; i < reachablePaths.Count; i++)
@@ -182,22 +187,6 @@ namespace MaxOfEmpires.Units
             return retVal;
         }
 
-
-        /// <summary>
-        /// Target location.
-        /// </summary>
-        public Point setTarget
-        {
-            set
-            {
-                if ((GameWorld as Grid).IsInGrid(value))
-                {
-                    target = value;
-                }
-            }
-        }
-
-
         /// <summary>
         /// Returns the PathToTile to the specified coördinates.
         /// </summary>
@@ -206,6 +195,24 @@ namespace MaxOfEmpires.Units
         private PathToTile ShortestPath(Point p)
         {
             return shortestPaths.Find(path => path.target.Equals(p));
+        }
+
+        /// <summary>
+        /// Target location.
+        /// </summary>
+        public Point TargetPosition
+        {
+            get
+            {
+                return target;
+            }
+            set
+            {
+                if ((GameWorld as Grid).IsInGrid(value))
+                {
+                    target = value;
+                }
+            }
         }
     }
 }

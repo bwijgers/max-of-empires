@@ -14,12 +14,31 @@ namespace MaxOfEmpires
         /// </summary>
         public delegate void KeyPressHandler();
         private Dictionary<string, KeyPressHandler> keyHandlers;
-        private Dictionary<Keys, string> keysByName;
+        private Dictionary<string, Keys> keysByName;
         
         private KeyManager()
         {
             keyHandlers = new Dictionary<string, KeyPressHandler>();
-            keysByName = new Dictionary<Keys, string>();
+            keysByName = new Dictionary<string, Keys>();
+        }
+
+        /// <summary>
+        /// Checks whether the a certain key on the keyboard is currently down.
+        /// </summary>
+        /// <param name="name">The name of the key to check for.</param>
+        /// <param name="helper">The InputHelper to use for keyboard input.</param>
+        /// <returns>True if the specified key is down, false otherwise.</returns>
+        /// <exception cref="ArgumentException">When the specified name is not found.</exception>
+        public bool IsKeyDown(string name, InputHelper helper)
+        {
+            // Make sure the name supplied is registered.
+            if (!keysByName.ContainsKey(name))
+            {
+                throw new ArgumentException("Key '" + name + "' was not registered but was asked for.");
+            }
+
+            // Return whether the specified key is down.
+            return helper.IsKeyDown(keysByName[name]);
         }
 
         /// <summary>
@@ -36,42 +55,21 @@ namespace MaxOfEmpires
             }
              
             // Make sure the key was not yet registered
-            if (keysByName.ContainsKey(key))
+            if (keysByName.ContainsKey(name))
                 throw new ArgumentException("Key '" + key.ToString() + "' was already registered. ");
 
             // Make sure the key's name was not yet registered
-            if (keysByName.ContainsValue(name))
+            if (keysByName.ContainsValue(key))
                 throw new ArgumentException("Key name '" + name + "' was already registered. ");
 
             // Register this key-name pair
-            keysByName[key] = name;
+            keysByName[name] = key;
             keyHandlers[name] = handler;
         }
 
         public void RegisterKey(string name, Keys key)
         {
-            keysByName.Add(key, name);
-        }
-
-        /// <summary>
-        /// Checks for every registered key whether it has been pressed, and execute the corresponding handlers if they are.
-        /// </summary>
-        /// <param name="time">The time that has passed since last update.</param>
-        /// <param name="helper">The <code>InputHelper</code> to check key presses with.</param>
-        public void Update(GameTime time, InputHelper helper)
-        {
-            // Check for every registered key... 
-            foreach (Keys k in keysByName.Keys)
-            {
-                // ... whether it has been pressed... 
-                if (helper.KeyPressed(k))
-                {
-                    // ... and execute the corresponding handler
-                    string keyName = keysByName[k];
-                    KeyPressHandler handler = keyHandlers[keyName];
-                    handler();
-                }
-            }
+            keysByName.Add(name, key);
         }
 
         public static KeyManager Instance => manager;

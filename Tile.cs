@@ -87,7 +87,7 @@ namespace MaxOfEmpires
             // Set the unit's position and parent, if it is not null
             if(unit != null)
             {
-                unit.GridPos = new Point(x, y);
+                unit.PositionInGrid = new Point(x, y);
                 unit.Parent = this;
             }
         }
