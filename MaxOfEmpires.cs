@@ -104,7 +104,7 @@ namespace MaxOfEmpires
 
         private void InitializeKeys()
         {
-
+            KeyManager.Instance.RegisterKey("unitTargetOverlay", Keys.T);
         }
 
         public static Random Random => random;

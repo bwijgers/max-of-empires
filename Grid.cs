@@ -19,12 +19,21 @@ namespace MaxOfEmpires
         /// </summary>
         private Point selectedTile;
 
+        /// <summary>
+        /// The current Unit targets that are displayed.
+        /// </summary>
+        private GameObjectList unitTargets;
+
+        /// <summary>
+        /// The positions the currently selected Unit can walk to.
+        /// </summary>
         private Point[] walkablePositions;
 
         public Grid(int width, int height, string id = "") : base(width, height, id)// TODO: make this load from a file or something similar
         {
             selectedTile = InvalidTile;
             currentPlayer = true;
+            unitTargets = new GameObjectList();
         }
 
         /// <summary>
@@ -82,6 +91,24 @@ namespace MaxOfEmpires
             return true;
         }
 
+        private void CreateUnitTargetOverlays()
+        {
+            ForEach((obj, x, y) => {
+                Tile t = obj as Tile;
+
+                // If there is a Unit on this Tile and their target is not where they are
+                if (t.Occupied && t.Unit.TargetPosition != t.Unit.PositionInGrid)
+                {
+                    // Recalculate the Unit's paths
+                    t.Unit.GeneratePaths(new Point(x, y));
+
+                    // Make a UnitTargetOverlay for this and add it to the list of overlays
+                    UnitTargetOverlay uto = new UnitTargetOverlay(t.Unit);
+                    unitTargets.Add(uto);
+                }
+            });
+        }
+
         public override void Draw(GameTime time, SpriteBatch s)
         {
             base.Draw(time, s);
@@ -95,6 +122,9 @@ namespace MaxOfEmpires
                 foreach (Point p in walkablePositions)
                     Ebilkill.Gui.DrawingHelper.Instance.DrawRectangle(s, new Rectangle(new Point(p.X * 32, p.Y * 32), new Point(32)), new Color(0x00, 0x00, 0xFF, 0x88));
             }
+
+            // Draw the Unit target overlay, if it exists
+            unitTargets.Draw(time, s);
         }
 
         /// <summary>
@@ -127,6 +157,12 @@ namespace MaxOfEmpires
             if (helper.MouseLeftButtonPressed)
             {
                 OnLeftClick(helper);
+            }
+
+            // Check if the overlays should be rendered.
+            if(keyManager.IsKeyDown("unitTargetOverlay", helper))
+            {
+                CreateUnitTargetOverlays();
             }
         }
 
@@ -213,7 +249,24 @@ namespace MaxOfEmpires
                     }
                 }
             });
-            
+        }
+
+        public override void Update(GameTime time)
+        {
+            base.Update(time);
+
+            // Updates the Unit target overlay
+            unitTargets.Update(time);
+
+            // Remove unitTargets that are done
+            unitTargets.ForEach(obj => {
+                UnitTargetOverlay uto = obj as UnitTargetOverlay;
+
+                if (uto.Finished)
+                {
+                    unitTargets.RemoveChild(obj);
+                }
+            });
         }
 
         /// <summary>

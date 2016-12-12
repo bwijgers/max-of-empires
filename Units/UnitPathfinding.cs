@@ -12,7 +12,7 @@ namespace MaxOfEmpires.Units
         private List<PathToTile> shortestPaths;
         private Point target;
 
-        private class PathToTile
+        public class PathToTile
         {
             public Point target;
             public Point[] path;
@@ -190,9 +190,9 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// Returns the PathToTile to the specified coördinates.
         /// </summary>
-        /// <param name="p">Point to which you need a path</param>
+        /// <param name="p">Point to which you need a path.</param>
         /// <returns></returns>
-        private PathToTile ShortestPath(Point p)
+        public PathToTile ShortestPath(Point p)
         {
             return shortestPaths.Find(path => path.target.Equals(p));
         }

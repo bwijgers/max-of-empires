@@ -18,7 +18,7 @@ namespace MaxOfEmpires.GameObjects
         /// </summary>
         /// <param name="obj">The current GameObject in the iteration of all elements of this list.</param>
         /// <see cref="ForEach(ListFunc)"/>
-        private delegate void ListFunc(GameObject obj);
+        public delegate void ListFunc(GameObject obj);
 
         /// <summary>
         /// The list of all GameObjects contained by this list.
@@ -49,7 +49,7 @@ namespace MaxOfEmpires.GameObjects
             ForEach(child => child?.Draw(time, s));
         }
 
-        private void ForEach(ListFunc func)
+        public void ForEach(ListFunc func)
         {
             for (int i = children.Count - 1; i >= 0; --i)
             {
@@ -95,5 +95,7 @@ namespace MaxOfEmpires.GameObjects
             // Updating this list means just update all children.
             ForEach(child => child?.Update(time));
         }
+
+        protected int Count => children.Count;
     }
 }

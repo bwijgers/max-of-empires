@@ -68,6 +68,8 @@
     <Compile Include="Terrain.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Units\UnitPathfinding.cs" />
+    <Compile Include="Units\UnitTargetOverlay.cs" />
+    <Compile Include="Units\UnitTargetParticle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
