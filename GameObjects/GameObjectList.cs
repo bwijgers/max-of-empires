@@ -49,6 +49,10 @@ namespace MaxOfEmpires.GameObjects
             ForEach(child => child?.Draw(time, s));
         }
 
+        /// <summary>
+        /// Executes a specified void function for each GameObject in this GameObjectList.
+        /// </summary>
+        /// <param name="func">The function to execute.</param>
         public void ForEach(ListFunc func)
         {
             for (int i = children.Count - 1; i >= 0; --i)
@@ -96,6 +100,9 @@ namespace MaxOfEmpires.GameObjects
             ForEach(child => child?.Update(time));
         }
 
+        /// <summary>
+        /// The amount of children this GameObjectList currently has. 
+        /// </summary>
         protected int Count => children.Count;
     }
 }

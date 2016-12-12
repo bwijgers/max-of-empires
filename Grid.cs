@@ -56,6 +56,12 @@ namespace MaxOfEmpires
             return false;
         }
 
+        /// <summary>
+        /// Checks whether a Unit can attack a Unit at the specified tile, and attacks it if it's possible.
+        /// </summary>
+        /// <param name="newPos">The position for the Unit to attack.</param>
+        /// <param name="unit">The Unit which attacks.</param>
+        /// <returns>True if the Unit attacked, false otherwise.</returns>
         public bool CheckAttackUnit(Point tileToAttack, Unit attackingUnit)
         {
             // Cannot attack more than once a turn. 
@@ -73,7 +79,7 @@ namespace MaxOfEmpires
             // Make sure the attack square is in range of the attacking unit
             if (!attackingUnit.IsInRange(tileToAttack))
             {
-                return false;
+                return false; // Enemy not in range
             }
 
             // We can actually attack this? Nice :D
@@ -91,6 +97,9 @@ namespace MaxOfEmpires
             return true;
         }
 
+        /// <summary>
+        /// Creates Unit target overlays, showing players where Units are headed.
+        /// </summary>
         private void CreateUnitTargetOverlays()
         {
             ForEach((obj, x, y) => {
@@ -185,6 +194,10 @@ namespace MaxOfEmpires
             (this[10, 10] as Tile).SetUnit(new Units.Swordsman(10, 10, false));
         }
 
+        /// <summary>
+        /// Executed when the player left-clicks on the grid.
+        /// </summary>
+        /// <param name="helper">The InputHelper used for mouse input.</param>
         private void OnLeftClick(InputHelper helper)
         {
             // Get the current Tile under the mouse

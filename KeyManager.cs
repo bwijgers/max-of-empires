@@ -67,6 +67,11 @@ namespace MaxOfEmpires
             keyHandlers[name] = handler;
         }
 
+        /// <summary>
+        /// Registers a key with a name, but without a handler.
+        /// </summary>
+        /// <param name="name">The name to register the key under.</param>
+        /// <param name="key">The key to register.</param>
         public void RegisterKey(string name, Keys key)
         {
             keysByName.Add(name, key);

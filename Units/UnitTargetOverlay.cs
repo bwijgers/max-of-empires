@@ -34,6 +34,9 @@ namespace MaxOfEmpires.Units
             doneParticles = false;
         }
 
+        /// <summary>
+        /// Draws a particle at the current position. Also updates the center of the next square to move to, or stops when done.
+        /// </summary>
         private void DrawNextParticle()
         {
             // If we're done with all particles, this should not be called.
@@ -58,10 +61,14 @@ namespace MaxOfEmpires.Units
                 nextEnd = ToDrawPos(path.path[indexInPath]);
             }
 
+            // Move towards the next square and add a particle.
             MoveTowardsNextEnd();
             Add(new UnitTargetParticle(drawPos));
         }
 
+        /// <summary>
+        /// Moves the internal position closer towards the center of the next square along the path.
+        /// </summary>
         private void MoveTowardsNextEnd()
         {
             // Get the direction from where we are to the next end.
@@ -82,6 +89,11 @@ namespace MaxOfEmpires.Units
             drawPos = newDrawPos;
         }
 
+        /// <summary>
+        /// Converts a Point representing a Grid square to a point to draw a UnitTargetParticle.
+        /// </summary>
+        /// <param name="gridPos">The Grid square to convert.</param>
+        /// <returns>The drawing position for a particle.</returns>
         private Vector2 ToDrawPos(Point gridPos)
         {
             Vector2 retVal = gridPos.ToVector2();
