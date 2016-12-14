@@ -39,6 +39,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
+    <Compile Include="GameObjects\GameObjectAnimated.cs" />
+    <Compile Include="GameObjects\GameObjectDrawable.cs" />
     <Compile Include="GameStates\BattleState.cs" />
     <Compile Include="Building.cs" />
     <Compile Include="GameStates\Overlays\OverlayBattleState.cs" />

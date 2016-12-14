@@ -10,7 +10,7 @@ using Ebilkill.Gui;
 
 namespace MaxOfEmpires.Units
 {
-    abstract partial class Unit : GameObject
+    abstract partial class Unit : GameObjectDrawable
     {
         /// <summary>
         /// Whether this unit has attacked. Units can only attack once.
@@ -35,11 +35,6 @@ namespace MaxOfEmpires.Units
         /// <see cref="Units.Stats"/>
         private Stats stats;
 
-        /// <summary>
-        /// The texture of this Unit.
-        /// </summary>
-        private Texture2D texture;
-
         private int x;
         private int y; // The x and y coords of this Unit. Used for drawing and moving.
 
@@ -50,13 +45,13 @@ namespace MaxOfEmpires.Units
             this.owner = owner;
             target = new Point(x, y);
 
-        // Get the texture based on the player (blue for p1, red for p2)
-        StringBuilder texName = new StringBuilder();
+            // Get the texture based on the player (blue for p1, red for p2)
+            StringBuilder texName = new StringBuilder();
             texName.Append(@"FE-Sprites\").Append(resName).Append('_');
             texName.Append(owner ? "blue" : "red");
 
             // Load the Unit's texture based on the name supplied and the player controlling the unit.
-            texture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString()); 
+            DrawingTexture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString());
         }
 
         public void Attack(Point attackPos)
@@ -129,8 +124,8 @@ namespace MaxOfEmpires.Units
         public override void Draw(GameTime time, SpriteBatch s)
         {
             // Draw the Unit based on whether it still has moves left; gray if there are no moves left.
-            Color drawColor = HasMoved ? Color.Gray : Color.White;
-            s.Draw(texture, DrawPos, drawColor);
+            DrawColor = HasMoved ? Color.Gray : Color.White;
+            base.Draw(time, s);
 
             // Draw a health bar
             DrawHealthBar(s);
@@ -154,8 +149,8 @@ namespace MaxOfEmpires.Units
         private Rectangle GetRectangleHealthBar(bool background)
         {
             // Base coords
-            int x = (int) DrawPos.X;
-            int y = (int)DrawPos.Y + 26;
+            int x = (int)DrawPosition.X;
+            int y = (int)DrawPosition.Y + 26;
 
             // Base sizes
             int height = 6;
@@ -166,7 +161,7 @@ namespace MaxOfEmpires.Units
             {
                 double widthMult = stats.hp;
                 widthMult /= stats.maxHp;
-                width = (int) (width * widthMult);
+                width = (int)(width * widthMult);
             }
 
             // Returns the calculated Rectangle
@@ -194,10 +189,10 @@ namespace MaxOfEmpires.Units
             }
 
             // Get the distance to the specified position.
-            int distance = ShortestPath(new Point(x,y)).cost;
+            int distance = ShortestPath(new Point(x, y)).cost;
 
             // Check if we can move to this position before actually just moving there. CanMoveTo decrements MovesLeft as well, if it is possible to move to the position.
-            if(distance <= movesLeft)
+            if (distance <= movesLeft)
             {
                 this.x = x;
                 this.y = y;
@@ -209,7 +204,7 @@ namespace MaxOfEmpires.Units
 
         public override void TurnUpdate(uint turn, bool player)
         {
-            if(owner == player)
+            if (owner == player)
             {
                 movesLeft = moveSpeed;
             }
@@ -219,8 +214,13 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The position to draw this Unit at. Returns the top-left-most pixel to draw at.
         /// </summary>
-        public Vector2 DrawPos => new Vector2(x * texture.Width, y * texture.Height);
-
+        public override Vector2 DrawPosition
+        {
+            get
+            {
+                return new Vector2(x * DrawingTexture.Width, y * DrawingTexture.Height);
+            }
+        }
         /// <summary>
         /// The position in the Grid this Unit occupies.
         /// </summary>

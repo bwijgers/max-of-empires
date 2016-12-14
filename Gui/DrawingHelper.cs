@@ -11,7 +11,7 @@ namespace Ebilkill.Gui
     public class DrawingHelper
     {
         private static DrawingHelper instance;
-        private Texture2D whiteTex;
+        private static Texture2D whiteTex;
 
         public static void Init(GraphicsDevice gd)
         {
@@ -19,8 +19,8 @@ namespace Ebilkill.Gui
                 return;
 
             instance = new DrawingHelper();
-            instance.whiteTex = new Texture2D(gd, 1, 1);
-            instance.whiteTex.SetData(new Color[] { new Color(255, 255, 255, 255) });
+            whiteTex = new Texture2D(gd, 1, 1);
+            whiteTex.SetData(new Color[] { new Color(255, 255, 255, 255) });
         }
 
         private DrawingHelper()
@@ -36,5 +36,7 @@ namespace Ebilkill.Gui
         }
 
         public static DrawingHelper Instance => instance;
+
+        public static Texture2D PixelTexture => whiteTex;
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Units
 {
-    abstract partial class Unit : GameObjects.GameObject
+    abstract partial class Unit : GameObjects.GameObjectDrawable
     {
         private List<PathToTile> shortestPaths;
         private Point target;
