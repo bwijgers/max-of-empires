@@ -36,17 +36,13 @@ namespace MaxOfEmpires.GameStates
         {
             // Initialize the battlefield.
             battleGrid = new Grid(15, 15);
-            battleGrid.InitField();
 
             // Initialize the overlay.
             overlay = new Overlays.OverlayBattleState();
             InitOverlay();
 
-            // Player 1 starts.
-            currentPlayer = true;
-
-            // Turn number starts at 1.
-            turnNum = 1;
+            // Reset ourselves
+            Reset();
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
@@ -98,6 +94,8 @@ namespace MaxOfEmpires.GameStates
         public void TurnUpdate()
         {
             currentPlayer = !currentPlayer;
+            if (currentPlayer)
+                ++turnNum;
             battleGrid.TurnUpdate(turnNum, currentPlayer);
 
             overlay.labelCurrentPlayer.setLabelText("Current player: " + (currentPlayer ? "Blue" : "Red"));
@@ -111,6 +109,22 @@ namespace MaxOfEmpires.GameStates
                 shouldTurnUpdate = false;
                 TurnUpdate();
             }
+        }
+
+        public override void Reset()
+        {
+            // Initialize the field
+            battleGrid.InitField();
+
+            // Player 1 starts.
+            currentPlayer = true;
+
+            // Turn number starts at 1.
+            turnNum = 0;
+
+            // Start turn
+            TurnUpdate();
+            TurnUpdate();
         }
 
         /// <summary>
