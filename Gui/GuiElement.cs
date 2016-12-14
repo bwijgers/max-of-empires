@@ -53,7 +53,7 @@ namespace Ebilkill.Gui
         /// Repositions this GuiElement to another place.
         /// </summary>
         /// <param name="pos">The position to move to.</param>
-        public void move(Point pos)
+        public virtual void move(Point pos)
         {
             bounds.Location = pos;
         }

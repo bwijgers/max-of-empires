@@ -12,10 +12,11 @@ namespace MaxOfEmpires
     /// </summary>
     public class MaxOfEmpires : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private static GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
         private InputHelper inputHelper;
         private static Random random = new Random((int) DateTime.Now.Ticks);
+        private static bool running = true;
 
         public MaxOfEmpires()
         {
@@ -53,13 +54,12 @@ namespace MaxOfEmpires
             DrawingHelper.Init(GraphicsDevice);
 
             // Adds battleState to the GamestateManager
-            GameStateManager.AddState("battleState", new BattleState());
-            GameStateManager.SwitchState("battleState");
+            GameStateManager.AddState("battle", new BattleState());
+            GameStateManager.AddState("mainMenu", new MainMenuState());
+            GameStateManager.SwitchState("mainMenu");
 
             // Initialize the key inputs
             InitializeKeys();
-
-            // Init the battle grid
         }
 
         /// <summary>
@@ -78,6 +78,11 @@ namespace MaxOfEmpires
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (!running)
+            {
+                Exit();
+            }
+
             inputHelper.Update(gameTime);
 
             // Update current gamestate
@@ -107,6 +112,13 @@ namespace MaxOfEmpires
             KeyManager.Instance.RegisterKey("unitTargetOverlay", Keys.T);
         }
 
+        public static void Quit()
+        {
+            running = false;
+        }
+
         public static Random Random => random;
+
+        public static Point ScreenSize => new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
     }
 }

@@ -11,6 +11,7 @@ using MaxOfEmpires;
 /// ---------------Made by: CallitMez--------------
 /// --------------Updated by: Ebilkill-------------
 /// ----------------Made for RPGGame---------------
+/// ------------Adapted for generic use------------
 /// -------------------12-10-2016------------------
 /// ------------github.com/CallitMez/RPG-----------
 /// -----------------------------------------------
@@ -72,6 +73,13 @@ namespace Ebilkill.Gui.Elements
             drawBackground(spriteBatch);
             if (label != null)
                 label.drawElement(spriteBatch);
+        }
+
+        public override void move(Point pos)
+        {
+            base.move(pos);
+
+            label.move(pos + new Point(2));
         }
 
         public override void onClick(ClickEvent e)
