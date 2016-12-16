@@ -5,24 +5,23 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MaxOfEmpires.Units
 {
-    class UnitTargetParticle : GameObject
+    class UnitTargetParticle : GameObjectDrawable
     {
         private const double TIME_TO_LIVE = 0.5D; // seconds
-        private Vector2 drawPos;
-        private Texture2D tex;
         private double timeExisted;
 
         public UnitTargetParticle(Vector2 drawPos)
         {
-            this.drawPos = drawPos;
-            tex = AssetManager.Instance.getAsset<Texture2D>("TargetParticle");
+            DrawPosition = drawPos;
+            DrawingTexture = AssetManager.Instance.getAsset<Texture2D>("TargetParticle");
             timeExisted = 0;
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
-            Color drawColor = new Color(0xFF, 0x00, 0xFF, (float) Math.Sin(timeExisted / TIME_TO_LIVE * Math.PI));
-            s.Draw(tex, drawPos, drawColor);
+            // Change alpha based on how long we still exist
+            DrawColor = new Color(0xFF, 0x00, 0xFF, (float) Math.Sin(timeExisted / TIME_TO_LIVE * Math.PI));
+            base.Draw(time, s);
         }
 
         public override void Update(GameTime time)

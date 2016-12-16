@@ -28,9 +28,9 @@ namespace MaxOfEmpires
             tex = AssetManager.Instance.getAsset<Texture2D>(@"FE-Sprites\" + texName);
         }
 
-        public void Draw(int x, int y, SpriteBatch s)
+        public void Draw(Point drawPosition, SpriteBatch s)
         {
-            s.Draw(tex, new Rectangle(x * tex.Width, y * tex.Height, tex.Width, tex.Height), Color.White);
+            s.Draw(tex, new Rectangle(drawPosition.X, drawPosition.Y, tex.Width, tex.Height), Color.White);
         }
     }
 }

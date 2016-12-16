@@ -24,16 +24,12 @@ namespace MaxOfEmpires
         /// </summary>
         private GameObjectList unitTargets;
 
-        /// <summary>
-        /// The positions the currently selected Unit can walk to.
-        /// </summary>
-        private Point[] walkablePositions;
-
         public Grid(int width, int height, string id = "") : base(width, height, id)// TODO: make this load from a file or something similar
         {
             selectedTile = InvalidTile;
             currentPlayer = true;
             unitTargets = new GameObjectList();
+            unitTargets.Parent = this;
         }
 
         /// <summary>
@@ -122,16 +118,6 @@ namespace MaxOfEmpires
         {
             base.Draw(time, s);
 
-            // Draws an overlay so the player knows which unit is selected.
-            Ebilkill.Gui.DrawingHelper.Instance.DrawRectangle(s, new Rectangle(new Point(selectedTile.X * 32, selectedTile.Y * 32), new Point(32)), new Color(0x00, 0x00, 0xFF, 0x88));
-
-            // Add an overlay to all positions the selected Unit can walk to, if there are such positions.
-            if (walkablePositions != null)
-            {
-                foreach (Point p in walkablePositions)
-                    Ebilkill.Gui.DrawingHelper.Instance.DrawRectangle(s, new Rectangle(new Point(p.X * 32, p.Y * 32), new Point(32)), new Color(0x00, 0x00, 0xFF, 0x88));
-            }
-
             // Draw the Unit target overlay, if it exists
             unitTargets.Draw(time, s);
         }
@@ -145,7 +131,8 @@ namespace MaxOfEmpires
         public Tile GetTileUnderMouse(InputHelper helper, bool onClick = false)
         {
             // Get the current grid position the player clicked at
-            Point gridPos = (helper.MousePosition / 32).ToPoint();
+            Vector2 mousePosRelativeToGrid = helper.MousePosition - DrawPosition;
+            Point gridPos = (mousePosRelativeToGrid / 32).ToPoint();
 
             // Just unselect this tile if the user clicks this again.
             if (gridPos.Equals(selectedTile) && onClick)
@@ -190,8 +177,8 @@ namespace MaxOfEmpires
             }
 
             // Place a swordsman for each player on the field.
-            (this[4, 4] as Tile).SetUnit(new Units.Swordsman(4, 4, true));
-            (this[10, 10] as Tile).SetUnit(new Units.Swordsman(10, 10, false));
+            (this[4, 4] as Tile).SetUnit(new Swordsman(4, 4, true));
+            (this[10, 10] as Tile).SetUnit(new Swordsman(10, 10, false));
         }
 
         /// <summary>
@@ -225,7 +212,8 @@ namespace MaxOfEmpires
             else if (clickedTile.Occupied && clickedTile.Unit.Owner == currentPlayer && clickedTile.Unit.HasAction)
             {
                 SelectTile(clickedTile.GridPos);
-                walkablePositions = clickedTile.Unit.ReachableTiles();
+                Point[] walkablePositions = clickedTile.Unit.ReachableTiles();
+                SetUnitWalkingOverlay(walkablePositions);
             }
         }
 
@@ -235,10 +223,45 @@ namespace MaxOfEmpires
         /// <param name="p">The position of the Tile to select.</param>
         public void SelectTile(Point p)
         {
+            // Unselect the current tile if this should happen.
+            Tile t = (this[p] as Tile);
+            if (t != null)
+            {
+                t.WalkingOverlay = false;
+            }
+
+            // Select the new tile
             selectedTile = p;
+
+            // Unselecting a tile means the unit walking overlay will be non-existent
             if (selectedTile == InvalidTile)
             {
-                this.walkablePositions = null;
+                SetUnitWalkingOverlay(null);
+            }
+            else
+            {
+                (this[p] as Tile).WalkingOverlay = true;
+            }
+        }
+
+        private void SetUnitWalkingOverlay(Point[] overlay)
+        {
+            // Remove overlay from everything
+            ForEach((obj, x, y) => (obj as Tile).WalkingOverlay = false);
+
+            // No overlay should be drawn
+            if (overlay == null || overlay.Length == 0)
+            {
+                return;
+            }
+
+            // Draw the overlay
+            foreach (Point p in overlay)
+            {
+                if (IsInGrid(p))
+                {
+                    (this[p] as Tile).WalkingOverlay = true;
+                }
             }
         }
 

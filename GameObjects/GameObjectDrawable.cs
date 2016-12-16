@@ -12,7 +12,6 @@ namespace MaxOfEmpires.GameObjects
     class GameObjectDrawable : GameObject
     {
         private Color drawColor;
-        private Vector2 drawPosition;
         private Vector2 size;
         private Texture2D tex;
 
@@ -25,6 +24,14 @@ namespace MaxOfEmpires.GameObjects
         public override void Draw(GameTime time, SpriteBatch s)
         {
             s.Draw(tex, DrawPosition, drawColor);
+        }
+
+        public Rectangle Bounds
+        {
+            get
+            {
+                return new Rectangle(DrawPosition.ToPoint(), Size.ToPoint());
+            }
         }
 
         public Color DrawColor
@@ -51,19 +58,7 @@ namespace MaxOfEmpires.GameObjects
             }
         }
 
-        public virtual Vector2 DrawPosition
-        {
-            get
-            {
-                return drawPosition;
-            }
-            set
-            {
-                drawPosition = value;
-            }
-        }
-
-        public Vector2 Size
+        public virtual Vector2 Size
         {
             get
             {

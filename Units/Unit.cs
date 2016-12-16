@@ -212,16 +212,6 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
-        /// The position to draw this Unit at. Returns the top-left-most pixel to draw at.
-        /// </summary>
-        public override Vector2 DrawPosition
-        {
-            get
-            {
-                return new Vector2(x * DrawingTexture.Width, y * DrawingTexture.Height);
-            }
-        }
-        /// <summary>
         /// The position in the Grid this Unit occupies.
         /// </summary>
         public Point PositionInGrid

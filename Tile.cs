@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Ebilkill.Gui;
 
 namespace MaxOfEmpires
 {
-    class Tile : GameObject
+    class Tile : GameObjectDrawable
     {
         /// <summary>
         /// The current Building on this Tile. Can be null.
@@ -26,6 +27,8 @@ namespace MaxOfEmpires
         /// The current Unit on this Tile. Can be null.
         /// </summary>
         private Unit unit;
+
+        private bool walkingOverlay;
 
         /// <summary>
         /// The x and y positions of this Tile in the containing Grid.
@@ -43,6 +46,8 @@ namespace MaxOfEmpires
             this.terrain = terrain;
             this.x = x;
             this.y = y;
+            position = new Vector2(x * 32, y * 32);
+            walkingOverlay = false;
         }
         /// <summary>
         /// The movement cost for a specified Unit to move to this Tile.
@@ -56,9 +61,15 @@ namespace MaxOfEmpires
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
-            terrain.Draw(x, y, s);
+            terrain.Draw(DrawPosition.ToPoint(), s);
             building?.Draw(time, s);
             unit?.Draw(time, s);
+
+            // Draw a walking overlay if it should be drawn
+            if (walkingOverlay)
+            {
+                DrawingHelper.Instance.DrawRectangle(s, Bounds, new Color(0x00, 0x00, 0xFF, 0x88));
+            }
         }
 
         /// <summary>
@@ -123,6 +134,14 @@ namespace MaxOfEmpires
         /// </summary>
         public bool Occupied => Unit != null;
 
+        public override Vector2 Size
+        {
+            get
+            {
+                return new Vector2(32, 32);
+            }
+        }
+
         /// <summary>
         /// The Terrain of this Tile.
         /// </summary>
@@ -136,6 +155,18 @@ namespace MaxOfEmpires
             get
             {
                 return unit;
+            }
+        }
+
+        public bool WalkingOverlay
+        {
+            get
+            {
+                return walkingOverlay;
+            }
+            set
+            {
+                walkingOverlay = value;
             }
         }
     }

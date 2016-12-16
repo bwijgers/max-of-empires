@@ -19,6 +19,11 @@ namespace MaxOfEmpires.GameObjects
         private string id;
 
         /// <summary>
+        /// The drawing position relative to the parent. 
+        /// </summary>
+        protected Vector2 position;
+
+        /// <summary>
         /// The parent object of this GameObject. Is most likely a GameObjectList
         /// </summary>
         /// <see cref="GameObjectList"/>
@@ -71,6 +76,22 @@ namespace MaxOfEmpires.GameObjects
         /// <param name="time">The current/elapsed game time.</param>
         public virtual void Update(GameTime time)
         {
+        }
+
+        public Vector2 DrawPosition
+        {
+            get
+            {
+                if (Parent != null)
+                {
+                    return Parent.DrawPosition + position;
+                }
+                return position;
+            }
+            set
+            {
+                position = value;
+            }
         }
 
         /// <summary>
