@@ -12,6 +12,7 @@ namespace MaxOfEmpires.GameStates.Overlays
     class OverlayMainMenu : GuiScreen
     {
         private GuiButton buttonQuit;
+        private GuiButton buttonSure;
         private GuiButton buttonStart;
         private GuiLabel labelTitle; 
 
@@ -23,8 +24,14 @@ namespace MaxOfEmpires.GameStates.Overlays
 
             // Quit button
             buttonQuit = GuiButton.createButtonWithLabel(new Point(0, MaxOfEmpires.ScreenSize.Y - 50), "Quit?", null, "font");
-            buttonQuit.ClickHandler = () => { MaxOfEmpires.Quit(); };
+            buttonQuit.ClickHandler = () => { buttonQuit.Visible = false; buttonSure.Visible = true; };
             addElement(buttonQuit);
+
+            // Are you sure? button
+            buttonSure = GuiButton.createButtonWithLabel(new Point(0, MaxOfEmpires.ScreenSize.Y - 50), "Are you sure?", null, "font");
+            buttonSure.ClickHandler = () => { MaxOfEmpires.Quit(); };
+            buttonSure.Visible = false;
+            addElement(buttonSure);
 
             // Start button
             buttonStart = GuiButton.createButtonWithLabel(new Point(0, buttonQuit.Bounds.Y - 50), "Start Game", null, "font");
@@ -38,11 +45,17 @@ namespace MaxOfEmpires.GameStates.Overlays
         public void CenterElements()
         {
             // Title
-            labelTitle.move(new Point(MaxOfEmpires.ScreenSize.X / 2 - labelTitle.Bounds.Width / 2, labelTitle.Bounds.Y));
+            MoveToCenter(labelTitle);
 
             // Buttons
-            buttonQuit.move(new Point(MaxOfEmpires.ScreenSize.X / 2 - buttonQuit.Bounds.Width / 2, buttonQuit.Bounds.Y));
-            buttonStart.move(new Point(MaxOfEmpires.ScreenSize.X / 2 - buttonStart.Bounds.Width / 2, buttonStart.Bounds.Y));
+            MoveToCenter(buttonQuit);
+            MoveToCenter(buttonStart);
+            MoveToCenter(buttonSure);
+        }
+
+        private void MoveToCenter(GuiElement elem)
+        {
+            elem.move(new Point(MaxOfEmpires.ScreenSize.X / 2 - elem.Bounds.Width / 2, elem.Bounds.Y));
         }
     }
 }
