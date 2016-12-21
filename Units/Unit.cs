@@ -242,6 +242,9 @@ namespace MaxOfEmpires.Units
         /// </summary>
         public bool HasMoved => MovesLeft <= 0;
 
+        /// <summary>
+        /// Whether this Unit is dead.
+        /// </summary>
         public bool IsDead => stats.hp <= 0;
 
         /// <summary>
@@ -259,6 +262,9 @@ namespace MaxOfEmpires.Units
         /// </summary>
         public bool Owner => owner;
 
+        /// <summary>
+        /// The range at which this Unit can attack.
+        /// </summary>
         public int Range => 1;
 
         /// <summary>

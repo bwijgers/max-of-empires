@@ -15,7 +15,7 @@ namespace MaxOfEmpires.Units
         public int dodge; // chance
         public int def; // damage
 
-        public Stats(int hp, int att, int hit, int dodge, int def)
+        public Stats(int hp, int att, int def, int hit, int dodge)
         {
             this.hp = this.maxHp = hp;
             this.att = att;
