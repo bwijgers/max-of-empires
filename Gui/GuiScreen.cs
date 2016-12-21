@@ -77,6 +77,9 @@ namespace Ebilkill.Gui
 
                         // Make this element active
                         activeElement = i;
+
+                        // An element has been clicked, check no more
+                        break;
                     }
                 }
             }
