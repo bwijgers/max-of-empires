@@ -15,10 +15,10 @@ namespace MaxOfEmpires
         private static GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private InputHelper inputHelper;
-        private KeyManager keyManager;
         private static Random random = new Random((int) DateTime.Now.Ticks);
         private static bool running = true;
         public static Camera camera = new Camera();
+        float Zoom = 1.00f;
 
         public MaxOfEmpires()
         {
@@ -110,7 +110,23 @@ namespace MaxOfEmpires
         {
             GraphicsDevice.Clear(Color.White);
 
-            spriteBatch.Begin();
+            var transform = Matrix.CreateTranslation(new Vector3(0, 0, 0)) * // camera position
+                         Matrix.CreateRotationZ(0) * // camera rotation, default 0
+                         Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) * // Zoom default 1
+                         Matrix.CreateTranslation(
+                             new Vector3(
+                                 camera.Centre.X,
+                                 camera.Centre.Y, 0)); // Device from DeviceManager, center camera to given position
+
+
+            spriteBatch.Begin( // SpriteBatch variable
+                        SpriteSortMode.BackToFront, // Sprite sort mode - not related
+                        BlendState.NonPremultiplied, // BelndState - not related
+                        null,
+                        null,
+                        null,
+                        null,
+                        transform); // set camera tranformation
             GameStateManager.Draw(gameTime, spriteBatch);// Draw the current game state
             spriteBatch.End();
 
