@@ -1,5 +1,7 @@
 ﻿using Ebilkill.Gui;
+using MaxOfEmpires.Files;
 using MaxOfEmpires.GameStates;
+using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,6 +19,7 @@ namespace MaxOfEmpires
         private InputHelper inputHelper;
         private static Random random = new Random((int) DateTime.Now.Ticks);
         private static bool running = true;
+        private Configuration mainConfiguration;
 
         public MaxOfEmpires()
         {
@@ -40,12 +43,28 @@ namespace MaxOfEmpires
             base.Initialize();
         }
 
+        protected void LoadConfiguration()
+        {
+            // Initialize main configuration file
+            mainConfiguration = FileManager.LoadConfig("Main");
+
+            // Initialize units
+            Configuration unitConfiguration = mainConfiguration.GetPropertySection("unit");
+            Swordsman.LoadConfig(unitConfiguration);
+
+            // Initialize keys
+            InitializeKeys(mainConfiguration.GetPropertySection("key"));
+        }
+
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
         protected override void LoadContent()
         {
+            // Load the main configuration file, load all subconfigs
+            LoadConfiguration();
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -57,9 +76,6 @@ namespace MaxOfEmpires
             GameStateManager.AddState("battle", new BattleState());
             GameStateManager.AddState("mainMenu", new MainMenuState());
             GameStateManager.SwitchState("mainMenu");
-
-            // Initialize the key inputs
-            InitializeKeys();
         }
 
         /// <summary>
@@ -107,9 +123,9 @@ namespace MaxOfEmpires
             base.Draw(gameTime);
         }
 
-        private void InitializeKeys()
+        private void InitializeKeys(Configuration config)
         {
-            KeyManager.Instance.RegisterKey("unitTargetOverlay", Keys.T);
+            KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys) config.GetProperty<int>("unitTargetOverlay"));
         }
 
         public static void Quit()
