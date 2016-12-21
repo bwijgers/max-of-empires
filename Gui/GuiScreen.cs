@@ -45,6 +45,10 @@ namespace Ebilkill.Gui
             }
         }
 
+        public virtual void onMisclick()
+        {
+        }
+
         public virtual void draw(SpriteBatch spriteBatch)
         {
             // Draw all elements
@@ -82,6 +86,9 @@ namespace Ebilkill.Gui
                         break;
                     }
                 }
+
+                if (activeElement == -1)
+                    onMisclick();
             }
 
             // Check if there is an active element and if it's visible

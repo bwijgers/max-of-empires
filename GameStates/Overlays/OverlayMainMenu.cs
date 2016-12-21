@@ -57,5 +57,11 @@ namespace MaxOfEmpires.GameStates.Overlays
         {
             elem.move(new Point(MaxOfEmpires.ScreenSize.X / 2 - elem.Bounds.Width / 2, elem.Bounds.Y));
         }
+
+        public override void onMisclick()
+        {
+            buttonQuit.Visible = true;
+            buttonSure.Visible = false;
+        }
     }
 }
