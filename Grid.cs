@@ -182,6 +182,9 @@ namespace MaxOfEmpires
 
             Unit u2 = UnitRegistry.GetUnit("swordsman", false);
             (this[10, 10] as Tile).SetUnit(u2);
+
+            // Clear the target positions (because this method kinda sucks :/)
+            ForEach((obj, x, y) => (obj as Tile).Unit?.ClearTargetPosition());
         }
 
         /// <summary>
