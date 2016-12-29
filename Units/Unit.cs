@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
+using MaxOfEmpires.Files;
 
 namespace MaxOfEmpires.Units
 {
-    abstract partial class Unit : GameObjectDrawable
+    partial class Unit : GameObjectDrawable, IConfigurable
     {
         /// <summary>
         /// Whether this unit has attacked. Units can only attack once.
@@ -35,23 +36,19 @@ namespace MaxOfEmpires.Units
         /// <see cref="Units.Stats"/>
         private Stats stats;
 
+        private string texName;
+
         private int x;
         private int y; // The x and y coords of this Unit. Used for drawing and moving.
 
-        protected Unit(int x, int y, bool owner, string resName)
+        public Unit(int x, int y, bool owner, string resName)
         {
             this.x = x;
             this.y = y;
             this.owner = owner;
             target = new Point(x, y);
 
-            // Get the texture based on the player (blue for p1, red for p2)
-            StringBuilder texName = new StringBuilder();
-            texName.Append(@"FE-Sprites\").Append(resName).Append('_');
-            texName.Append(owner ? "blue" : "red");
-
-            // Load the Unit's texture based on the name supplied and the player controlling the unit.
-            DrawingTexture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString());
+            this.texName = resName;
         }
 
         public void Attack(Point attackPos)
@@ -173,6 +170,31 @@ namespace MaxOfEmpires.Units
             return DistanceTo(p.X, p.Y) == Range;
         }
 
+        public void LoadFromConfiguration(Configuration config)
+        {
+            // Load stats from config
+            Stats = Units.Stats.Empty;
+            Stats.LoadFromConfiguration(config.GetPropertySection("stats"));
+
+            // Load movespeed from config
+            moveSpeed = config.GetProperty<int>("moveSpeed");
+
+            // Load texture from config file
+            texName = config.GetProperty<string>("texture.name");
+            LoadTexture();
+        }
+
+        public void LoadTexture()
+        {
+            // Get the texture based on the player (blue for p1, red for p2)
+            StringBuilder texName = new StringBuilder();
+            texName.Append(@"FE-Sprites\").Append(this.texName).Append('_');
+            texName.Append(owner ? "blue" : "red");
+
+            // Load the Unit's texture based on the name supplied and the player controlling the unit.
+            DrawingTexture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString());
+        }
+
         /// <summary>
         /// Moves this Unit to the specified position. Returns false if this Unit can't reach the specified position.
         /// Assumes the specified position is not occupied.
@@ -200,6 +222,22 @@ namespace MaxOfEmpires.Units
                 return true;
             }
             return false;
+        }
+
+        public Unit Copy(bool owner)
+        {
+            // Create a new Unit instance
+            Unit copy = new Unit(x, y, owner, texName);
+
+            // Populate the Unit's values
+            copy.moveSpeed = moveSpeed;
+            copy.stats = stats.Copy();
+
+            // Load the texture
+            copy.LoadTexture();
+
+            // Return the Unit copy
+            return copy;
         }
 
         public override void TurnUpdate(uint turn, bool player)
@@ -260,7 +298,17 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The owner of this Unit. True => player 1, false => player 2.
         /// </summary>
-        public bool Owner => owner;
+        public bool Owner
+        {
+            get
+            {
+                return owner;
+            }
+            set
+            {
+                owner = value;
+            }
+        }
 
         /// <summary>
         /// The range at which this Unit can attack.

@@ -41,6 +41,7 @@
     <Compile Include="AssetManager.cs" />
     <Compile Include="Files\Configuration.cs" />
     <Compile Include="Files\FileManager.cs" />
+    <Compile Include="Files\IConfigurable.cs" />
     <Compile Include="Files\Property.cs" />
     <Compile Include="GameObjects\GameObjectAnimated.cs" />
     <Compile Include="GameObjects\GameObjectDrawable.cs" />
@@ -54,7 +55,6 @@
     <Compile Include="GameObjects\GameObjectGrid.cs" />
     <Compile Include="GameObjects\GameObjectList.cs" />
     <Compile Include="Units\Stats.cs" />
-    <Compile Include="Units\Swordsman.cs" />
     <Compile Include="Units\Unit.cs" />
     <Compile Include="MaxOfEmpires.cs" />
     <Compile Include="GameStates\GameState.cs" />
@@ -75,6 +75,7 @@
     <Compile Include="Terrain.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Units\UnitPathfinding.cs" />
+    <Compile Include="Units\UnitRegistry.cs" />
     <Compile Include="Units\UnitTargetOverlay.cs" />
     <Compile Include="Units\UnitTargetParticle.cs" />
   </ItemGroup>

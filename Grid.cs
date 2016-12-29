@@ -24,7 +24,7 @@ namespace MaxOfEmpires
         /// </summary>
         private GameObjectList unitTargets;
 
-        public Grid(int width, int height, string id = "") : base(width, height, id)// TODO: make this load from a file or something similar
+        public Grid(int width, int height, string id = "") : base(width, height, id) // TODO: make this load from a file or something similar
         {
             selectedTile = InvalidTile;
             currentPlayer = true;
@@ -177,8 +177,11 @@ namespace MaxOfEmpires
             }
 
             // Place a swordsman for each player on the field.
-            (this[4, 4] as Tile).SetUnit(new Swordsman(4, 4, true));
-            (this[10, 10] as Tile).SetUnit(new Swordsman(10, 10, false));
+            Unit u1 = UnitRegistry.GetUnit("swordsman", true);
+            (this[4, 4] as Tile).SetUnit(u1);
+
+            Unit u2 = UnitRegistry.GetUnit("swordsman", false);
+            (this[10, 10] as Tile).SetUnit(u2);
         }
 
         /// <summary>

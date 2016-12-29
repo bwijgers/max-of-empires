@@ -50,7 +50,7 @@ namespace MaxOfEmpires
 
             // Initialize units
             Configuration unitConfiguration = mainConfiguration.GetPropertySection("unit");
-            Swordsman.LoadConfig(unitConfiguration);
+            UnitRegistry.Init(unitConfiguration);
 
             // Initialize keys
             InitializeKeys(mainConfiguration.GetPropertySection("key"));
@@ -62,15 +62,15 @@ namespace MaxOfEmpires
         /// </summary>
         protected override void LoadContent()
         {
-            // Load the main configuration file, load all subconfigs
-            LoadConfiguration();
-
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Init AssetManager and DrawingHelper
             AssetManager.Init(Content);
             DrawingHelper.Init(GraphicsDevice);
+
+            // Load the main configuration file, load all subconfigs
+            LoadConfiguration();
 
             // Adds battleState to the GamestateManager
             GameStateManager.AddState("battle", new BattleState());
