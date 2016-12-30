@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Units
 {
-    class Stats : IConfigurable
+    class Stats 
     {
         public int hp;
         public int maxHp;
@@ -25,19 +25,26 @@ namespace MaxOfEmpires.Units
             this.def = def;
         }
 
-        public void LoadFromConfiguration(Configuration config)
+        public Stats(Stats origin) : this(origin.maxHp, origin.att, origin.def, origin.hit, origin.dodge)
+        {
+            hp = origin.hp;
+        }
+
+        public static Stats LoadFromConfiguration(Configuration config)
         {
             // Load everything in Stats from the config
-            hp = maxHp = config.GetProperty<int>("hp");
-            att = config.GetProperty<int>("att");
-            def = config.GetProperty<int>("def");
-            hit = config.GetProperty<int>("hit");
-            dodge = config.GetProperty<int>("dodge");
+            int hp = config.GetProperty<int>("hp");
+            int att = config.GetProperty<int>("att");
+            int def = config.GetProperty<int>("def");
+            int hit = config.GetProperty<int>("hit");
+            int dodge = config.GetProperty<int>("dodge");
+
+            return new Stats(hp, att, def, hit, dodge);
         }
 
         public Stats Copy()
         {
-            return new Stats(hp, att, def, hit, dodge);
+            return new Stats(this);
         }
 
         //public int crit; // crit chance

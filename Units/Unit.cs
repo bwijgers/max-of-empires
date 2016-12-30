@@ -11,7 +11,7 @@ using MaxOfEmpires.Files;
 
 namespace MaxOfEmpires.Units
 {
-    partial class Unit : GameObjectDrawable, IConfigurable
+    partial class Unit : GameObjectDrawable
     {
         /// <summary>
         /// Whether this unit has attacked. Units can only attack once.
@@ -38,17 +38,27 @@ namespace MaxOfEmpires.Units
 
         private string texName;
 
-        private int x;
-        private int y; // The x and y coords of this Unit. Used for drawing and moving.
+        /// <summary>
+        /// The x and y coords of this Unit. Used for drawing and moving.
+        /// </summary>
+        private int x, y;
 
-        public Unit(int x, int y, bool owner, string resName)
+        public Unit(int x, int y, bool owner, string resName, int moveSpeed, Stats stats)
         {
+            // Set parameters
             this.x = x;
             this.y = y;
             this.owner = owner;
-            target = new Point(x, y);
-
+            Stats = stats;
             this.texName = resName;
+            this.moveSpeed = moveSpeed;
+
+            // Set others
+            target = new Point(x, y);
+        }
+
+        public Unit(Unit original, bool owner) : this(original.x, original.y, owner, original.texName, original.moveSpeed, original.stats.Copy())
+        {
         }
 
         public void Attack(Point attackPos)
@@ -170,18 +180,17 @@ namespace MaxOfEmpires.Units
             return DistanceTo(p.X, p.Y) == Range;
         }
 
-        public void LoadFromConfiguration(Configuration config)
+        public static Unit LoadFromConfiguration(Configuration config)
         {
             // Load stats from config
-            Stats = Units.Stats.Empty;
-            Stats.LoadFromConfiguration(config.GetPropertySection("stats"));
+            Stats stats = Stats.LoadFromConfiguration(config.GetPropertySection("stats"));
 
             // Load movespeed from config
-            moveSpeed = config.GetProperty<int>("moveSpeed");
+            int moveSpeed = config.GetProperty<int>("moveSpeed");
 
             // Load texture from config file
-            texName = config.GetProperty<string>("texture.name");
-            LoadTexture();
+            string texName = config.GetProperty<string>("texture.name");
+            return new Unit(0, 0, false, texName, moveSpeed, stats);
         }
 
         public void LoadTexture()
@@ -227,7 +236,7 @@ namespace MaxOfEmpires.Units
         public Unit Copy(bool owner)
         {
             // Create a new Unit instance
-            Unit copy = new Unit(x, y, owner, texName);
+            Unit copy = new Unit(this, owner);
 
             // Populate the Unit's values
             copy.moveSpeed = moveSpeed;

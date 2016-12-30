@@ -29,10 +29,7 @@ namespace MaxOfEmpires.Units
         public static void RegisterUnitFromConfiguration(string name, Configuration c)
         {
             // Create a Unit
-            Unit u = new Unit(0, 0, true, "");
-
-            // Load its values from configuration
-            u.LoadFromConfiguration(c);
+            Unit u = Unit.LoadFromConfiguration(c);
 
             // Register the Unit
             RegisterUnit(name, u);
