@@ -108,7 +108,7 @@ namespace MaxOfEmpires
                     t.Unit.GeneratePaths(new Point(x, y));
 
                     // Make a UnitTargetOverlay for this and add it to the list of overlays
-                    UnitTargetOverlay uto = new UnitTargetOverlay(t.Unit);
+                    TargetPositionOverlay uto = new TargetPositionOverlay(t.Unit);
                     unitTargets.Add(uto);
                 }
             });
@@ -302,7 +302,7 @@ namespace MaxOfEmpires
 
             // Remove unitTargets that are done
             unitTargets.ForEach(obj => {
-                UnitTargetOverlay uto = obj as UnitTargetOverlay;
+                TargetPositionOverlay uto = obj as TargetPositionOverlay;
 
                 if (uto.Finished)
                 {

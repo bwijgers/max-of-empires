@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MaxOfEmpires.Units
 {
-    class UnitTargetOverlay : GameObjectList
+    class TargetPositionOverlay : GameObjectList
     {
         private const double DRAW_INTERVAL_TIME = 0.05D;
         private const float MOVEMENT_SPEED = 16.0F;
@@ -17,7 +17,7 @@ namespace MaxOfEmpires.Units
         private double timeUntilNextDraw;
         private bool doneParticles;
 
-        public UnitTargetOverlay(Unit u)
+        public TargetPositionOverlay(Unit u)
         {
             // Get the path along which to annotate the movement.
             path = u.ShortestPath(u.TargetPosition);
@@ -63,7 +63,7 @@ namespace MaxOfEmpires.Units
 
             // Move towards the next square and add a particle.
             MoveTowardsNextEnd();
-            Add(new UnitTargetParticle(drawPos));
+            Add(new TargetPositionParticle(drawPos));
         }
 
         /// <summary>

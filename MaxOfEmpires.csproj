@@ -76,8 +76,8 @@
     <Compile Include="Tile.cs" />
     <Compile Include="Units\UnitPathfinding.cs" />
     <Compile Include="Units\UnitRegistry.cs" />
-    <Compile Include="Units\UnitTargetOverlay.cs" />
-    <Compile Include="Units\UnitTargetParticle.cs" />
+    <Compile Include="Units\TargetPositionOverlay.cs" />
+    <Compile Include="Units\TargetPositionParticle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
