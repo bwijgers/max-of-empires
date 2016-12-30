@@ -179,9 +179,11 @@ namespace MaxOfEmpires
             // Place a swordsman for each player on the field.
             Unit u1 = UnitRegistry.GetUnit("swordsman", true);
             (this[4, 4] as Tile).SetUnit(u1);
+            (this[3, 4] as Tile).SetUnit(UnitRegistry.GetUnit("archer", true));
 
             Unit u2 = UnitRegistry.GetUnit("swordsman", false);
             (this[10, 10] as Tile).SetUnit(u2);
+            (this[11, 10] as Tile).SetUnit(UnitRegistry.GetUnit("archer", false));
 
             // Clear the target positions (because this method kinda sucks :/)
             ForEach((obj, x, y) => (obj as Tile).Unit?.ClearTargetPosition());

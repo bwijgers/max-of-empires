@@ -19,6 +19,7 @@ namespace MaxOfEmpires.Units
         public static void Init(Configuration unitConfiguration)
         {
             RegisterUnitFromConfiguration("swordsman", unitConfiguration.GetPropertySection("swordsman"));
+            RegisterUnitFromConfiguration("archer", unitConfiguration.GetPropertySection("archer"));
         }
 
         public static void RegisterUnit(string name, Unit u)

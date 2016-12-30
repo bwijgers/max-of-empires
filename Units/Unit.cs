@@ -30,6 +30,8 @@ namespace MaxOfEmpires.Units
 
         private bool owner; // 2 is false, 1 is true
 
+        private Range range;
+
         /// <summary>
         /// This Unit's stats. 
         /// </summary>
@@ -43,12 +45,13 @@ namespace MaxOfEmpires.Units
         /// </summary>
         private int x, y;
 
-        public Unit(int x, int y, bool owner, string resName, int moveSpeed, Stats stats)
+        private Unit(int x, int y, bool owner, string resName, int moveSpeed, Stats stats, Range range)
         {
             // Set parameters
             this.x = x;
             this.y = y;
             this.owner = owner;
+            this.range = range;
             Stats = stats;
             this.texName = resName;
             this.moveSpeed = moveSpeed;
@@ -57,7 +60,7 @@ namespace MaxOfEmpires.Units
             target = new Point(x, y);
         }
 
-        public Unit(Unit original, bool owner) : this(original.x, original.y, owner, original.texName, original.moveSpeed, original.stats.Copy())
+        public Unit(Unit original, bool owner) : this(original.x, original.y, owner, original.texName, original.moveSpeed, original.stats.Copy(), original.range.Copy())
         {
         }
 
@@ -177,7 +180,7 @@ namespace MaxOfEmpires.Units
 
         public bool IsInRange(Point p)
         {
-            return DistanceTo(p.X, p.Y) == Range;
+            return range.InRange(DistanceTo(p.X, p.Y));
         }
 
         public static Unit LoadFromConfiguration(Configuration config)
@@ -185,12 +188,15 @@ namespace MaxOfEmpires.Units
             // Load stats from config
             Stats stats = Stats.LoadFromConfiguration(config.GetPropertySection("stats"));
 
+            // Load range from config
+            Range range = Range.LoadFromConfiguration(config.GetPropertySection("range"));
+
             // Load movespeed from config
             int moveSpeed = config.GetProperty<int>("moveSpeed");
 
             // Load texture from config file
             string texName = config.GetProperty<string>("texture.name");
-            return new Unit(0, 0, false, texName, moveSpeed, stats);
+            return new Unit(0, 0, false, texName, moveSpeed, stats, range);
         }
 
         public void LoadTexture()
@@ -237,10 +243,6 @@ namespace MaxOfEmpires.Units
         {
             // Create a new Unit instance
             Unit copy = new Unit(this, owner);
-
-            // Populate the Unit's values
-            copy.moveSpeed = moveSpeed;
-            copy.stats = stats.Copy();
 
             // Load the texture
             copy.LoadTexture();
@@ -322,7 +324,7 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The range at which this Unit can attack.
         /// </summary>
-        public int Range => 1;
+        public Range Range => range;
 
         /// <summary>
         /// The Stats of this Unit. 
