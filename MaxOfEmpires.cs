@@ -53,7 +53,7 @@ namespace MaxOfEmpires
             UnitRegistry.Init(unitConfiguration);
 
             // Initialize keys
-            InitializeKeys(mainConfiguration.GetPropertySection("key"));
+            InitializeKeys(FileManager.LoadConfig("Keys").GetPropertySection("key"));
         }
 
         /// <summary>
