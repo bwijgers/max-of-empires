@@ -123,18 +123,24 @@ namespace MaxOfEmpires
             base.Draw(gameTime);
         }
 
+        /// <summary>
+        /// Initializes all keybinds, loaded from Keys.cfg
+        /// </summary>
+        /// <param name="config">The configuration file and section to use for loading.</param>
         private void InitializeKeys(Configuration config)
         {
             KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys) config.GetProperty<int>("unitTargetOverlay"));
         }
 
+        /// <summary>
+        /// Quits the game. Effectively closes the game.
+        /// </summary>
         public static void Quit()
         {
             running = false;
         }
 
         public static Random Random => random;
-
         public static Point ScreenSize => new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
     }
 }

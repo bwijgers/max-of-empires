@@ -41,7 +41,6 @@
     <Compile Include="AssetManager.cs" />
     <Compile Include="Files\Configuration.cs" />
     <Compile Include="Files\FileManager.cs" />
-    <Compile Include="Files\IConfigurable.cs" />
     <Compile Include="Files\Property.cs" />
     <Compile Include="GameObjects\GameObjectAnimated.cs" />
     <Compile Include="GameObjects\GameObjectDrawable.cs" />

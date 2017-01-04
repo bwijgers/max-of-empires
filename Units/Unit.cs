@@ -30,6 +30,9 @@ namespace MaxOfEmpires.Units
 
         private bool owner; // 2 is false, 1 is true
 
+        /// <summary>
+        /// The range in which this Unit can attack.
+        /// </summary>
         private Range range;
 
         /// <summary>
@@ -60,10 +63,21 @@ namespace MaxOfEmpires.Units
             target = new Point(x, y);
         }
 
+        /// <summary>
+        /// Creates a deep copy of this Unit.
+        /// </summary>
+        /// <param name="original">The original to make a copy of.</param>
+        /// <param name="owner">The owner of the copy of this Unit.</param>
         public Unit(Unit original, bool owner) : this(original.x, original.y, owner, original.texName, original.moveSpeed, original.stats.Copy(), original.range.Copy())
         {
+            // Make sure the texture is loaded, or the game will crash.
+            LoadTexture();
         }
 
+        /// <summary>
+        /// Attacks a Unit at the specified position. 
+        /// </summary>
+        /// <param name="attackPos">The position to attack.</param>
         public void Attack(Point attackPos)
         {
             // Get the gameWorld and the Tile to attack a Unit on. 
@@ -96,6 +110,10 @@ namespace MaxOfEmpires.Units
             hasAttacked = true;
         }
 
+        /// <summary>
+        /// Deals damage to an enemy Unit, based on attack and defence. Calculates miss as well.
+        /// </summary>
+        /// <param name="enemy">The enemy to deal damage to.</param>
         private void DealDamage(Unit enemy)
         {
             // Check if we hit at all
@@ -112,6 +130,7 @@ namespace MaxOfEmpires.Units
             // We hit :D Damage the enemy
             int damageToDeal = stats.att - enemy.stats.def;
 
+            // If there is no damage to deal, don't actually *heal* the enemy Unit.
             if (damageToDeal > 0)
             {
                 enemy.stats.hp -= damageToDeal;
@@ -178,11 +197,24 @@ namespace MaxOfEmpires.Units
             return new Rectangle(x, y, width, height);
         }
 
+        /// <summary>
+        /// Checks whether the specified position is in the Range of this Unit.
+        /// </summary>
+        /// <param name="p">The position to check.</param>
+        /// <returns>True if the position is in range, false otherwise.</returns>
         public bool IsInRange(Point p)
         {
             return range.InRange(DistanceTo(p.X, p.Y));
         }
 
+        /// <summary>
+        /// Loads a Unit from a configuration. 
+        /// </summary>
+        /// Note that a Unit requires these keys:
+        ///   - stats (a Stats object. <see cref="Units.Stats.LoadFromConfiguration(Configuration)"/>
+        ///   - range (a Range object. <see cref="Units.Range.LoadFromConfiguration(Configuration)"/> 
+        /// <param name="config">The configuration file/subsection to load from.</param>
+        /// <returns>A Unit as loaded from the configuration.</returns>
         public static Unit LoadFromConfiguration(Configuration config)
         {
             // Load stats from config
@@ -239,13 +271,15 @@ namespace MaxOfEmpires.Units
             return false;
         }
 
+        /// <summary>
+        /// Copy this Unit and set an owner.
+        /// </summary>
+        /// <param name="owner">The owner of the Copy.</param>
+        /// <returns>A copy of the Unit.</returns>
         public Unit Copy(bool owner)
         {
             // Create a new Unit instance
             Unit copy = new Unit(this, owner);
-
-            // Load the texture
-            copy.LoadTexture();
 
             // Return the Unit copy
             return copy;
