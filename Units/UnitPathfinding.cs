@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Units
 {
-    abstract partial class Unit : GameObjects.GameObjectDrawable
+    partial class Unit : GameObjects.GameObjectDrawable
     {
         private List<PathToTile> shortestPaths;
         private Point target;
@@ -81,6 +81,14 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
+        /// Clears the Unit's target position.
+        /// </summary>
+        public void ClearTargetPosition()
+        {
+            target = PositionInGrid;
+        }
+
+        /// <summary>
         /// Generates the list of shortest paths.
         /// </summary>
         /// <param name="startPosition">Position from which all paths are created.</param>
@@ -124,7 +132,7 @@ namespace MaxOfEmpires.Units
             // If the target tile is occupied, unset target. 
             if(((GameWorld as Grid)[target] as Tile).Occupied)
             {
-                target = PositionInGrid;
+                ClearTargetPosition();
                 return target;
             }
 

@@ -24,7 +24,7 @@ namespace MaxOfEmpires
         /// </summary>
         private GameObjectList unitTargets;
 
-        public Grid(int width, int height, string id = "") : base(width, height, id)// TODO: make this load from a file or something similar
+        public Grid(int width, int height, string id = "") : base(width, height, id) // TODO: make this load from a file or something similar
         {
             selectedTile = InvalidTile;
             currentPlayer = true;
@@ -108,7 +108,7 @@ namespace MaxOfEmpires
                     t.Unit.GeneratePaths(new Point(x, y));
 
                     // Make a UnitTargetOverlay for this and add it to the list of overlays
-                    UnitTargetOverlay uto = new UnitTargetOverlay(t.Unit);
+                    TargetPositionOverlay uto = new TargetPositionOverlay(t.Unit);
                     unitTargets.Add(uto);
                 }
             });
@@ -177,8 +177,16 @@ namespace MaxOfEmpires
             }
 
             // Place a swordsman for each player on the field.
-            (this[4, 4] as Tile).SetUnit(new Swordsman(4, 4, true));
-            (this[10, 10] as Tile).SetUnit(new Swordsman(10, 10, false));
+            Unit u1 = UnitRegistry.GetUnit("swordsman", true);
+            (this[4, 4] as Tile).SetUnit(u1);
+            (this[3, 4] as Tile).SetUnit(UnitRegistry.GetUnit("archer", true));
+
+            Unit u2 = UnitRegistry.GetUnit("swordsman", false);
+            (this[10, 10] as Tile).SetUnit(u2);
+            (this[11, 10] as Tile).SetUnit(UnitRegistry.GetUnit("archer", false));
+
+            // Clear the target positions (because this method kinda sucks :/)
+            ForEach((obj, x, y) => (obj as Tile).Unit?.ClearTargetPosition());
         }
 
         /// <summary>
@@ -296,7 +304,7 @@ namespace MaxOfEmpires
 
             // Remove unitTargets that are done
             unitTargets.ForEach(obj => {
-                UnitTargetOverlay uto = obj as UnitTargetOverlay;
+                TargetPositionOverlay uto = obj as TargetPositionOverlay;
 
                 if (uto.Finished)
                 {

@@ -39,6 +39,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
+    <Compile Include="Files\Configuration.cs" />
+    <Compile Include="Files\FileManager.cs" />
+    <Compile Include="Files\Property.cs" />
     <Compile Include="GameObjects\GameObjectAnimated.cs" />
     <Compile Include="GameObjects\GameObjectDrawable.cs" />
     <Compile Include="GameStates\BattleState.cs" />
@@ -50,8 +53,8 @@
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\GameObjectGrid.cs" />
     <Compile Include="GameObjects\GameObjectList.cs" />
+    <Compile Include="Units\Range.cs" />
     <Compile Include="Units\Stats.cs" />
-    <Compile Include="Units\Swordsman.cs" />
     <Compile Include="Units\Unit.cs" />
     <Compile Include="MaxOfEmpires.cs" />
     <Compile Include="GameStates\GameState.cs" />
@@ -72,8 +75,9 @@
     <Compile Include="Terrain.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Units\UnitPathfinding.cs" />
-    <Compile Include="Units\UnitTargetOverlay.cs" />
-    <Compile Include="Units\UnitTargetParticle.cs" />
+    <Compile Include="Units\UnitRegistry.cs" />
+    <Compile Include="Units\TargetPositionOverlay.cs" />
+    <Compile Include="Units\TargetPositionParticle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -95,6 +99,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Gui\Screens\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\configs\Keys.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\Main.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Lang\en_US.lang" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

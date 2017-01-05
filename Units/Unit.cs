@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
+using MaxOfEmpires.Files;
 
 namespace MaxOfEmpires.Units
 {
-    abstract partial class Unit : GameObjectDrawable
+    partial class Unit : GameObjectDrawable
     {
         /// <summary>
         /// Whether this unit has attacked. Units can only attack once.
@@ -30,30 +31,53 @@ namespace MaxOfEmpires.Units
         private bool owner; // 2 is false, 1 is true
 
         /// <summary>
+        /// The range in which this Unit can attack.
+        /// </summary>
+        private Range range;
+
+        /// <summary>
         /// This Unit's stats. 
         /// </summary>
         /// <see cref="Units.Stats"/>
         private Stats stats;
 
-        private int x;
-        private int y; // The x and y coords of this Unit. Used for drawing and moving.
+        private string texName;
 
-        protected Unit(int x, int y, bool owner, string resName)
+        /// <summary>
+        /// The x and y coords of this Unit. Used for drawing and moving.
+        /// </summary>
+        private int x, y;
+
+        private Unit(int x, int y, bool owner, string resName, int moveSpeed, Stats stats, Range range)
         {
+            // Set parameters
             this.x = x;
             this.y = y;
             this.owner = owner;
+            this.range = range;
+            Stats = stats;
+            this.texName = resName;
+            this.moveSpeed = moveSpeed;
+
+            // Set others
             target = new Point(x, y);
-
-            // Get the texture based on the player (blue for p1, red for p2)
-            StringBuilder texName = new StringBuilder();
-            texName.Append(@"FE-Sprites\").Append(resName).Append('_');
-            texName.Append(owner ? "blue" : "red");
-
-            // Load the Unit's texture based on the name supplied and the player controlling the unit.
-            DrawingTexture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString());
         }
 
+        /// <summary>
+        /// Creates a deep copy of this Unit.
+        /// </summary>
+        /// <param name="original">The original to make a copy of.</param>
+        /// <param name="owner">The owner of the copy of this Unit.</param>
+        public Unit(Unit original, bool owner) : this(original.x, original.y, owner, original.texName, original.moveSpeed, original.stats.Copy(), original.range.Copy())
+        {
+            // Make sure the texture is loaded, or the game will crash.
+            LoadTexture();
+        }
+
+        /// <summary>
+        /// Attacks a Unit at the specified position. 
+        /// </summary>
+        /// <param name="attackPos">The position to attack.</param>
         public void Attack(Point attackPos)
         {
             // Get the gameWorld and the Tile to attack a Unit on. 
@@ -86,6 +110,10 @@ namespace MaxOfEmpires.Units
             hasAttacked = true;
         }
 
+        /// <summary>
+        /// Deals damage to an enemy Unit, based on attack and defence. Calculates miss as well.
+        /// </summary>
+        /// <param name="enemy">The enemy to deal damage to.</param>
         private void DealDamage(Unit enemy)
         {
             // Check if we hit at all
@@ -102,6 +130,7 @@ namespace MaxOfEmpires.Units
             // We hit :D Damage the enemy
             int damageToDeal = stats.att - enemy.stats.def;
 
+            // If there is no damage to deal, don't actually *heal* the enemy Unit.
             if (damageToDeal > 0)
             {
                 enemy.stats.hp -= damageToDeal;
@@ -168,9 +197,49 @@ namespace MaxOfEmpires.Units
             return new Rectangle(x, y, width, height);
         }
 
+        /// <summary>
+        /// Checks whether the specified position is in the Range of this Unit.
+        /// </summary>
+        /// <param name="p">The position to check.</param>
+        /// <returns>True if the position is in range, false otherwise.</returns>
         public bool IsInRange(Point p)
         {
-            return DistanceTo(p.X, p.Y) == Range;
+            return range.InRange(DistanceTo(p.X, p.Y));
+        }
+
+        /// <summary>
+        /// Loads a Unit from a configuration. 
+        /// </summary>
+        /// Note that a Unit requires these keys:
+        ///   - stats (a Stats object. <see cref="Units.Stats.LoadFromConfiguration(Configuration)"/>
+        ///   - range (a Range object. <see cref="Units.Range.LoadFromConfiguration(Configuration)"/> 
+        /// <param name="config">The configuration file/subsection to load from.</param>
+        /// <returns>A Unit as loaded from the configuration.</returns>
+        public static Unit LoadFromConfiguration(Configuration config)
+        {
+            // Load stats from config
+            Stats stats = Stats.LoadFromConfiguration(config.GetPropertySection("stats"));
+
+            // Load range from config
+            Range range = Range.LoadFromConfiguration(config.GetPropertySection("range"));
+
+            // Load movespeed from config
+            int moveSpeed = config.GetProperty<int>("moveSpeed");
+
+            // Load texture from config file
+            string texName = config.GetProperty<string>("texture.name");
+            return new Unit(0, 0, false, texName, moveSpeed, stats, range);
+        }
+
+        public void LoadTexture()
+        {
+            // Get the texture based on the player (blue for p1, red for p2)
+            StringBuilder texName = new StringBuilder();
+            texName.Append(@"FE-Sprites\").Append(this.texName).Append('_');
+            texName.Append(owner ? "blue" : "red");
+
+            // Load the Unit's texture based on the name supplied and the player controlling the unit.
+            DrawingTexture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString());
         }
 
         /// <summary>
@@ -200,6 +269,20 @@ namespace MaxOfEmpires.Units
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Copy this Unit and set an owner.
+        /// </summary>
+        /// <param name="owner">The owner of the Copy.</param>
+        /// <returns>A copy of the Unit.</returns>
+        public Unit Copy(bool owner)
+        {
+            // Create a new Unit instance
+            Unit copy = new Unit(this, owner);
+
+            // Return the Unit copy
+            return copy;
         }
 
         public override void TurnUpdate(uint turn, bool player)
@@ -260,12 +343,22 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The owner of this Unit. True => player 1, false => player 2.
         /// </summary>
-        public bool Owner => owner;
+        public bool Owner
+        {
+            get
+            {
+                return owner;
+            }
+            set
+            {
+                owner = value;
+            }
+        }
 
         /// <summary>
         /// The range at which this Unit can attack.
         /// </summary>
-        public int Range => 1;
+        public Range Range => range;
 
         /// <summary>
         /// The Stats of this Unit. 

@@ -1,5 +1,7 @@
 ﻿using Ebilkill.Gui;
+using MaxOfEmpires.Files;
 using MaxOfEmpires.GameStates;
+using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,6 +19,7 @@ namespace MaxOfEmpires
         private InputHelper inputHelper;
         private static Random random = new Random((int) DateTime.Now.Ticks);
         private static bool running = true;
+        private Configuration mainConfiguration;
 
         public MaxOfEmpires()
         {
@@ -40,6 +43,19 @@ namespace MaxOfEmpires
             base.Initialize();
         }
 
+        protected void LoadConfiguration()
+        {
+            // Initialize main configuration file
+            mainConfiguration = FileManager.LoadConfig("Main");
+
+            // Initialize units
+            Configuration unitConfiguration = mainConfiguration.GetPropertySection("unit");
+            UnitRegistry.Init(unitConfiguration);
+
+            // Initialize keys
+            InitializeKeys(FileManager.LoadConfig("Keys").GetPropertySection("key"));
+        }
+
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -53,13 +69,13 @@ namespace MaxOfEmpires
             AssetManager.Init(Content);
             DrawingHelper.Init(GraphicsDevice);
 
+            // Load the main configuration file, load all subconfigs
+            LoadConfiguration();
+
             // Adds battleState to the GamestateManager
             GameStateManager.AddState("battle", new BattleState());
             GameStateManager.AddState("mainMenu", new MainMenuState());
             GameStateManager.SwitchState("mainMenu");
-
-            // Initialize the key inputs
-            InitializeKeys();
         }
 
         /// <summary>
@@ -107,18 +123,24 @@ namespace MaxOfEmpires
             base.Draw(gameTime);
         }
 
-        private void InitializeKeys()
+        /// <summary>
+        /// Initializes all keybinds, loaded from Keys.cfg
+        /// </summary>
+        /// <param name="config">The configuration file and section to use for loading.</param>
+        private void InitializeKeys(Configuration config)
         {
-            KeyManager.Instance.RegisterKey("unitTargetOverlay", Keys.T);
+            KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys) config.GetProperty<int>("unitTargetOverlay"));
         }
 
+        /// <summary>
+        /// Quits the game. Effectively closes the game.
+        /// </summary>
         public static void Quit()
         {
             running = false;
         }
 
         public static Random Random => random;
-
         public static Point ScreenSize => new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
     }
 }

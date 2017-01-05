@@ -5,12 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MaxOfEmpires.Units
 {
-    class UnitTargetParticle : GameObjectDrawable
+    class TargetPositionParticle : GameObjectDrawable
     {
         private const double TIME_TO_LIVE = 0.5D; // seconds
         private double timeExisted;
 
-        public UnitTargetParticle(Vector2 drawPos)
+        public TargetPositionParticle(Vector2 drawPos)
         {
             DrawPosition = drawPos;
             DrawingTexture = AssetManager.Instance.getAsset<Texture2D>("TargetParticle");
