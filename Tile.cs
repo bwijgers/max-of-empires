@@ -28,7 +28,7 @@ namespace MaxOfEmpires
         /// </summary>
         private Unit unit;
 
-        private bool walkingOverlay;
+        private bool overlayAttack, overlayWalk;
 
         /// <summary>
         /// The x and y positions of this Tile in the containing Grid.
@@ -47,8 +47,9 @@ namespace MaxOfEmpires
             this.x = x;
             this.y = y;
             position = new Vector2(x * 32, y * 32);
-            walkingOverlay = false;
+            overlayAttack = overlayWalk = false;
         }
+
         /// <summary>
         /// The movement cost for a specified Unit to move to this Tile.
         /// </summary>
@@ -66,9 +67,15 @@ namespace MaxOfEmpires
             unit?.Draw(time, s);
 
             // Draw a walking overlay if it should be drawn
-            if (walkingOverlay)
+            if (overlayWalk)
             {
                 DrawingHelper.Instance.DrawRectangle(s, Bounds, new Color(0x00, 0x00, 0xFF, 0x88));
+            }
+
+            // Draw an attacking overlay if it should be drawn
+            if (overlayAttack)
+            {
+                DrawingHelper.Instance.DrawRectangle(s, Bounds, new Color(0xFF, 0x00, 0x00, 0x88));
             }
         }
 
@@ -134,6 +141,36 @@ namespace MaxOfEmpires
         /// </summary>
         public bool Occupied => Unit != null;
 
+        /// <summary>
+        /// True when the attacking overlay on this tile should be shown, false otherwise.
+        /// </summary>
+        public bool OverlayAttack
+        {
+            get
+            {
+                return overlayAttack;
+            }
+            set
+            {
+                overlayAttack = value;
+            }
+        }
+
+        /// <summary>
+        /// True when the walking overlay on this tile should be shown, false otherwise.
+        /// </summary>
+        public bool OverlayWalk
+        {
+            get
+            {
+                return overlayWalk;
+            }
+            set
+            {
+                overlayWalk = value;
+            }
+        }
+
         public override Vector2 Size
         {
             get
@@ -155,18 +192,6 @@ namespace MaxOfEmpires
             get
             {
                 return unit;
-            }
-        }
-
-        public bool WalkingOverlay
-        {
-            get
-            {
-                return walkingOverlay;
-            }
-            set
-            {
-                walkingOverlay = value;
             }
         }
     }

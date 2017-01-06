@@ -65,5 +65,15 @@ namespace MaxOfEmpires.Units
         {
             return new Range(this);
         }
+
+        /// <summary>
+        /// The maximum reach of this Range.
+        /// </summary>
+        public int Max => max;
+
+        /// <summary>
+        /// The minimum rach of this Range.
+        /// </summary>
+        public int Min => min;
     }
 }

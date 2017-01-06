@@ -118,6 +118,8 @@ namespace MaxOfEmpires
         {
             base.Draw(time, s);
 
+            // Draw selected Unit overlay, Unit move overlay and Unit attacking overlay
+
             // Draw the Unit target overlay, if it exists
             unitTargets.Draw(time, s);
         }
@@ -219,9 +221,21 @@ namespace MaxOfEmpires
             // Check if the player clicked a tile with a Unit on it, and select it if it's there. 
             else if (clickedTile.Occupied && clickedTile.Unit.Owner == currentPlayer && clickedTile.Unit.HasAction)
             {
+                // If the Unit can walk, show where it is allowed to walk. 
+                if (!clickedTile.Unit.HasMoved)
+                {
+                    Point[] walkablePositions = clickedTile.Unit.ReachableTiles();
+                    SetUnitWalkingOverlay(walkablePositions);
+                }
+
+                // This unit can be selected. Show the player it is selected too
                 SelectTile(clickedTile.GridPos);
-                Point[] walkablePositions = clickedTile.Unit.ReachableTiles();
-                SetUnitWalkingOverlay(walkablePositions);
+
+                // Add an overlay for enemy units that can be attacked
+                if (!clickedTile.Unit.HasAttacked)
+                {
+                    SetUnitAttackingOverlay(clickedTile.Unit);
+                }
             }
         }
 
@@ -235,7 +249,7 @@ namespace MaxOfEmpires
             Tile t = (this[p] as Tile);
             if (t != null)
             {
-                t.WalkingOverlay = false;
+                t.OverlayWalk = false;
             }
 
             // Select the new tile
@@ -245,17 +259,66 @@ namespace MaxOfEmpires
             if (selectedTile == InvalidTile)
             {
                 SetUnitWalkingOverlay(null);
+                SetUnitAttackingOverlay(null);
             }
             else
             {
-                (this[p] as Tile).WalkingOverlay = true;
+                (this[p] as Tile).OverlayWalk = true;
+            }
+        }
+
+        /// <summary>
+        /// Sets the attacking overlay on all tiles the parameter Unit can attack. Removes said overlay if the Unit == null.
+        /// </summary>
+        /// <param name="u">The Unit whose attacking overlay will be set.</param>
+        private void SetUnitAttackingOverlay(Unit u)
+        {
+            // If no Unit is selected (anymore), unset the walking overlay everywhere
+            if (u == null)
+            {
+                ForEach((obj, x, y) => {
+                    Tile t = obj as Tile;
+                    if (t != null)
+                        t.OverlayAttack = false;
+                });
+
+                return;
+            }
+
+            // Get the max range so we don't overshoot the search *too* much
+            int maxRange = u.Range.Max; // Hey Max :)
+
+            // Search each tile within max range and check if we can attack there
+            int startX = Math.Max(u.PositionInGrid.X - maxRange, 0); // Make sure we are in grid
+            int startY = Math.Max(u.PositionInGrid.Y - maxRange, 0); // Same as above
+            int endX = Math.Min(u.PositionInGrid.X + maxRange, Width); // Again, same as above
+            int endY = Math.Min(u.PositionInGrid.Y + maxRange, Height); // I hate repeating myself...
+
+            // Start searching already O_O
+            for (int x = startX; x < endX; ++x)
+            {
+                for (int y = startY; y < endY; ++y)
+                {
+                    // Get the current Tile
+                    Tile t = this[x, y] as Tile;
+
+                    // If there is a Unit we can attack, set that overlay to true
+                    if (t != null && t.Occupied && t.Unit.Owner != u.Owner)
+                    {
+                        // Check if the enemy is in range
+                        if (u.IsInRange(new Point(x, y)))
+                        {
+                            t.OverlayAttack = true;
+                        }
+                    }
+                }
             }
         }
 
         private void SetUnitWalkingOverlay(Point[] overlay)
         {
             // Remove overlay from everything
-            ForEach((obj, x, y) => (obj as Tile).WalkingOverlay = false);
+            ForEach((obj, x, y) => (obj as Tile).OverlayWalk = false);
 
             // No overlay should be drawn
             if (overlay == null || overlay.Length == 0)
@@ -268,7 +331,7 @@ namespace MaxOfEmpires
             {
                 if (IsInGrid(p))
                 {
-                    (this[p] as Tile).WalkingOverlay = true;
+                    (this[p] as Tile).OverlayWalk = true;
                 }
             }
         }
