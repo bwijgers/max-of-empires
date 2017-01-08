@@ -10,7 +10,7 @@ namespace MaxOfEmpires.Units
         private const double DRAW_INTERVAL_TIME = 0.05D;
         private const float MOVEMENT_SPEED = 16.0F;
 
-        private Unit.PathToTile path;
+        private Pathfinding.PathToTile path;
         private int indexInPath;
         private Vector2 drawPos;
         private Vector2 nextEnd;
@@ -20,7 +20,7 @@ namespace MaxOfEmpires.Units
         public TargetPositionOverlay(Unit u)
         {
             // Get the path along which to annotate the movement.
-            path = u.ShortestPath(u.TargetPosition);
+            path = Pathfinding.ShortestPath(u, u.TargetPosition);
             indexInPath = 0;
 
             // Set the initial position for drawing.

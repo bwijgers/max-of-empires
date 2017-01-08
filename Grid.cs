@@ -105,7 +105,7 @@ namespace MaxOfEmpires
                 if (t.Occupied && t.Unit.TargetPosition != t.Unit.PositionInGrid)
                 {
                     // Recalculate the Unit's paths
-                    t.Unit.GeneratePaths(new Point(x, y));
+                    Pathfinding.GeneratePaths(t.Unit, new Point(x, y));
 
                     // Make a UnitTargetOverlay for this and add it to the list of overlays
                     TargetPositionOverlay uto = new TargetPositionOverlay(t.Unit);
@@ -351,7 +351,7 @@ namespace MaxOfEmpires
                     Unit unit = tile.Unit;
                     if(unit.Owner != player) // End of turn for the player whose turn it is NOT right now.
                     {
-                        Point movePos = unit.MoveTowardsTarget();
+                        Point movePos = Pathfinding.MoveTowardsTarget(unit);
                         CheckMoveUnit(movePos, unit);
                     }
                 }

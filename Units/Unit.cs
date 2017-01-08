@@ -11,7 +11,7 @@ using MaxOfEmpires.Files;
 
 namespace MaxOfEmpires.Units
 {
-    partial class Unit : GameObjectDrawable
+    class Unit : GameObjectDrawable
     {
         /// <summary>
         /// Whether this unit has attacked. Units can only attack once.
@@ -40,6 +40,8 @@ namespace MaxOfEmpires.Units
         /// </summary>
         /// <see cref="Units.Stats"/>
         private Stats stats;
+
+        private Point target;
 
         private string texName;
 
@@ -258,7 +260,7 @@ namespace MaxOfEmpires.Units
             }
 
             // Get the distance to the specified position.
-            int distance = ShortestPath(new Point(x, y)).cost;
+            int distance = Pathfinding.ShortestPath(this, new Point(x, y)).cost;
 
             // Check if we can move to this position before actually just moving there. CanMoveTo decrements MovesLeft as well, if it is possible to move to the position.
             if (distance <= movesLeft)
@@ -373,6 +375,24 @@ namespace MaxOfEmpires.Units
             protected set
             {
                 stats = value;
+            }
+        }
+
+        /// <summary>
+        /// Target location.
+        /// </summary>
+        public Point TargetPosition
+        {
+            get
+            {
+                return target;
+            }
+            set
+            {
+                if ((GameWorld as Grid).IsInGrid(value))
+                {
+                    target = value;
+                }
             }
         }
     }
