@@ -141,7 +141,7 @@ namespace MaxOfEmpires.Units
             if (movingUnit.PositionInGrid != movingUnit.TargetPosition)
             {
                 GeneratePaths(movingUnit, movingUnit.PositionInGrid);
-                Point[] Path = ShortestPath(movingUnit, movingUnit.TargetPosition).path;
+                Point[] Path = ShortestPath(movingUnit, movingUnit.TargetPosition).path; // Threw nullpointer when clicking out of screen
                 int i = 0;
                 bool foundPath = false;
                 Point reachableTarget = movingUnit.PositionInGrid;

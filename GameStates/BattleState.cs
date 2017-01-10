@@ -17,7 +17,7 @@ namespace MaxOfEmpires.GameStates
         /// <summary>
         /// The battlegrid.
         /// </summary>
-        private Grid battleGrid;
+        private BattleGrid battleGrid;
 
         /// <summary>
         /// The overlay. Things like buttons are defined here. everything other than the grid is in here.
@@ -35,7 +35,8 @@ namespace MaxOfEmpires.GameStates
         public BattleState()
         {
             // Initialize the battlefield.
-            battleGrid = new Grid(15, 15);
+            battleGrid = new BattleGrid(15, 15);
+            battleGrid.InitField();
 
             // Initialize the overlay.
             overlay = new Overlays.OverlayBattleState();
@@ -57,7 +58,7 @@ namespace MaxOfEmpires.GameStates
             battleGrid.HandleInput(helper, manager);
 
             // Get the selected Unit
-            Unit u = battleGrid.SelectedTile?.Unit;
+            Soldier u = (Soldier) battleGrid.SelectedTile?.Unit;
 
             // Print the selected Unit's information, if it exists
             if (u != null)
@@ -71,7 +72,7 @@ namespace MaxOfEmpires.GameStates
                 Tile t = battleGrid.GetTileUnderMouse(helper);
                 if (t != null)
                 {
-                    overlay.PrintUnitInfo(t.Unit);
+                    overlay.PrintUnitInfo((Soldier) t.Unit);
                 }
             }
 
@@ -93,17 +94,26 @@ namespace MaxOfEmpires.GameStates
         /// </summary>
         public void TurnUpdate()
         {
+            // Change the current player
             currentPlayer = !currentPlayer;
+
+            // Increase the turn number when the blue player starts their turn
             if (currentPlayer)
                 ++turnNum;
+
+            // TurnUpdate the grid
             battleGrid.TurnUpdate(turnNum, currentPlayer);
 
+            // Show whose turn it is in the overlay
             overlay.labelCurrentPlayer.setLabelText("Current player: " + (currentPlayer ? "Blue" : "Red"));
         }
 
         public override void Update(GameTime time)
         {
+            // Update the grid
             battleGrid.Update(time);
+
+            // TurnUpdate when requested.
             if (shouldTurnUpdate)
             {
                 shouldTurnUpdate = false;
@@ -113,9 +123,6 @@ namespace MaxOfEmpires.GameStates
 
         public override void Reset()
         {
-            // Initialize the field
-            battleGrid.InitField();
-
             // Player 1 starts.
             currentPlayer = true;
 
@@ -130,6 +137,6 @@ namespace MaxOfEmpires.GameStates
         /// <summary>
         /// Accessor for the BattleGrid.
         /// </summary>
-        public Grid BattleGrid => battleGrid;
+        public BattleGrid BattleGrid => battleGrid;
     }
 }

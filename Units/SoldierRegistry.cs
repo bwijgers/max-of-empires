@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Units
 {
-    class UnitRegistry
+    class SoldierRegistry
     {
-        private static Dictionary<string, Unit> unitsByName = new Dictionary<string, Unit>();
+        private static Dictionary<string, Soldier> unitsByName = new Dictionary<string, Soldier>();
+        private static List<Soldier> allSoldiers = new List<Soldier>();
 
         /// <summary>
         /// Gets a Unit by its name, with a specified owner. Position will be (0,0) until set in the Grid at a specified position.
@@ -17,7 +18,7 @@ namespace MaxOfEmpires.Units
         /// <param name="name">The unlocalized name of the Unit to load.</param>
         /// <param name="owner">The owner of the Unit.</param>
         /// <returns>The requested Unit with specified owner.</returns>
-        public static Unit GetUnit(string name, bool owner)
+        public static Soldier GetSoldier(string name, bool owner)
         {
             return unitsByName[name].Copy(owner);
         }
@@ -28,8 +29,8 @@ namespace MaxOfEmpires.Units
         /// <param name="unitConfiguration">The configuration to load the Units from.</param>
         public static void Init(Configuration unitConfiguration)
         {
-            RegisterUnitFromConfiguration("swordsman", unitConfiguration.GetPropertySection("swordsman"));
-            RegisterUnitFromConfiguration("archer", unitConfiguration.GetPropertySection("archer"));
+            RegisterSoldierFromConfiguration("swordsman", unitConfiguration.GetPropertySection("swordsman"));
+            RegisterSoldierFromConfiguration("archer", unitConfiguration.GetPropertySection("archer"));
         }
 
         /// <summary>
@@ -37,9 +38,10 @@ namespace MaxOfEmpires.Units
         /// </summary>
         /// <param name="name">The name to register the Unit by.</param>
         /// <param name="u">The Unit to register.</param>
-        private static void RegisterUnit(string name, Unit u)
+        private static void RegisterSoldier(string name, Soldier u)
         {
             unitsByName[name] = u;
+            allSoldiers.Add(u);
         }
 
         /// <summary>
@@ -47,13 +49,15 @@ namespace MaxOfEmpires.Units
         /// </summary>
         /// <param name="name">The unlocalized name of the Unit to load.</param>
         /// <param name="c">The configuration to load the Unit from.</param>
-        public static void RegisterUnitFromConfiguration(string name, Configuration c)
+        public static void RegisterSoldierFromConfiguration(string name, Configuration c)
         {
             // Create a Unit
-            Unit u = Unit.LoadFromConfiguration(c);
+            Soldier u = Soldier.LoadFromConfiguration(c);
 
             // Register the Unit
-            RegisterUnit(name, u);
+            RegisterSoldier(name, u);
         }
+
+        public IList<Soldier> AllSoldiers => allSoldiers.AsReadOnly();
     }
 }

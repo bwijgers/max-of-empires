@@ -50,7 +50,7 @@ namespace MaxOfEmpires
 
             // Initialize units
             Configuration unitConfiguration = mainConfiguration.GetPropertySection("unit");
-            UnitRegistry.Init(unitConfiguration);
+            SoldierRegistry.Init(unitConfiguration);
 
             // Initialize keys
             InitializeKeys(FileManager.LoadConfig("Keys").GetPropertySection("key"));
@@ -73,9 +73,10 @@ namespace MaxOfEmpires
             LoadConfiguration();
 
             // Adds battleState to the GamestateManager
+            GameStateManager.AddState("economy", new EconomyState());
             GameStateManager.AddState("battle", new BattleState());
             GameStateManager.AddState("mainMenu", new MainMenuState());
-            GameStateManager.SwitchState("mainMenu");
+            GameStateManager.SwitchState("mainMenu", true);
         }
 
         /// <summary>

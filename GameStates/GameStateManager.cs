@@ -28,12 +28,24 @@ namespace MaxOfEmpires.GameStates
             CurrentState?.HandleInput(helper, keys);
         }
 
-        public static void SwitchState(string name)
+        public static GameState GetState(string name)
+        {
+            if (stateDict.ContainsKey(name))
+            {
+                return stateDict[name];
+            }
+            throw new KeyNotFoundException("GameState with name '" + name + "' does not exist.");
+        }
+
+        public static void SwitchState(string name, bool reset)
         {
             if (stateDict.ContainsKey(name))
             {
                 currentState = stateDict[name];
-                CurrentState.Reset();
+                if (reset)
+                {
+                    CurrentState.Reset();
+                }
                 return;
             }
             throw new KeyNotFoundException("GameState with name '" + name + "' does not exist.");
