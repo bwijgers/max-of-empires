@@ -238,7 +238,7 @@ namespace MaxOfEmpires
         protected void SetArmyAttackingOverlay(Army a)
         {
             // Use a swordsman, as it has a range of 1. 
-            Soldier swordsman = SoldierRegistry.GetSoldier("swordsman", a.Owner);
+            Soldier swordsman = SoldierRegistry.GetSoldier("unit.swordsman", a.Owner);
             swordsman.PositionInGrid = a.PositionInGrid;
             SetUnitAttackingOverlay(swordsman);
         }

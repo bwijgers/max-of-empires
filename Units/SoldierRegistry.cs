@@ -29,8 +29,8 @@ namespace MaxOfEmpires.Units
         /// <param name="unitConfiguration">The configuration to load the Units from.</param>
         public static void Init(Configuration unitConfiguration)
         {
-            RegisterSoldierFromConfiguration("swordsman", unitConfiguration.GetPropertySection("swordsman"));
-            RegisterSoldierFromConfiguration("archer", unitConfiguration.GetPropertySection("archer"));
+            RegisterSoldierFromConfiguration("unit.swordsman", unitConfiguration.GetPropertySection("swordsman"));
+            RegisterSoldierFromConfiguration("unit.archer", unitConfiguration.GetPropertySection("archer"));
         }
 
         /// <summary>

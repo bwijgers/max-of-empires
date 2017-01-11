@@ -14,6 +14,11 @@ namespace MaxOfEmpires.Units
     class Soldier : Unit
     {
         /// <summary>
+        /// The name of this type of Soldier.
+        /// </summary>
+        private string name;
+
+        /// <summary>
         /// The range in which this Unit can attack.
         /// </summary>
         private Range range;
@@ -26,9 +31,10 @@ namespace MaxOfEmpires.Units
 
         private string texName;
 
-        private Soldier(int x, int y, bool owner, string resName, int moveSpeed, Stats stats, Range range) : base(x, y, owner)
+        private Soldier(string name, int x, int y, bool owner, string resName, int moveSpeed, Stats stats, Range range) : base(x, y, owner)
         {
             // Set parameters
+            this.name = name;
             this.range = range;
             Stats = stats;
             this.texName = resName;
@@ -40,7 +46,7 @@ namespace MaxOfEmpires.Units
         /// </summary>
         /// <param name="original">The original to make a copy of.</param>
         /// <param name="owner">The owner of the copy of this Unit.</param>
-        public Soldier(Soldier original, bool owner) : this(original.PositionInGrid.X, original.PositionInGrid.Y, owner, original.texName, original.moveSpeed, original.stats.Copy(), original.range.Copy())
+        public Soldier(Soldier original, bool owner) : this(new string(original.name.ToCharArray()), original.PositionInGrid.X, original.PositionInGrid.Y, owner, original.texName, original.moveSpeed, original.stats.Copy(), original.range.Copy())
         {
             // Make sure the texture is loaded, or the game will crash.
             LoadTexture();
@@ -184,6 +190,11 @@ namespace MaxOfEmpires.Units
             return range.InRange(DistanceTo(p.X, p.Y));
         }
 
+        public bool IsSameType(Soldier other)
+        {
+            return other.name.Equals(name);
+        }
+
         public void LoadTexture()
         {
             // Get the texture based on the player (blue for p1, red for p2)
@@ -216,7 +227,7 @@ namespace MaxOfEmpires.Units
 
             // Load texture from config file
             string texName = config.GetProperty<string>("texture.name");
-            return new Soldier(0, 0, false, texName, moveSpeed, stats, range);
+            return new Soldier(config.GetProperty<string>("name"), 0, 0, false, texName, moveSpeed, stats, range);
         }
 
         public override void TurnUpdate(uint turn, bool player)
@@ -244,12 +255,17 @@ namespace MaxOfEmpires.Units
         public bool IsDead => stats.hp <= 0;
 
         /// <summary>
-        /// The range at which this Unit can attack.
+        /// The name of this type of Soldier.
+        /// </summary>
+        public string Name => name;
+
+        /// <summary>
+        /// The range at which this Soldier can attack.
         /// </summary>
         public Range Range => range;
 
         /// <summary>
-        /// The Stats of this Unit. 
+        /// The Stats of this Soldier. 
         /// </summary>
         /// <see cref="Units.Stats"/>
         public Stats Stats

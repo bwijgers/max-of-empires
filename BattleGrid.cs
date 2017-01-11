@@ -48,7 +48,7 @@ namespace MaxOfEmpires
             int currentY = 0;
 
             // Iterate over every type of Soldier in the attacking Army
-            foreach (Soldier s in attacker.UnitsAndCounts.Keys)
+            foreach (string s in attacker.UnitsAndCounts.Keys)
             {
                 // Get the amount of this kind of Soldier
                 int soldierCount = attacker.UnitsAndCounts[s];
@@ -56,7 +56,7 @@ namespace MaxOfEmpires
                 // Place them in a position based on how many soldiers we have passed so far.
                 for (; soldierCount > 0; --soldierCount)
                 {
-                    (this[currentX, currentY] as Tile).SetUnit(s.Copy(attacker.Owner));
+                    (this[currentX, currentY] as Tile).SetUnit(SoldierRegistry.GetSoldier(s, attacker.Owner));
                     ++currentX;
 
                     // Make sure we don't create a line of soldiers longer than the field.
@@ -72,13 +72,13 @@ namespace MaxOfEmpires
             currentX = Width - 1;
             currentY = Height - 1;
 
-            foreach (Soldier s in defender.UnitsAndCounts.Keys)
+            foreach (string s in defender.UnitsAndCounts.Keys)
             {
                 int soldierCount = defender.UnitsAndCounts[s];
 
                 for (; soldierCount > 0; --soldierCount)
                 {
-                    (this[currentX, currentY] as Tile).SetUnit(s.Copy(defender.Owner));
+                    (this[currentX, currentY] as Tile).SetUnit(SoldierRegistry.GetSoldier(s, defender.Owner));
                     --currentX;
 
                     if (currentX < 0)

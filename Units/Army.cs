@@ -13,7 +13,7 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The Soldiers and the amount of each Soldier in this Army.
         /// </summary>
-        private Dictionary<Soldier, int> unitsAndCounts; // It's a UAC, guys :o
+        private Dictionary<string, int> unitsAndCounts; // It's a UAC, guys :o
 
         /// <summary>
         /// Creates a new empty Army.
@@ -23,7 +23,7 @@ namespace MaxOfEmpires.Units
         /// <param name="owner">The player that is the owner of this Army.</param>
         public Army(int x, int y, bool owner) : base(x, y, owner)
         {
-            unitsAndCounts = new Dictionary<Soldier, int>();
+            unitsAndCounts = new Dictionary<string, int>();
         }
 
         /// <summary>
@@ -33,11 +33,11 @@ namespace MaxOfEmpires.Units
         /// <param name="y">The y-position on which this Army stands.</param>
         /// <param name="owner">The player that is the owner of this Army.</param>
         /// <param name="currentSoldiers">The Soldiers to add to this Army.</param>
-        public Army(int x, int y, bool owner, Dictionary<Soldier, int> currentSoldiers) : this(x, y, owner)
+        public Army(int x, int y, bool owner, Dictionary<string, int> currentSoldiers) : this(x, y, owner)
         {
-            foreach (Soldier u in currentSoldiers.Keys)
+            foreach (string unitName in currentSoldiers.Keys)
             {
-                unitsAndCounts[u] = currentSoldiers[u];
+                unitsAndCounts[unitName] = currentSoldiers[unitName];
             }
         }
 
@@ -55,8 +55,8 @@ namespace MaxOfEmpires.Units
             Random rand = MaxOfEmpires.Random;
 
             // Get the amount of Swordsmen and Archers we should have in this army
-            retVal.unitsAndCounts[SoldierRegistry.GetSoldier("swordsman", owner)] = rand.Next(30, 45);
-            retVal.unitsAndCounts[SoldierRegistry.GetSoldier("archer", owner)] = rand.Next(15, 30);
+            retVal.unitsAndCounts["unit.swordsman"] = rand.Next(1, 2);
+            retVal.unitsAndCounts["unit.archer"] = rand.Next(1, 3);
 
             // Return the newly generated Army
             return retVal;
@@ -73,23 +73,25 @@ namespace MaxOfEmpires.Units
                 return null; // Invalid army
 
             // Get all units
-            ICollection<Soldier> unitsInStack = unitsAndCounts.Keys;
+            ICollection<string> unitsInStack = unitsAndCounts.Keys;
 
             // Get the movespeed of the slowest one.
             int moveSpeed = 99999;
             Soldier slowest = null;
-            foreach (Soldier u in unitsInStack)
+            foreach (string unitName in unitsInStack)
             {
+                Soldier u = SoldierRegistry.GetSoldier(unitName, owner);
                 moveSpeed = Math.Min(moveSpeed, u.MoveSpeed);
                 slowest = u.Copy(owner);
             }
 
+            /* TODO: remove this
             // Set the slowest one to this position in this grid
             slowest.Parent = Parent;
             slowest.PositionInGrid = PositionInGrid;
             slowest.MovesLeft = movesLeft;
             slowest.TargetPosition = TargetPosition;
-
+            */
             // Return the unit that was found slowest
             return slowest;
         }
@@ -111,12 +113,13 @@ namespace MaxOfEmpires.Units
 
             // Set the drawing texture to the Unit that is most prevalent in this stack
             int maxUnits = 0;
-            foreach (Soldier u in unitsAndCounts.Keys)
+            foreach (string unitName in unitsAndCounts.Keys)
             {
-                if (unitsAndCounts[u] > maxUnits)
+                if (unitsAndCounts[unitName] > maxUnits)
                 {
+                    Soldier u = SoldierRegistry.GetSoldier(unitName, owner);
                     DrawingTexture = u.DrawingTexture;
-                    maxUnits = unitsAndCounts[u];
+                    maxUnits = unitsAndCounts[unitName];
                 }
             }
         }
@@ -129,6 +132,6 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The Soldiers and the amount of each Soldier in this Army.
         /// </summary>
-        public Dictionary<Soldier, int> UnitsAndCounts => unitsAndCounts;
+        public Dictionary<string, int> UnitsAndCounts => unitsAndCounts;
     }
 }
