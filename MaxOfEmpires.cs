@@ -126,7 +126,7 @@ namespace MaxOfEmpires
             GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin();
-            GameStateManager.Draw(gameTime, spriteBatch);// Draw the current game state
+            GameStateManager.Draw(gameTime, spriteBatch); // Draw the current game state
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -139,10 +139,10 @@ namespace MaxOfEmpires
         private void InitializeKeys(Configuration config)
         {
             KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys) config.GetProperty<int>("unitTargetOverlay"));
-            KeyManager.Instance.RegisterKey("moveCameraUp", Keys.Up);
-            KeyManager.Instance.RegisterKey("moveCameraDown", Keys.Down);
-            KeyManager.Instance.RegisterKey("moveCameraLeft", Keys.Left);
-            KeyManager.Instance.RegisterKey("moveCameraRight", Keys.Right);
+            KeyManager.Instance.RegisterKey("moveCameraUp", (Keys)config.GetProperty<int>("moveCameraUp"));
+            KeyManager.Instance.RegisterKey("moveCameraDown", (Keys)config.GetProperty<int>("moveCameraDown"));
+            KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft"));
+            KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight"));
         }
 
         /// <summary>
