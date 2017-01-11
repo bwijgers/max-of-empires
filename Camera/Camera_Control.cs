@@ -75,7 +75,7 @@ namespace MaxOfEmpires
         {
             switch (direction)
             {
-                //Moves the camera upwards
+                // Moves the camera upwards
                 case "up":
                 case "Up":
                     {
@@ -83,7 +83,7 @@ namespace MaxOfEmpires
                         break;
                     }
 
-                //moves the camera downwards
+                // Moves the camera downwards
                 case "down":
                 case "Down":
                     {
@@ -91,7 +91,7 @@ namespace MaxOfEmpires
                         break;
                     }
 
-                //moves the camera downwards
+                // Moves the camera left
                 case "left":
                 case "Left":
                     {
@@ -99,7 +99,7 @@ namespace MaxOfEmpires
                         break;
                     }
                     
-                    //moves the camera downwards
+                // Moves the camera right
                 case "right":
                 case "Right":
                     {

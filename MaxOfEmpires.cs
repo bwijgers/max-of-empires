@@ -15,7 +15,6 @@ namespace MaxOfEmpires
         private static GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private InputHelper inputHelper;
-        private KeyManager keyManager;
         private static Random random = new Random((int) DateTime.Now.Ticks);
         private static bool running = true;
         public static Camera camera = new Camera();

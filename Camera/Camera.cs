@@ -19,7 +19,10 @@ namespace MaxOfEmpires
         /// </summary>
         public Vector2 Position
         {
-            get { return position; }
+            get
+            {
+                return position;
+            }
             set
             {
                 position = value;
@@ -36,7 +39,10 @@ namespace MaxOfEmpires
         /// </summary>
         public Vector2 Center
         {
-            get { return new Vector2(Position.X + 1920 / 2, Position.Y + 1080 / 2); }
+            get
+            {
+                return new Vector2(Position.X + 1920 / 2, Position.Y + 1080 / 2);
+            }
             set
             {
                 position.X = value.X - 1920 / 2;
