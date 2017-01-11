@@ -56,47 +56,6 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
-        /// Checks whether a Unit can attack a Unit at the specified tile, and attacks it if it's possible.
-        /// </summary>
-        /// <param name="newPos">The position for the Unit to attack.</param>
-        /// <param name="unit">The Unit which attacks.</param>
-        /// <returns>True if the Unit attacked, false otherwise.</returns>
-        public bool CheckAttackSoldier(Point tileToAttack, Soldier attackingUnit)
-        {
-            // Cannot attack more than once a turn. 
-            if (attackingUnit.HasAttacked)
-                return false;
-
-            Tile toAttack = this[tileToAttack] as Tile;
-
-            // Make sure the attack square is occupied by an enemy unit
-            if(!toAttack.Occupied || toAttack.Unit.Owner == attackingUnit.Owner)
-            {
-                return false; // nothing to attack
-            }
-
-            // Make sure the attack square is in range of the attacking unit
-            if (!attackingUnit.IsInRange(tileToAttack))
-            {
-                return false; // Enemy not in range
-            }
-
-            // We can actually attack this? Nice :D
-            attackingUnit.Attack(tileToAttack);
-
-            // After a battle, check if there are dead Units, and remove these if they are dead
-            ForEach((obj, x, y) => {
-                Tile t = obj as Tile;
-                if (t.Occupied && (t.Unit as Soldier).IsDead)
-                {
-                    t.SetUnit(null);
-                }
-            });
-
-            return true;
-        }
-
-        /// <summary>
         /// Clears the target positions of all Units on the grid.
         /// </summary>
         protected void ClearAllTargetPositions()

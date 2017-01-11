@@ -1,4 +1,5 @@
 ﻿using MaxOfEmpires.GameObjects;
+using MaxOfEmpires.GameStates;
 using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,6 +15,49 @@ namespace MaxOfEmpires
     {
         public BattleGrid(int width, int height, string id = "") : base(width, height, id) // TODO: make this load from procedural generation.
         {
+        }
+
+        /// <summary>
+        /// Checks whether a Unit can attack a Unit at the specified tile, and attacks it if it's possible.
+        /// </summary>
+        /// <param name="newPos">The position for the Unit to attack.</param>
+        /// <param name="unit">The Unit which attacks.</param>
+        /// <returns>True if the Unit attacked, false otherwise.</returns>
+        public bool CheckAttackSoldier(Point tileToAttack, Soldier attackingUnit)
+        {
+            // Cannot attack more than once a turn. 
+            if (attackingUnit.HasAttacked)
+                return false;
+
+            Tile toAttack = this[tileToAttack] as Tile;
+
+            // Make sure the attack square is occupied by an enemy unit
+            if (!toAttack.Occupied || toAttack.Unit.Owner == attackingUnit.Owner)
+            {
+                return false; // nothing to attack
+            }
+
+            // Make sure the attack square is in range of the attacking unit
+            if (!attackingUnit.IsInRange(tileToAttack))
+            {
+                return false; // Enemy not in range
+            }
+
+            // We can actually attack this? Nice :D
+            attackingUnit.Attack(toAttack);
+
+            // After a battle, check if there are dead Units, and remove these if they are dead
+            Soldier defender = toAttack.Unit as Soldier;
+            if (defender.IsDead)
+            {
+                OnKillSoldier(defender);
+            }
+            if (attackingUnit.IsDead)
+            {
+                OnKillSoldier(attackingUnit);
+            }
+
+            return true;
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
@@ -34,6 +78,58 @@ namespace MaxOfEmpires
                     this[x, y] = new Tile(Terrain.Plains, x, y);
                 }
             }
+        }
+
+        /// <summary>
+        /// Called when a Soldier dies in battle.
+        /// </summary>
+        /// <param name="deadSoldier">The Soldier that died.</param>
+        private void OnKillSoldier(Soldier deadSoldier)
+        {
+            // Remove this Soldier as it is dead
+            (this[deadSoldier.PositionInGrid] as Tile).SetUnit(null);
+
+            // If there are no Soldiers left on this side, the enemy won D:
+            bool foundAlly = false;
+
+            // Check all tiles
+            ForEach((obj, x, y) => {
+                Tile t = obj as Tile;
+
+                // If there is an ally, update this condition
+                if (t.Occupied && t.Unit.Owner == deadSoldier.Owner)
+                {
+                    foundAlly = true;
+                }
+            });
+
+            // If we found no ally, the enemy won.
+            if (!foundAlly)
+            {
+                OnPlayerWinBattle(!deadSoldier.Owner);
+            }
+        }
+
+        /// <summary>
+        /// Called when a player wins a battle (because all enemies died).
+        /// </summary>
+        /// <param name="winningPlayer">The player that won the battle.</param>
+        private void OnPlayerWinBattle(bool winningPlayer)
+        {
+            // Find what's left of our army
+            Army remainingArmy = new Army(0, 0, winningPlayer);
+            ForEach((obj, x, y) => {
+                Tile t = obj as Tile;
+
+                // See if there's a Soldier belonging to the winning player here
+                if (t.Occupied && t.Unit.Owner == winningPlayer)
+                {
+                    remainingArmy.AddSoldier(t.Unit as Soldier);
+                }
+            });
+
+            // Tell economy grid what's left and go back to economy grid
+            GameStateManager.OnPlayerWinBattle(remainingArmy);
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,7 +11,7 @@ namespace MaxOfEmpires.GameStates
 {
     class EconomyState : GameState
     {
-        private Grid ecoGrid;
+        private EconomyGrid ecoGrid;
 
         private Overlays.OverlayEconomyState overlay; 
 
@@ -69,6 +70,11 @@ namespace MaxOfEmpires.GameStates
                 shouldTurnUpdate = false;
                 TurnUpdate();
             }
+        }
+
+        public void OnPlayerWinBattle(Army remainingArmy)
+        {
+            ecoGrid.OnPlayerWinBattle(remainingArmy);
         }
 
         public override void Reset()

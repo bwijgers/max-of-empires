@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MaxOfEmpires.Units;
 
 namespace MaxOfEmpires.GameStates
 {
@@ -57,5 +58,24 @@ namespace MaxOfEmpires.GameStates
         }
 
         private static GameState CurrentState => currentState;
+
+        public static void OnInitiateBattle(Army attackingArmy, Army defendingArmy)
+        {
+            // Get the battle state
+            BattleState state = (BattleState)GetState("battle");
+
+            // Create the new battle grid
+            state.OnInitiateBattle(attackingArmy, defendingArmy);
+
+            // Switch to the battle state
+            SwitchState("battle", true);
+        }
+
+        public static void OnPlayerWinBattle(Army remainingArmy)
+        {
+            EconomyState state = GetState("economy") as EconomyState;
+            state.OnPlayerWinBattle(remainingArmy);
+            SwitchState("economy", false);
+        }
     }
 }

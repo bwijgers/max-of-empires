@@ -80,6 +80,12 @@ namespace MaxOfEmpires.GameStates
             overlay.update(helper);
         }
 
+        public void OnInitiateBattle(Army attackingArmy, Army defendingArmy)
+        {
+            battleGrid.InitField();
+            battleGrid.PopulateField(attackingArmy, defendingArmy);
+        }
+
         /// <summary>
         /// Initializes the overlay. Add all GuiElements here.
         /// </summary>

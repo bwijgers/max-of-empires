@@ -53,24 +53,19 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
-        /// Attacks a Unit at the specified position. 
+        /// Attacks a Unit at the specified position. Assumes the enemy is in range.
         /// </summary>
-        /// <param name="attackPos">The position to attack.</param>
-        public void Attack(Point attackPos)
+        /// <param name="attackPos">The tile to attack.</param>
+        public void Attack(Tile attackPos)
         {
-            // Get the gameWorld and the Tile to attack a Unit on. 
-            Grid gameWorld = GameWorld as Grid;
-            Tile toAttack = gameWorld[attackPos] as Tile;
-
             // Check if the attacking tile actually has a Unit to attack. 
-            // Also check if the Unit can actually attack the enemy from here.
-            if (!toAttack.Occupied && IsInRange(attackPos))
+            if (!attackPos.Occupied)
             {
                 return; // This should *never* happen. 
             }
 
             // Actually damage the enemy unit.
-            Unit u = toAttack.Unit;
+            Unit u = attackPos.Unit;
             if(!(u is Soldier))
             {
                 return; // SHOULD NEVER HAPPEN
@@ -210,8 +205,10 @@ namespace MaxOfEmpires.Units
         /// Loads a Unit from a configuration. 
         /// </summary>
         /// Note that a Unit requires these keys:
+        ///   - name (a string)
         ///   - stats (a Stats object. <see cref="Units.Stats.LoadFromConfiguration(Configuration)"/>
         ///   - range (a Range object. <see cref="Units.Range.LoadFromConfiguration(Configuration)"/> 
+        ///   - texture.name (a string)
         /// <param name="config">The configuration file/subsection to load from.</param>
         /// <returns>A Unit as loaded from the configuration.</returns>
         public static Soldier LoadFromConfiguration(Configuration config)

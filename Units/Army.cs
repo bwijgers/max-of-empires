@@ -62,6 +62,15 @@ namespace MaxOfEmpires.Units
             return retVal;
         }
 
+        public void AddSoldier(Soldier s)
+        {
+            if (unitsAndCounts.ContainsKey(s.Name))
+            {
+                ++unitsAndCounts[s.Name];
+            }
+            unitsAndCounts[s.Name] = 1;
+        }
+
         /// <summary>
         /// Gets the Soldier in this Army with the lowest movement speed. Used to update moves left at the start of a turn.
         /// </summary>
@@ -78,20 +87,14 @@ namespace MaxOfEmpires.Units
             // Get the movespeed of the slowest one.
             int moveSpeed = 99999;
             Soldier slowest = null;
-            foreach (string unitName in unitsInStack)
+            foreach (string soldierType in unitsInStack)
             {
-                Soldier u = SoldierRegistry.GetSoldier(unitName, owner);
-                moveSpeed = Math.Min(moveSpeed, u.MoveSpeed);
-                slowest = u.Copy(owner);
+                Soldier soldier = SoldierRegistry.GetSoldier(soldierType, owner);
+                moveSpeed = Math.Min(moveSpeed, soldier.MoveSpeed);
+                if (moveSpeed == soldier.MoveSpeed)
+                    slowest = soldier.Copy(owner);
             }
 
-            /* TODO: remove this
-            // Set the slowest one to this position in this grid
-            slowest.Parent = Parent;
-            slowest.PositionInGrid = PositionInGrid;
-            slowest.MovesLeft = movesLeft;
-            slowest.TargetPosition = TargetPosition;
-            */
             // Return the unit that was found slowest
             return slowest;
         }
@@ -113,13 +116,13 @@ namespace MaxOfEmpires.Units
 
             // Set the drawing texture to the Unit that is most prevalent in this stack
             int maxUnits = 0;
-            foreach (string unitName in unitsAndCounts.Keys)
+            foreach (string soldierType in unitsAndCounts.Keys)
             {
-                if (unitsAndCounts[unitName] > maxUnits)
+                if (unitsAndCounts[soldierType] > maxUnits)
                 {
-                    Soldier u = SoldierRegistry.GetSoldier(unitName, owner);
-                    DrawingTexture = u.DrawingTexture;
-                    maxUnits = unitsAndCounts[unitName];
+                    Soldier soldier = SoldierRegistry.GetSoldier(soldierType, owner);
+                    DrawingTexture = soldier.DrawingTexture;
+                    maxUnits = unitsAndCounts[soldierType];
                 }
             }
         }
