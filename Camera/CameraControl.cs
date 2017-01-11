@@ -4,11 +4,11 @@ namespace MaxOfEmpires
 {
     public partial class Camera
     {
-        private float CameraMoveSpeed = 1.00f;
-        private int CameraBreakoffX = GraphicsDeviceManager.DefaultBackBufferWidth;
-        private int CameraBreakoffY = GraphicsDeviceManager.DefaultBackBufferHeight;
-        private int CameraMouseMargin = 5;
-        public bool UseMouse = false;
+        private float cameraMoveSpeed = 1.00f;
+        private int cameraBreakoffX = GraphicsDeviceManager.DefaultBackBufferWidth;
+        private int cameraBreakoffY = GraphicsDeviceManager.DefaultBackBufferHeight;
+        private int cameraMouseMargin = 5;
+        public bool useMouse = false;
 
         /// <summary>
         /// A function that checks if the mouse is in such a position that the camera should move.
@@ -42,22 +42,22 @@ namespace MaxOfEmpires
 
             if (useMouse)
             {
-                if (inputHelper.MousePosition.Y < CameraMouseMargin && inputHelper.MousePosition.Y >= 0)
+                if (inputHelper.MousePosition.Y < cameraMouseMargin && inputHelper.MousePosition.Y >= 0)
                 {
                     MoveCamera("up");
                 }
 
-                if (inputHelper.MousePosition.Y > CameraBreakoffY - CameraMouseMargin && inputHelper.MousePosition.Y<= CameraBreakoffY)
+                if (inputHelper.MousePosition.Y > cameraBreakoffY - cameraMouseMargin && inputHelper.MousePosition.Y<= cameraBreakoffY)
                 {
                     MoveCamera("Down");
                 }
 
-                if (inputHelper.MousePosition.X < CameraMouseMargin && inputHelper.MousePosition.X >= 0)
+                if (inputHelper.MousePosition.X < cameraMouseMargin && inputHelper.MousePosition.X >= 0)
                 {
                     MoveCamera("Left");
                 }
 
-                if (inputHelper.MousePosition.X > CameraBreakoffX - CameraMouseMargin && inputHelper.MousePosition.X <= CameraBreakoffX)
+                if (inputHelper.MousePosition.X > cameraBreakoffX - cameraMouseMargin && inputHelper.MousePosition.X <= cameraBreakoffX)
                 {
                     MoveCamera("Right");
                 }
@@ -70,16 +70,16 @@ namespace MaxOfEmpires
         /// <summary>
         /// This function moves the camera in a specified direction.
         /// </summary>
-        /// <param name="Direction"> The direction to which the camera should move (up, down, left, right) </param>
-        public void MoveCamera(string Direction)
+        /// <param name="direction"> The direction to which the camera should move (up, down, left, right) </param>
+        public void MoveCamera(string direction)
         {
-            switch (Direction)
+            switch (direction)
             {
                 //Moves the camera upwards
                 case "up":
                 case "Up":
                     {
-                        MaxOfEmpires.camera.Position += new Vector2(0, -CameraMoveSpeed);
+                        MaxOfEmpires.camera.Position += new Vector2(0, -cameraMoveSpeed);
                         break;
                     }
 
@@ -87,7 +87,7 @@ namespace MaxOfEmpires
                 case "down":
                 case "Down":
                     {
-                        MaxOfEmpires.camera.Position += new Vector2(0, CameraMoveSpeed);
+                        MaxOfEmpires.camera.Position += new Vector2(0, cameraMoveSpeed);
                         break;
                     }
 
@@ -95,7 +95,7 @@ namespace MaxOfEmpires
                 case "left":
                 case "Left":
                     {
-                        MaxOfEmpires.camera.Position += new Vector2(-CameraMoveSpeed, 0);
+                        MaxOfEmpires.camera.Position += new Vector2(-cameraMoveSpeed, 0);
                         break;
                     }
                     
@@ -103,7 +103,7 @@ namespace MaxOfEmpires
                 case "right":
                 case "Right":
                     {
-                        MaxOfEmpires.camera.Position += new Vector2(CameraMoveSpeed, 0);
+                        MaxOfEmpires.camera.Position += new Vector2(cameraMoveSpeed, 0);
                         break;
                     }
 
@@ -117,7 +117,7 @@ namespace MaxOfEmpires
         /// <param name="inputHelper"> the inputhelper</param>
         public void Update(GameTime gameTime, InputHelper inputHelper, KeyManager keyManager)
         {
-            CheckMousePositionForCamera(UseMouse, inputHelper, keyManager);
+            CheckMousePositionForCamera(useMouse, inputHelper, keyManager);
         }
 
     }

@@ -95,7 +95,7 @@ namespace MaxOfEmpires
             //TIJDELIJKE CODE TOT WE SETTINGS HEBBEN OM TE SWITCHEN TUSSEN MOUSE EN KEYBOARD CONTROLL VAN DE CAMERA
             if (inputHelper.KeyPressed(Keys.K))
             {
-                camera.UseMouse = !camera.UseMouse;
+                camera.useMouse = !camera.useMouse;
             }
             //EINDE TIJDELIJKE CODE
 

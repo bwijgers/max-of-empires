@@ -32,9 +32,9 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
-        /// returns or sets the camera centre
+        /// returns or sets the camera center
         /// </summary>
-        public Vector2 Centre
+        public Vector2 Center
         {
             get { return new Vector2(Position.X + 1920 / 2, Position.Y + 1080 / 2); }
             set
