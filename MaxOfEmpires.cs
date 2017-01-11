@@ -20,6 +20,7 @@ namespace MaxOfEmpires
         private static Random random = new Random((int) DateTime.Now.Ticks);
         private static bool running = true;
         private Configuration mainConfiguration;
+        public static Camera camera = new Camera();
 
         public MaxOfEmpires()
         {
@@ -100,10 +101,18 @@ namespace MaxOfEmpires
             }
 
             inputHelper.Update(gameTime);
+            camera.Update(gameTime, inputHelper, KeyManager.Instance);
 
             // Update current gamestate
             GameStateManager.Update(gameTime);
             GameStateManager.HandleInput(inputHelper, KeyManager.Instance);
+
+            //TIJDELIJKE CODE TOT WE SETTINGS HEBBEN OM TE SWITCHEN TUSSEN MOUSE EN KEYBOARD CONTROLL VAN DE CAMERA
+            if (inputHelper.KeyPressed(Keys.K))
+            {
+                camera.useMouse = !camera.useMouse;
+            }
+            //EINDE TIJDELIJKE CODE
 
             base.Update(gameTime);
         }
@@ -130,6 +139,10 @@ namespace MaxOfEmpires
         private void InitializeKeys(Configuration config)
         {
             KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys) config.GetProperty<int>("unitTargetOverlay"));
+            KeyManager.Instance.RegisterKey("moveCameraUp", Keys.Up);
+            KeyManager.Instance.RegisterKey("moveCameraDown", Keys.Down);
+            KeyManager.Instance.RegisterKey("moveCameraLeft", Keys.Left);
+            KeyManager.Instance.RegisterKey("moveCameraRight", Keys.Right);
         }
 
         /// <summary>

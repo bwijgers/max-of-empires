@@ -86,7 +86,7 @@ namespace MaxOfEmpires.GameObjects
                 {
                     return Parent.DrawPosition + position;
                 }
-                return position;
+                return position - MaxOfEmpires.camera.Position;
             }
             set
             {

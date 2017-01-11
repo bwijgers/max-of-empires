@@ -42,6 +42,8 @@
     <Compile Include="Files\Configuration.cs" />
     <Compile Include="Files\FileManager.cs" />
     <Compile Include="Files\Property.cs" />
+    <Compile Include="Camera\Camera.cs" />
+    <Compile Include="Camera\Camera_Control.cs" />
     <Compile Include="GameObjects\GameObjectAnimated.cs" />
     <Compile Include="GameObjects\GameObjectDrawable.cs" />
     <Compile Include="GameStates\BattleState.cs" />
