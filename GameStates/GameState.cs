@@ -10,7 +10,7 @@ namespace MaxOfEmpires.GameStates
 {
     abstract class GameState
     {
-        public abstract void Draw(GameTime time, SpriteBatch s);
+        public abstract void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS);
 
         public virtual void HandleInput(InputHelper helper, KeyManager manager)
         {
@@ -21,5 +21,7 @@ namespace MaxOfEmpires.GameStates
         }
 
         public abstract void Update(GameTime time);
+
+        public abstract Vector2 GetCurrentGridSize();
     }
 }

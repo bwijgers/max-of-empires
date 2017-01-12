@@ -12,8 +12,16 @@ using MaxOfEmpires.Units;
 namespace MaxOfEmpires.GameStates
 {
     
-    class BattleState : GameState
+   class BattleState : GameState
     {
+
+        public override Vector2 GetCurrentGridSize()
+        {
+            int x = battleGrid.Width;
+            int y = battleGrid.Height;
+            return new Vector2(x, y);
+        }
+
         /// <summary>
         /// The battlegrid.
         /// </summary>
@@ -35,7 +43,7 @@ namespace MaxOfEmpires.GameStates
         public BattleState()
         {
             // Initialize the battlefield.
-            battleGrid = new Grid(15, 15);
+            battleGrid = new Grid(30, 25);
 
             // Initialize the overlay.
             overlay = new Overlays.OverlayBattleState();
@@ -45,10 +53,10 @@ namespace MaxOfEmpires.GameStates
             Reset();
         }
 
-        public override void Draw(GameTime time, SpriteBatch s)
+        public override void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS)
         {
-            battleGrid.Draw(time, s);
-            overlay.draw(s);
+            battleGrid.Draw(time, gameObjectS);
+            overlay.draw(overlayS);
         }
 
         public override void HandleInput(InputHelper helper, KeyManager manager)

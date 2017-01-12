@@ -48,7 +48,19 @@ namespace MaxOfEmpires
 
         public Dictionary<Keys, char> TextKeys => alphabetKeys;
         public bool MouseLeftButtonPressed => currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released;
-        public Vector2 MousePosition => currentMouse.Position.ToVector2();
+        public Vector2 GetMousePosition(bool basedOnCamera)
+        {
+            if (!basedOnCamera)
+            {
+                return currentMouse.Position.ToVector2();
+            }
+
+            else
+            {
+                return currentMouse.Position.ToVector2() / MaxOfEmpires.Zoom;
+            }
+        }
+
         public bool MouseRightButtonPressed => currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released;
     }
 }

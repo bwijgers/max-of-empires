@@ -131,7 +131,7 @@ namespace MaxOfEmpires
         public Tile GetTileUnderMouse(InputHelper helper, bool onClick = false)
         {
             // Get the current grid position the player clicked at
-            Vector2 mousePosRelativeToGrid = helper.MousePosition - DrawPosition;
+            Vector2 mousePosRelativeToGrid = helper.GetMousePosition(true) - DrawPosition;
             Point gridPos = (mousePosRelativeToGrid / 32).ToPoint();
 
             // Just unselect this tile if the user clicks this again.

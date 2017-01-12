@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using MaxOfEmpires.GameStates;
 
 namespace MaxOfEmpires
 {
     public partial class Camera
     {
         private float CameraMoveSpeed = 1.00f;
-        private int CameraBreakoffX = GraphicsDeviceManager.DefaultBackBufferWidth;
+        private int CameraBreakoffX = 480;
         private int CameraBreakoffY = GraphicsDeviceManager.DefaultBackBufferHeight;
         private int CameraMouseMargin = 5;
         public bool UseMouse = false;
@@ -17,6 +18,17 @@ namespace MaxOfEmpires
         /// <param name="inputHelper">the input helper</param>
         public void CheckMousePositionForCamera(bool useMouse, InputHelper inputHelper, KeyManager keyManager)
         {
+
+            if (keyManager.IsKeyDown("zoomCameraIn", inputHelper))
+            {
+                MoveCamera("in");
+            }
+
+            if (keyManager.IsKeyDown("zoomCameraOut", inputHelper))
+            {
+                MoveCamera("out");
+            }
+
             if (!useMouse)
             {
                 if (keyManager.IsKeyDown("moveCameraUp", inputHelper))
@@ -42,22 +54,22 @@ namespace MaxOfEmpires
 
             if (useMouse)
             {
-                if (inputHelper.MousePosition.Y < CameraMouseMargin && inputHelper.MousePosition.Y >= 0)
+                if (inputHelper.GetMousePosition(false).Y < CameraMouseMargin && inputHelper.GetMousePosition(false).Y >= 0)
                 {
                     MoveCamera("up");
                 }
 
-                if (inputHelper.MousePosition.Y > CameraBreakoffY - CameraMouseMargin && inputHelper.MousePosition.Y<= CameraBreakoffY)
+                if (inputHelper.GetMousePosition(false).Y > CameraBreakoffY - CameraMouseMargin && inputHelper.GetMousePosition(false).Y<= CameraBreakoffY)
                 {
                     MoveCamera("Down");
                 }
 
-                if (inputHelper.MousePosition.X < CameraMouseMargin && inputHelper.MousePosition.X >= 0)
+                if (inputHelper.GetMousePosition(false).X < CameraMouseMargin && inputHelper.GetMousePosition(false).X >= 0)
                 {
                     MoveCamera("Left");
                 }
 
-                if (inputHelper.MousePosition.X > CameraBreakoffX - CameraMouseMargin && inputHelper.MousePosition.X <= CameraBreakoffX)
+                if (inputHelper.GetMousePosition(false).X > CameraBreakoffX - CameraMouseMargin && inputHelper.GetMousePosition(false).X <= CameraBreakoffX)
                 {
                     MoveCamera("Right");
                 }
@@ -78,7 +90,7 @@ namespace MaxOfEmpires
                 //Moves the camera upwards
                 case "up":
                 case "Up":
-                    {
+                    { 
                         MaxOfEmpires.camera.Position += new Vector2(0, -CameraMoveSpeed);
                         break;
                     }
@@ -91,7 +103,7 @@ namespace MaxOfEmpires
                         break;
                     }
 
-                //moves the camera downwards
+                //moves the camera towards the left
                 case "left":
                 case "Left":
                     {
@@ -99,7 +111,7 @@ namespace MaxOfEmpires
                         break;
                     }
                     
-                    //moves the camera downwards
+                //moves the camera towards the right
                 case "right":
                 case "Right":
                     {
@@ -107,7 +119,42 @@ namespace MaxOfEmpires
                         break;
                     }
 
+                //zooms the camera in
+                case "in":
+                case "In":
+                    {
+                        MaxOfEmpires.Zoom = MathHelper.Clamp(MaxOfEmpires.Zoom + 0.01f, 1.0f, 5.0f);
+                        break;
+                    }
+
+                //zooms the camera out
+                case "out":
+                case "Out":
+                    {
+                        MaxOfEmpires.Zoom = MathHelper.Clamp(MaxOfEmpires.Zoom - 0.01f, 1.0f, 5.0f);
+
+                        float cameraGridCompFactorX2 = ((GameStateManager.GridSize.X - 15) * 32);
+                        float cameraGridCompFactorY2 = ((GameStateManager.GridSize.Y - 15) * 32);
+                        float cameraGridCalc2 = 480 - (480 / MaxOfEmpires.Zoom);
+
+                        //caps the camera so it wont move past the grid
+                        float x2 = MathHelper.Clamp(MaxOfEmpires.camera.Position.X, 0.0f, (int)(cameraGridCalc2 + cameraGridCompFactorX2));
+                        float y2 = MathHelper.Clamp(MaxOfEmpires.camera.Position.Y, 0.0f, (int)(cameraGridCalc2 + cameraGridCompFactorY2));
+                        MaxOfEmpires.camera.Position = new Vector2(x2, y2);
+                        break;
+                    }
+                
+
             }
+            
+            float cameraGridCompFactorX = ((GameStateManager.GridSize.X - 15) * 32);
+            float cameraGridCompFactorY = ((GameStateManager.GridSize.Y - 15) * 32);
+            float cameraGridCalc = 480 - (480 / MaxOfEmpires.Zoom);
+
+            //caps the camera so it wont move past the grid
+            float x = MathHelper.Clamp(MaxOfEmpires.camera.Position.X, 0.0f, (int)(cameraGridCalc + cameraGridCompFactorX));
+            float y = MathHelper.Clamp(MaxOfEmpires.camera.Position.Y, 0.0f, (int)(cameraGridCalc + cameraGridCompFactorY));
+            MaxOfEmpires.camera.Position = new Vector2(x, y);
         }
 
         /// <summary>
