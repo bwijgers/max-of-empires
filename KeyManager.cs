@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 
@@ -13,6 +12,7 @@ namespace MaxOfEmpires
         /// A delegate for pressing a key registered by the KeyManager.
         /// </summary>
         public delegate void KeyPressHandler();
+
         private Dictionary<string, KeyPressHandler> keyHandlers;
         private Dictionary<string, Keys> keysByName;
         

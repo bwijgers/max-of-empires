@@ -9,6 +9,22 @@ namespace MaxOfEmpires.Units
 {
     class Range
     {
+        /// <summary>
+        /// Loads a Range object from the specified configuration.
+        /// </summary>
+        /// Note that a Range object requires the following keys:
+        ///   - min (int)
+        ///   - max (int)
+        /// <param name="config">The configuration to load from.</param>
+        /// <returns>The Range object as in the configuration.</returns>
+        public static Range LoadFromConfiguration(Configuration config)
+        {
+            int max = config.GetProperty<int>("max");
+            int min = config.GetProperty<int>("min");
+
+            return new Range(min, max);
+        }
+
         private int max;
         private int min;
 
@@ -39,22 +55,6 @@ namespace MaxOfEmpires.Units
         public bool InRange(int v)
         {
             return v >= min && v <= max;
-        }
-
-        /// <summary>
-        /// Loads a Range object from the specified configuration.
-        /// </summary>
-        /// Note that a Range object requires the following keys:
-        ///   - min (int)
-        ///   - max (int)
-        /// <param name="config">The configuration to load from.</param>
-        /// <returns>The Range object as in the configuration.</returns>
-        public static Range LoadFromConfiguration(Configuration config)
-        {
-            int max = config.GetProperty<int>("max");
-            int min = config.GetProperty<int>("min");
-
-            return new Range(min, max);
         }
 
         /// <summary>

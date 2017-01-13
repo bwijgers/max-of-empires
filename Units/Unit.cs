@@ -104,22 +104,6 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
-        /// The position in the Grid this Unit occupies.
-        /// </summary>
-        public Point PositionInGrid
-        {
-            get
-            {
-                return new Point(x, y);
-            }
-            set
-            {
-                this.x = value.X;
-                this.y = value.Y;
-            }
-        }
-
-        /// <summary>
         /// Whether this unit can still perform an action this turn. 
         /// </summary>
         public virtual bool HasAction => !HasMoved;
@@ -167,6 +151,22 @@ namespace MaxOfEmpires.Units
             set
             {
                 owner = value;
+            }
+        }
+
+        /// <summary>
+        /// The position in the Grid this Unit occupies.
+        /// </summary>
+        public Point PositionInGrid
+        {
+            get
+            {
+                return new Point(x, y);
+            }
+            set
+            {
+                this.x = value.X;
+                this.y = value.Y;
             }
         }
 

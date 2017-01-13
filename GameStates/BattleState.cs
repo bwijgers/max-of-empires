@@ -18,19 +18,18 @@ namespace MaxOfEmpires.GameStates
         /// The battlegrid.
         /// </summary>
         private BattleGrid battleGrid;
+        private bool currentPlayer; // false if player 2, true if player 1.
 
         /// <summary>
         /// The overlay. Things like buttons are defined here. everything other than the grid is in here.
         /// </summary>
         private Overlays.OverlayBattleState overlay;
+        private bool shouldTurnUpdate; // True if the next update should initiate a turn update.
 
         /// <summary>
         /// The current turn in this battle.
         /// </summary>
         private uint turnNum;
-
-        private bool currentPlayer; // false if player 2, true if player 1.
-        private bool shouldTurnUpdate; // True if the next update should initiate a turn update.
 
         public BattleState()
         {
@@ -89,6 +88,15 @@ namespace MaxOfEmpires.GameStates
         }
 
         /// <summary>
+        /// Initializes the overlay. Add all GuiElements here.
+        /// </summary>
+        private void InitOverlay()
+        {
+            // Add a click handler to the end turn button.
+            overlay.EndTurnHandler = () => { shouldTurnUpdate = true; };
+        }
+
+        /// <summary>
         /// Called when a player initiates a battle from the Economy state.
         /// </summary>
         /// <param name="attackingArmy">The army that attacked.</param>
@@ -99,13 +107,17 @@ namespace MaxOfEmpires.GameStates
             battleGrid.PopulateField(attackingArmy, defendingArmy);
         }
 
-        /// <summary>
-        /// Initializes the overlay. Add all GuiElements here.
-        /// </summary>
-        private void InitOverlay()
+        public override void Reset()
         {
-            // Add a click handler to the end turn button.
-            overlay.EndTurnHandler = () => { shouldTurnUpdate = true; };
+            // Player 1 starts.
+            currentPlayer = true;
+
+            // Turn number starts at 1.
+            turnNum = 0;
+
+            // Start turn
+            TurnUpdate();
+            TurnUpdate();
         }
 
         /// <summary>
@@ -141,19 +153,6 @@ namespace MaxOfEmpires.GameStates
                 shouldTurnUpdate = false;
                 TurnUpdate();
             }
-        }
-
-        public override void Reset()
-        {
-            // Player 1 starts.
-            currentPlayer = true;
-
-            // Turn number starts at 1.
-            turnNum = 0;
-
-            // Start turn
-            TurnUpdate();
-            TurnUpdate();
         }
 
         /// <summary>

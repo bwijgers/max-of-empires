@@ -13,11 +13,11 @@ namespace MaxOfEmpires.GameStates.Overlays
 {
     class OverlayBattleState : GuiScreen
     {
+        private GuiButton buttonEndTurn;
         private GuiLabel labelCurrentPlayer;
-        private GuiLabel labelUnitHp;
         private GuiLabel labelUnitAtt;
         private GuiLabel labelUnitHit;
-        private GuiButton buttonEndTurn;
+        private GuiLabel labelUnitHp;
 
         public OverlayBattleState()
         {
@@ -65,8 +65,6 @@ namespace MaxOfEmpires.GameStates.Overlays
             labelUnitHit.setLabelText("Unit Hit/Dodge: " + u.Stats.hit + '/' + u.Stats.dodge);
         }
 
-        public GuiLabel LabelCurrentPlayer => labelCurrentPlayer;
-
         public GuiButton.OnClickHandler EndTurnHandler
         {
             set
@@ -74,5 +72,7 @@ namespace MaxOfEmpires.GameStates.Overlays
                 buttonEndTurn.ClickHandler = value;
             }
         }
+
+        public GuiLabel LabelCurrentPlayer => labelCurrentPlayer;
     }
 }

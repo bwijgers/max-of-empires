@@ -3,6 +3,11 @@
     public class Property
     {
         /// <summary>
+        /// An empty Property.
+        /// </summary>
+        public static Property Empty => new Property("", "");
+
+        /// <summary>
         /// The key of this Property. Always a string.
         /// </summary>
         public readonly string key;
@@ -22,10 +27,5 @@
             this.key = key;
             this.value = value;
         }
-
-        /// <summary>
-        /// An empty Property.
-        /// </summary>
-        public static Property Empty => new Property("", "");
     }
 }

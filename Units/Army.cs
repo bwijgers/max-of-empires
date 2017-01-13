@@ -11,6 +11,27 @@ namespace MaxOfEmpires.Units
     class Army : Unit
     {
         /// <summary>
+        /// Creates a new Army with some Soldiers in it. 
+        /// </summary>
+        /// <param name="owner">The player that owns this Army.</param>
+        /// <returns>The newly generated Army.</returns>
+        public static Army GenerateArmy(bool owner)
+        {
+            // Create a new Army
+            Army retVal = new Army(0, 0, owner);
+
+            // Get the rng
+            Random rand = MaxOfEmpires.Random;
+
+            // Get the amount of Swordsmen and Archers we should have in this army
+            retVal.unitsAndCounts["unit.swordsman"] = rand.Next(1, 2);
+            retVal.unitsAndCounts["unit.archer"] = rand.Next(1, 3);
+
+            // Return the newly generated Army
+            return retVal;
+        }
+
+        /// <summary>
         /// The Soldiers and the amount of each Soldier in this Army.
         /// </summary>
         private Dictionary<string, int> unitsAndCounts; // It's a UAC, guys :o
@@ -39,27 +60,6 @@ namespace MaxOfEmpires.Units
             {
                 unitsAndCounts[unitName] = currentSoldiers[unitName];
             }
-        }
-
-        /// <summary>
-        /// Creates a new Army with some Soldiers in it. 
-        /// </summary>
-        /// <param name="owner">The player that owns this Army.</param>
-        /// <returns>The newly generated Army.</returns>
-        public static Army GenerateArmy(bool owner)
-        {
-            // Create a new Army
-            Army retVal = new Army(0, 0, owner);
-
-            // Get the rng
-            Random rand = MaxOfEmpires.Random;
-
-            // Get the amount of Swordsmen and Archers we should have in this army
-            retVal.unitsAndCounts["unit.swordsman"] = rand.Next(1, 2);
-            retVal.unitsAndCounts["unit.archer"] = rand.Next(1, 3);
-
-            // Return the newly generated Army
-            return retVal;
         }
 
         public void AddSoldier(Soldier s)
@@ -130,7 +130,7 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The Tile this Army currently stands on.
         /// </summary>
-        private Tile CurrentTile => ((GameWorld as Grid)[PositionInGrid] as Tile);
+        private Tile CurrentTile => (GameWorld as Grid)[PositionInGrid] as Tile;
 
         /// <summary>
         /// The Soldiers and the amount of each Soldier in this Army.

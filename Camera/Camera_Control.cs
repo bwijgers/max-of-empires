@@ -5,17 +5,6 @@ namespace MaxOfEmpires
 {
     public partial class Camera
     {
-        // Variables
-
-        /// <summary>
-        /// The speed with which the camera moves
-        /// </summary>
-        private float cameraMoveSpeed = 2.00f;
-
-        /// <summary>
-        /// The speed with which the camera zooms
-        /// </summary>
-        private float zoomSpeed = 0.01f;
 
         /// <summary>
         /// The horizontal breakoff point for the mouse controlled camera
@@ -33,18 +22,25 @@ namespace MaxOfEmpires
         private int cameraMouseMargin = 5;
 
         /// <summary>
-        /// A bool determining if the camera should be controlled through the mouse
-        /// True means mouse controll, False means keyboard controll
+        /// The speed with which the camera moves
         /// </summary>
-        private bool useMouse = false;
+        private float cameraMoveSpeed = 2.00f;
 
         /// <summary>
         /// A bool which, if true, will let the camera be controlled through both the mouse and the keyboard
         /// </summary>
         private bool useBoth = false;
 
+        /// <summary>
+        /// A bool determining if the camera should be controlled through the mouse
+        /// True means mouse controll, False means keyboard controll
+        /// </summary>
+        private bool useMouse = false;
 
-        // Functions
+        /// <summary>
+        /// The speed with which the camera zooms
+        /// </summary>
+        private float zoomSpeed = 0.01f;
 
         /// <summary>
         /// A function that checks if the mouse is in such a position that the camera should move.
@@ -202,38 +198,6 @@ namespace MaxOfEmpires
             CheckMousePositionForCamera(UseMouse, UseBoth, inputHelper, keyManager);
         }
 
-        // Properties
-
-        /// <summary>
-        /// Gets or sets the speed with which the camera moves.
-        /// </summary>
-        public float CameraMoveSpeed
-        {
-            get
-            {
-                return cameraMoveSpeed;
-            }
-            set
-            {
-                cameraMoveSpeed = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the speed with which the camera zooms.
-        /// </summary>
-        public float ZoomSpeed
-        {
-            get
-            {
-                return zoomSpeed;
-            }
-            set
-            {
-                zoomSpeed = value;
-            }
-        }
-
         /// <summary>
         /// Gets or sets the horizontal breakoff point for the mouse controlled camera.
         /// </summary>
@@ -280,6 +244,21 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
+        /// Gets or sets the speed with which the camera moves.
+        /// </summary>
+        public float CameraMoveSpeed
+        {
+            get
+            {
+                return cameraMoveSpeed;
+            }
+            set
+            {
+                cameraMoveSpeed = value;
+            }
+        }
+
+        /// <summary>
         /// A bool determining if the camera should be controlled through the mouse
         /// True means mouse controll, False means keyboard controll
         /// </summary>
@@ -307,6 +286,21 @@ namespace MaxOfEmpires
             set
             {
                 useBoth = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the speed with which the camera zooms.
+        /// </summary>
+        public float ZoomSpeed
+        {
+            get
+            {
+                return zoomSpeed;
+            }
+            set
+            {
+                zoomSpeed = value;
             }
         }
 

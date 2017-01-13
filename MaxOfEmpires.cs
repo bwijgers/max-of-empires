@@ -14,14 +14,28 @@ namespace MaxOfEmpires
     /// </summary>
     public class MaxOfEmpires : Game
     {
-        private static GraphicsDeviceManager graphics;
-        private SpriteBatch gameObjectSpriteBatch;
-        private SpriteBatch overlaySpriteBatch;
-        private InputHelper inputHelper;
-        private static Random random = new Random((int) DateTime.Now.Ticks);
-        private static bool running = true;
-        private Configuration mainConfiguration;
+        #region statics
         public static Camera camera = new Camera();
+        private static GraphicsDeviceManager graphics;
+        private static Random random = new Random((int)DateTime.Now.Ticks);
+        private static bool running = true;
+
+        /// <summary>
+        /// Quits the game. Effectively closes the game.
+        /// </summary>
+        public static void Quit()
+        {
+            running = false;
+        }
+
+        public static Random Random => random;
+        public static Point ScreenSize => new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+        #endregion
+
+        private SpriteBatch gameObjectSpriteBatch;
+        private InputHelper inputHelper;
+        private Configuration mainConfiguration;
+        private SpriteBatch overlaySpriteBatch;
 
         public MaxOfEmpires()
         {
@@ -43,6 +57,22 @@ namespace MaxOfEmpires
             IsMouseVisible = true;
 
             base.Initialize();
+        }
+
+        /// <summary>
+        /// Initializes all keybinds, loaded from Keys.cfg
+        /// </summary>
+        /// <param name="config">The configuration file and section to use for loading.</param>
+        private void InitializeKeys(Configuration config)
+        {
+            KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys)config.GetProperty<int>("unitTargetOverlay"));
+            KeyManager.Instance.RegisterKey("moveCameraUp", (Keys)config.GetProperty<int>("moveCameraUp"));
+            KeyManager.Instance.RegisterKey("moveCameraDown", (Keys)config.GetProperty<int>("moveCameraDown"));
+            KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft"));
+            KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight"));
+
+            KeyManager.Instance.RegisterKey("zoomCameraIn", (Keys)config.GetProperty<int>("moveCameraIn"));
+            KeyManager.Instance.RegisterKey("zoomCameraOut", (Keys)config.GetProperty<int>("moveCameraOut"));
         }
 
         protected void LoadConfiguration()
@@ -146,32 +176,5 @@ namespace MaxOfEmpires
 
             base.Draw(gameTime);
         }
-
-        /// <summary>
-        /// Initializes all keybinds, loaded from Keys.cfg
-        /// </summary>
-        /// <param name="config">The configuration file and section to use for loading.</param>
-        private void InitializeKeys(Configuration config)
-        {
-            KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys) config.GetProperty<int>("unitTargetOverlay"));
-            KeyManager.Instance.RegisterKey("moveCameraUp", (Keys)config.GetProperty<int>("moveCameraUp"));
-            KeyManager.Instance.RegisterKey("moveCameraDown", (Keys)config.GetProperty<int>("moveCameraDown"));
-            KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft"));
-            KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight"));
-
-            KeyManager.Instance.RegisterKey("zoomCameraIn", (Keys)config.GetProperty<int>("moveCameraIn"));
-            KeyManager.Instance.RegisterKey("zoomCameraOut", (Keys)config.GetProperty<int>("moveCameraOut"));
-        }
-
-        /// <summary>
-        /// Quits the game. Effectively closes the game.
-        /// </summary>
-        public static void Quit()
-        {
-            running = false;
-        }
-
-        public static Random Random => random;
-        public static Point ScreenSize => new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
     }
 }

@@ -11,8 +11,8 @@ namespace MaxOfEmpires
     public class InputHelper
     {
         private Dictionary<Keys, char> alphabetKeys;
-        private MouseState currentMouse, previousMouse;
         private KeyboardState currentKeyboard, previousKeyboard;
+        private MouseState currentMouse, previousMouse;
 
         /// <summary>
         /// Creates a new input helper.
@@ -22,6 +22,29 @@ namespace MaxOfEmpires
             alphabetKeys = new Dictionary<Keys, char>();
             currentKeyboard = previousKeyboard = Keyboard.GetState();
             currentMouse = previousMouse = Mouse.GetState();
+        }
+
+        public Vector2 GetMousePosition(bool basedOnCamera)
+        {
+            if (!basedOnCamera)
+            {
+                return currentMouse.Position.ToVector2();
+            }
+
+            else
+            {
+                return currentMouse.Position.ToVector2() / MaxOfEmpires.camera.Zoom;
+            }
+        }
+
+        /// <summary>
+        /// Checks whether a key on the keyboard is currently held down.
+        /// </summary>
+        /// <param name="k">The key to check.</param>
+        /// <returns>True if the key is currently down, false otherwise.</returns>
+        public bool IsKeyDown(Keys k)
+        {
+            return currentKeyboard.IsKeyDown(k);
         }
 
         /// <summary>
@@ -50,34 +73,12 @@ namespace MaxOfEmpires
             currentKeyboard = Keyboard.GetState();
         }
 
-        /// <summary>
-        /// Checks whether a key on the keyboard is currently held down.
-        /// </summary>
-        /// <param name="k">The key to check.</param>
-        /// <returns>True if the key is currently down, false otherwise.</returns>
-        public bool IsKeyDown(Keys k)
-        {
-            return currentKeyboard.IsKeyDown(k);
-        }
+        public bool MouseLeftButtonPressed => currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released;
+        public bool MouseRightButtonPressed => currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released;
+        public bool MouseScrollDown => currentMouse.ScrollWheelValue < previousMouse.ScrollWheelValue;
+        public bool MouseScrollUp => currentMouse.ScrollWheelValue > previousMouse.ScrollWheelValue;
 
         public Dictionary<Keys, char> TextKeys => alphabetKeys;
-        public bool MouseLeftButtonPressed => currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released;
-        public Vector2 GetMousePosition(bool basedOnCamera)
-        {
-            if (!basedOnCamera)
-            {
-                return currentMouse.Position.ToVector2();
-            }
-
-            else
-            {
-                return currentMouse.Position.ToVector2() / MaxOfEmpires.camera.Zoom;
-            }
-        } 
-
-        public bool MouseRightButtonPressed => currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released;
-        public bool MouseScrollUp => currentMouse.ScrollWheelValue > previousMouse.ScrollWheelValue;
-        public bool MouseScrollDown => currentMouse.ScrollWheelValue < previousMouse.ScrollWheelValue;
     }
 }
  

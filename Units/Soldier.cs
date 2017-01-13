@@ -14,6 +14,32 @@ namespace MaxOfEmpires.Units
     class Soldier : Unit
     {
         /// <summary>
+        /// Loads a Unit from a configuration. 
+        /// </summary>
+        /// Note that a Unit requires these keys:
+        ///   - name (a string)
+        ///   - stats (a Stats object. <see cref="Units.Stats.LoadFromConfiguration(Configuration)"/>
+        ///   - range (a Range object. <see cref="Units.Range.LoadFromConfiguration(Configuration)"/> 
+        ///   - texture.name (a string)
+        /// <param name="config">The configuration file/subsection to load from.</param>
+        /// <returns>A Unit as loaded from the configuration.</returns>
+        public static Soldier LoadFromConfiguration(Configuration config)
+        {
+            // Load stats from config
+            Stats stats = Stats.LoadFromConfiguration(config.GetPropertySection("stats"));
+
+            // Load range from config
+            Range range = Range.LoadFromConfiguration(config.GetPropertySection("range"));
+
+            // Load movespeed from config
+            int moveSpeed = config.GetProperty<int>("moveSpeed");
+
+            // Load texture from config file
+            string texName = config.GetProperty<string>("texture.name");
+            return new Soldier(config.GetProperty<string>("name"), 0, 0, false, texName, moveSpeed, stats, range);
+        }
+
+        /// <summary>
         /// The name of this type of Soldier.
         /// </summary>
         private string name;
@@ -204,32 +230,6 @@ namespace MaxOfEmpires.Units
 
             // Load the Unit's texture based on the name supplied and the player controlling the unit.
             DrawingTexture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString());
-        }
-
-        /// <summary>
-        /// Loads a Unit from a configuration. 
-        /// </summary>
-        /// Note that a Unit requires these keys:
-        ///   - name (a string)
-        ///   - stats (a Stats object. <see cref="Units.Stats.LoadFromConfiguration(Configuration)"/>
-        ///   - range (a Range object. <see cref="Units.Range.LoadFromConfiguration(Configuration)"/> 
-        ///   - texture.name (a string)
-        /// <param name="config">The configuration file/subsection to load from.</param>
-        /// <returns>A Unit as loaded from the configuration.</returns>
-        public static Soldier LoadFromConfiguration(Configuration config)
-        {
-            // Load stats from config
-            Stats stats = Stats.LoadFromConfiguration(config.GetPropertySection("stats"));
-
-            // Load range from config
-            Range range = Range.LoadFromConfiguration(config.GetPropertySection("range"));
-
-            // Load movespeed from config
-            int moveSpeed = config.GetProperty<int>("moveSpeed");
-
-            // Load texture from config file
-            string texName = config.GetProperty<string>("texture.name");
-            return new Soldier(config.GetProperty<string>("name"), 0, 0, false, texName, moveSpeed, stats, range);
         }
 
         public override void TurnUpdate(uint turn, bool player)

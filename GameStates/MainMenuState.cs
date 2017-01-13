@@ -23,8 +23,9 @@ namespace MaxOfEmpires.GameStates
             overlay.draw(overlayS);
         }
 
-        public override void Update(GameTime time)
+        public override Vector2 GetCurrentGridSize()
         {
+            return new Vector2(0, 0);
         }
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
@@ -32,9 +33,8 @@ namespace MaxOfEmpires.GameStates
             overlay.update(helper);
         }
 
-        public override Vector2 GetCurrentGridSize()
+        public override void Update(GameTime time)
         {
-            return new Vector2(0,0);
         }
     }
 }

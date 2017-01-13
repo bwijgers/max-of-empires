@@ -94,21 +94,6 @@ namespace MaxOfEmpires.Files
         }
 
         /// <summary>
-        /// Checks to see if the specified key is in the specified section.
-        /// </summary>
-        /// <param name="key">The key to check.</param>
-        /// <param name="sectionName">The section to check whether the key is in it.</param>
-        /// <returns>True if the key is part of the specified section, false otherwise.</returns>
-        private bool IsInSection(string key, string sectionName)
-        {
-            // Create the section identifier
-            string sectionIdent = sectionName + '.';
-
-            // Return whether the key is made up of the identifier + more text
-            return key.StartsWith(sectionIdent); // Cannot be just this, as a key can never end with a '.'
-        }
-
-        /// <summary>
         /// Creates a new Configuration based on a subsection of this Configuration.
         /// </summary>
         /// <param name="sectionName">The name of the section to narrow down to.</param>
@@ -130,6 +115,21 @@ namespace MaxOfEmpires.Files
 
             // Return the sub-configuration
             return subConf;
-        } 
+        }
+
+        /// <summary>
+        /// Checks to see if the specified key is in the specified section.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <param name="sectionName">The section to check whether the key is in it.</param>
+        /// <returns>True if the key is part of the specified section, false otherwise.</returns>
+        private bool IsInSection(string key, string sectionName)
+        {
+            // Create the section identifier
+            string sectionIdent = sectionName + '.';
+
+            // Return whether the key is made up of the identifier + more text
+            return key.StartsWith(sectionIdent); // Cannot be just this, as a key can never end with a '.'
+        }
     }
 }
