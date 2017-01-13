@@ -35,7 +35,7 @@ namespace MaxOfEmpires.GameStates.Overlays
 
             // Start button
             buttonStart = GuiButton.createButtonWithLabel(new Point(0, buttonQuit.Bounds.Y - 50), "Start Game", null, "font");
-            buttonStart.ClickHandler = () => GameStateManager.SwitchState("battle");
+            buttonStart.ClickHandler = () => GameStateManager.SwitchState("economy", true);
             addElement(buttonStart);
 
             // Set everything to the center of the screen

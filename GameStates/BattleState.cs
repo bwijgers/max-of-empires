@@ -17,7 +17,7 @@ namespace MaxOfEmpires.GameStates
         /// <summary>
         /// The battlegrid.
         /// </summary>
-        private Grid battleGrid;
+        private BattleGrid battleGrid;
 
         /// <summary>
         /// The overlay. Things like buttons are defined here. everything other than the grid is in here.
@@ -35,7 +35,8 @@ namespace MaxOfEmpires.GameStates
         public BattleState()
         {
             // Initialize the battlefield.
-            battleGrid = new Grid(15, 15);
+            battleGrid = new BattleGrid(15, 15);
+            battleGrid.InitField();
 
             // Initialize the overlay.
             overlay = new Overlays.OverlayBattleState();
@@ -49,6 +50,7 @@ namespace MaxOfEmpires.GameStates
         {
             battleGrid.Draw(time, s);
             overlay.draw(s);
+            base.Draw(time, s);
         }
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
@@ -57,7 +59,7 @@ namespace MaxOfEmpires.GameStates
             battleGrid.HandleInput(helper, manager);
 
             // Get the selected Unit
-            Unit u = battleGrid.SelectedTile?.Unit;
+            Soldier u = (Soldier) battleGrid.SelectedTile?.Unit;
 
             // Print the selected Unit's information, if it exists
             if (u != null)
@@ -71,12 +73,23 @@ namespace MaxOfEmpires.GameStates
                 Tile t = battleGrid.GetTileUnderMouse(helper);
                 if (t != null)
                 {
-                    overlay.PrintUnitInfo(t.Unit);
+                    overlay.PrintUnitInfo((Soldier) t.Unit);
                 }
             }
 
             // Update the overlay
             overlay.update(helper);
+        }
+
+        /// <summary>
+        /// Called when a player initiates a battle from the Economy state.
+        /// </summary>
+        /// <param name="attackingArmy">The army that attacked.</param>
+        /// <param name="defendingArmy">The army that was attacked.</param>
+        public void OnInitiateBattle(Army attackingArmy, Army defendingArmy)
+        {
+            battleGrid.InitField();
+            battleGrid.PopulateField(attackingArmy, defendingArmy);
         }
 
         /// <summary>
@@ -93,17 +106,29 @@ namespace MaxOfEmpires.GameStates
         /// </summary>
         public void TurnUpdate()
         {
+            // Change the current player
             currentPlayer = !currentPlayer;
+
+            // Increase the turn number when the blue player starts their turn
             if (currentPlayer)
                 ++turnNum;
+
+            // TurnUpdate the grid
             battleGrid.TurnUpdate(turnNum, currentPlayer);
 
+            // Show whose turn it is in the overlay
             overlay.labelCurrentPlayer.setLabelText("Current player: " + (currentPlayer ? "Blue" : "Red"));
         }
 
         public override void Update(GameTime time)
         {
+            // Update fade in / fade out
+            base.Update(time);
+
+            // Update the grid
             battleGrid.Update(time);
+
+            // TurnUpdate when requested.
             if (shouldTurnUpdate)
             {
                 shouldTurnUpdate = false;
@@ -113,9 +138,6 @@ namespace MaxOfEmpires.GameStates
 
         public override void Reset()
         {
-            // Initialize the field
-            battleGrid.InitField();
-
             // Player 1 starts.
             currentPlayer = true;
 
@@ -130,6 +152,6 @@ namespace MaxOfEmpires.GameStates
         /// <summary>
         /// Accessor for the BattleGrid.
         /// </summary>
-        public Grid BattleGrid => battleGrid;
+        public BattleGrid BattleGrid => battleGrid;
     }
 }

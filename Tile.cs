@@ -28,6 +28,9 @@ namespace MaxOfEmpires
         /// </summary>
         private Unit unit;
 
+        /// <summary>
+        /// Whether certain overlays should be drawn.
+        /// </summary>
         private bool overlayAttack, overlayWalk;
 
         /// <summary>
@@ -119,6 +122,12 @@ namespace MaxOfEmpires
             // Update the Building at this position if it exists.
             if (BuiltOn)
                 Building.TurnUpdate(turn, player);
+        }
+
+        public override void Update(GameTime time)
+        {
+            building?.Update(time);
+            unit?.Update(time);
         }
 
         /// <summary>

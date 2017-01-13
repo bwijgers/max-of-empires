@@ -1,15 +1,11 @@
-﻿using Ebilkill.Gui.Elements;
+﻿using Ebilkill.Gui;
+using Ebilkill.Gui.Elements;
 using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MaxOfEmpires.GameStates.Overlays
 {
-    class OverlayBattleState : Ebilkill.Gui.GuiScreen
+    class OverlayEconomyState : GuiScreen
     {
         public GuiLabel labelCurrentPlayer;
         public GuiLabel labelUnitHp;
@@ -17,7 +13,7 @@ namespace MaxOfEmpires.GameStates.Overlays
         public GuiLabel labelUnitHit;
         public GuiButton buttonEndTurn;
 
-        public OverlayBattleState()
+        public OverlayEconomyState()
         {
             // Add the end turn button
             buttonEndTurn = GuiButton.createButtonWithLabel(new Point(500, 10), "End turn", null, "font");
@@ -41,20 +37,14 @@ namespace MaxOfEmpires.GameStates.Overlays
         /// Prints a Unit's information on the screen, or makes the information labels disappear if there is no Unit.
         /// </summary>
         /// <param name="u">The Unit of which the information should be printed.</param>
-        public void PrintUnitInfo(Soldier u)
+        public void PrintArmyInfo(Army u)
         {
             // No Unit? Make the unit info disappear :o
-            if(u == null)
+            if (u == null)
             {
                 labelUnitHp.Visible = labelUnitAtt.Visible = labelUnitHit.Visible = false;
                 return;
             }
-
-            // There is a Unit? Show its stats. 
-            labelUnitHp.Visible = labelUnitAtt.Visible = labelUnitHit.Visible = true;
-            labelUnitHp.setLabelText("Unit HP/Max: " + u.Stats.hp + '/' + u.Stats.maxHp);
-            labelUnitAtt.setLabelText("Unit Att/Def: " + u.Stats.att + '/' + u.Stats.def);
-            labelUnitHit.setLabelText("Unit Hit/Dodge: " + u.Stats.hit + '/' + u.Stats.dodge);
         }
     }
 }

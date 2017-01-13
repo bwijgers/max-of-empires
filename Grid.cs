@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace MaxOfEmpires
 {
-    class Grid : GameObjectGrid
+    abstract class Grid : GameObjectGrid
     {
-        private bool currentPlayer;
+        protected bool currentPlayer;
 
         /// <summary>
         /// The coords of the currently selected Tile within the grid.
@@ -40,57 +40,32 @@ namespace MaxOfEmpires
         /// <returns>True if the Unit was moved, false otherwise.</returns>
         public bool CheckMoveUnit(Point newPos, Unit unit)
         {
-            Tile tile = (GameWorld as Grid)[newPos] as Tile;
-            Tile oriTile = (GameWorld as Grid)[unit.PositionInGrid] as Tile;
-            if (!tile.Occupied && unit.Move(newPos.X, newPos.Y))
+            Tile targetTile = this[newPos] as Tile;
+            Tile originTile = this[unit.PositionInGrid] as Tile;
+
+            // If the Unit can move to its target, move it and tell the caller that we moved.
+            if (targetTile != null && !targetTile.Occupied && unit.Move(newPos.X, newPos.Y))
             {
-                tile.SetUnit(unit);
-                oriTile.SetUnit(null);
+                targetTile.SetUnit(unit);
+                originTile.SetUnit(null);
                 return true;
             }
 
+            // Otherwise, tell the caller that we didn't move.
             return false;
         }
 
         /// <summary>
-        /// Checks whether a Unit can attack a Unit at the specified tile, and attacks it if it's possible.
+        /// Clears the target positions of all Units on the grid.
         /// </summary>
-        /// <param name="newPos">The position for the Unit to attack.</param>
-        /// <param name="unit">The Unit which attacks.</param>
-        /// <returns>True if the Unit attacked, false otherwise.</returns>
-        public bool CheckAttackUnit(Point tileToAttack, Unit attackingUnit)
+        protected void ClearAllTargetPositions()
         {
-            // Cannot attack more than once a turn. 
-            if (attackingUnit.HasAttacked)
-                return false;
-
-            Tile toAttack = this[tileToAttack] as Tile;
-
-            // Make sure the attack square is occupied by an enemy unit
-            if(!toAttack.Occupied || toAttack.Unit.Owner == attackingUnit.Owner)
+            // Clear the target positions (because this method kinda sucks :/)
+            ForEach((obj, x, y) =>
             {
-                return false; // nothing to attack
-            }
-
-            // Make sure the attack square is in range of the attacking unit
-            if (!attackingUnit.IsInRange(tileToAttack))
-            {
-                return false; // Enemy not in range
-            }
-
-            // We can actually attack this? Nice :D
-            attackingUnit.Attack(tileToAttack);
-
-            // After a battle, check if there are dead Units, and remove these if they are dead
-            ForEach((obj, x, y) => {
-                Tile t = obj as Tile;
-                if (t.Occupied && t.Unit.IsDead)
-                {
-                    t.SetUnit(null);
-                }
+                if ((obj as Tile).Occupied)
+                    Pathfinding.ClearTargetPosition((obj as Tile).Unit);
             });
-
-            return true;
         }
 
         /// <summary>
@@ -105,7 +80,7 @@ namespace MaxOfEmpires
                 if (t.Occupied && t.Unit.TargetPosition != t.Unit.PositionInGrid)
                 {
                     // Recalculate the Unit's paths
-                    t.Unit.GeneratePaths(new Point(x, y));
+                    Pathfinding.GeneratePaths(t.Unit, new Point(x, y));
 
                     // Make a UnitTargetOverlay for this and add it to the list of overlays
                     TargetPositionOverlay uto = new TargetPositionOverlay(t.Unit);
@@ -117,8 +92,6 @@ namespace MaxOfEmpires
         public override void Draw(GameTime time, SpriteBatch s)
         {
             base.Draw(time, s);
-
-            // Draw selected Unit overlay, Unit move overlay and Unit attacking overlay
 
             // Draw the Unit target overlay, if it exists
             unitTargets.Draw(time, s);
@@ -167,76 +140,26 @@ namespace MaxOfEmpires
         /// <summary>
         /// Initializes the field.
         /// </summary>
-        public void InitField()
+        public abstract void InitField();
+
+        /// <summary>
+        /// Checks if two positions are adjacent. Points are not considered adjacent when they are diagonally adjacent.
+        /// </summary>
+        /// <returns>True when the positions are adjacent, false otherwise.</returns>
+        protected bool IsAdjacent(Point a, Point b)
         {
-            // Initialize the terrain
-            for (int x = 0; x < Width; ++x)
-            {
-                for (int y = 0; y < Height; ++y)
-                {
-                    this[x, y] = new Tile(Terrain.Plains, x, y);
-                }
-            }
+            int xDiff = Math.Abs(a.X - b.X);
+            int yDiff = Math.Abs(a.Y - b.Y);
 
-            // Place a swordsman for each player on the field.
-            Unit u1 = UnitRegistry.GetUnit("swordsman", true);
-            (this[4, 4] as Tile).SetUnit(u1);
-            (this[3, 4] as Tile).SetUnit(UnitRegistry.GetUnit("archer", true));
-
-            Unit u2 = UnitRegistry.GetUnit("swordsman", false);
-            (this[10, 10] as Tile).SetUnit(u2);
-            (this[11, 10] as Tile).SetUnit(UnitRegistry.GetUnit("archer", false));
-
-            // Clear the target positions (because this method kinda sucks :/)
-            ForEach((obj, x, y) => (obj as Tile).Unit?.ClearTargetPosition());
+            return (xDiff == 1 || yDiff == 1) && xDiff != yDiff;
         }
 
         /// <summary>
         /// Executed when the player left-clicks on the grid.
         /// </summary>
         /// <param name="helper">The InputHelper used for mouse input.</param>
-        private void OnLeftClick(InputHelper helper)
+        public virtual void OnLeftClick(InputHelper helper)
         {
-            // Get the current Tile under the mouse
-            Tile clickedTile = GetTileUnderMouse(helper, true);
-
-            // Do nothing if there is no clicked tile.
-            if (clickedTile == null)
-                return;
-
-            // If the player had a tile selected and it contains a Unit...
-            if (SelectedTile != null && SelectedTile.Occupied)
-            {
-                // ... move the Unit there, if the square is not occupied and the unit is capable, then unselect the tile.
-                SelectedTile.Unit.TargetPosition = clickedTile.GridPos;
-                Point movePos = SelectedTile.Unit.MoveTowardsTarget();
-
-                if (CheckMoveUnit(movePos, SelectedTile.Unit) || CheckAttackUnit(clickedTile.GridPos, SelectedTile.Unit))
-                {
-                    SelectTile(InvalidTile);
-                    return;
-                }
-            }
-
-            // Check if the player clicked a tile with a Unit on it, and select it if it's there. 
-            else if (clickedTile.Occupied && clickedTile.Unit.Owner == currentPlayer && clickedTile.Unit.HasAction)
-            {
-                // If the Unit can walk, show where it is allowed to walk. 
-                if (!clickedTile.Unit.HasMoved)
-                {
-                    Point[] walkablePositions = clickedTile.Unit.ReachableTiles();
-                    SetUnitWalkingOverlay(walkablePositions);
-                }
-
-                // This unit can be selected. Show the player it is selected too
-                SelectTile(clickedTile.GridPos);
-
-                // Add an overlay for enemy units that can be attacked
-                if (!clickedTile.Unit.HasAttacked)
-                {
-                    SetUnitAttackingOverlay(clickedTile.Unit);
-                }
-            }
         }
 
         /// <summary>
@@ -268,12 +191,24 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
+        /// Shows an attacking overlay for armies.
+        /// </summary>
+        /// <param name="a">The army which needs an attacking overlay to show.</param>
+        protected void SetArmyAttackingOverlay(Army a)
+        {
+            // Use a swordsman, as it has a range of 1. 
+            Soldier swordsman = SoldierRegistry.GetSoldier("unit.swordsman", a.Owner);
+            swordsman.PositionInGrid = a.PositionInGrid;
+            SetUnitAttackingOverlay(swordsman);
+        }
+
+        /// <summary>
         /// Sets the attacking overlay on all tiles the parameter Unit can attack. Removes said overlay if the Unit == null.
         /// </summary>
         /// <param name="u">The Unit whose attacking overlay will be set.</param>
-        private void SetUnitAttackingOverlay(Unit u)
+        protected void SetUnitAttackingOverlay(Soldier u)
         {
-            // If no Unit is selected (anymore), unset the walking overlay everywhere
+            // If no Unit is selected (anymore), unset the attacking overlay everywhere
             if (u == null)
             {
                 ForEach((obj, x, y) => {
@@ -286,7 +221,7 @@ namespace MaxOfEmpires
             }
 
             // Get the max range so we don't overshoot the search *too* much
-            int maxRange = u.Range.Max; // Hey Max :)
+            int maxRange = u.Range.Max + 1; // Hey Max :)
 
             // Search each tile within max range and check if we can attack there
             int startX = Math.Max(u.PositionInGrid.X - maxRange, 0); // Make sure we are in grid
@@ -315,7 +250,11 @@ namespace MaxOfEmpires
             }
         }
 
-        private void SetUnitWalkingOverlay(Point[] overlay)
+        /// <summary>
+        /// Sets a walking overlay to all Points in the <code>overlay</code> parameter. If <code>overlay</code> is null or empty, removes the overlay from all Tiles.
+        /// </summary>
+        /// <param name="overlay">The points to set the walking overlay on.</param>
+        protected void SetUnitWalkingOverlay(Point[] overlay)
         {
             // Remove overlay from everything
             ForEach((obj, x, y) => (obj as Tile).OverlayWalk = false);
@@ -340,6 +279,9 @@ namespace MaxOfEmpires
         {
             base.TurnUpdate(turn, player);
 
+            // Make sure that anything that was selected no longer is selected.
+            SelectTile(InvalidTile);
+
             // So the grid knows who is the current player. Useful for selecting units that are your own. 
             this.currentPlayer = player;
 
@@ -351,7 +293,7 @@ namespace MaxOfEmpires
                     Unit unit = tile.Unit;
                     if(unit.Owner != player) // End of turn for the player whose turn it is NOT right now.
                     {
-                        Point movePos = unit.MoveTowardsTarget();
+                        Point movePos = Pathfinding.MoveTowardsTarget(unit);
                         CheckMoveUnit(movePos, unit);
                     }
                 }
@@ -379,7 +321,7 @@ namespace MaxOfEmpires
         /// <summary>
         /// Property defining a position which is invalid. Unselects tiles.
         /// </summary>
-        private Point InvalidTile => new Point(-1, -1);
+        protected Point InvalidTile => new Point(-1, -1);
 
         /// <summary>
         /// Gets the selected tile.

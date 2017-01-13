@@ -39,6 +39,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
+    <Compile Include="BattleGrid.cs" />
+    <Compile Include="EconomyGrid.cs" />
     <Compile Include="Files\Configuration.cs" />
     <Compile Include="Files\FileManager.cs" />
     <Compile Include="Files\Property.cs" />
@@ -48,16 +50,19 @@
     <Compile Include="GameObjects\GameObjectDrawable.cs" />
     <Compile Include="GameStates\BattleState.cs" />
     <Compile Include="Building.cs" />
+    <Compile Include="GameStates\EconomyState.cs" />
     <Compile Include="GameStates\MainMenuState.cs" />
     <Compile Include="GameStates\Overlays\OverlayBattleState.cs" />
+    <Compile Include="GameStates\Overlays\OverlayEconomy.cs" />
     <Compile Include="GameStates\Overlays\OverlayMainMenu.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\GameObjectGrid.cs" />
     <Compile Include="GameObjects\GameObjectList.cs" />
+    <Compile Include="Units\Army.cs" />
     <Compile Include="Units\Range.cs" />
     <Compile Include="Units\Stats.cs" />
-    <Compile Include="Units\Unit.cs" />
+    <Compile Include="Units\Soldier.cs" />
     <Compile Include="MaxOfEmpires.cs" />
     <Compile Include="GameStates\GameState.cs" />
     <Compile Include="GameStates\GameStateManager.cs" />
@@ -76,8 +81,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Terrain.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="Units\Unit.cs" />
     <Compile Include="Units\UnitPathfinding.cs" />
-    <Compile Include="Units\UnitRegistry.cs" />
+    <Compile Include="Units\SoldierRegistry.cs" />
     <Compile Include="Units\TargetPositionOverlay.cs" />
     <Compile Include="Units\TargetPositionParticle.cs" />
   </ItemGroup>
