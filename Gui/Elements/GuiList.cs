@@ -47,8 +47,10 @@ namespace Ebilkill.Gui.Elements
             }
             catch (ArgumentOutOfRangeException)
             {
-                height = 32;
             }
+
+            height = Math.Max(height, 34);
+
             // Return a new GuiList based on position, width and height. 
             GuiList retVal = new GuiList(new Rectangle(position, new Point(width, height)), labels);
             retVal.displayableItemsCount = displayableItems;
@@ -61,12 +63,12 @@ namespace Ebilkill.Gui.Elements
         private GuiList(Rectangle bounds, List<GuiLabel> labels) : base(bounds)
         {
             // Create the up-button
-            up = new GuiButton(new Rectangle(new Point(0, 0), new Point(16)), "testure");
+            up = new GuiButton(new Rectangle(new Point(0, 0), new Point(16)), "ArrowUp");
             up.ClickHandler = () => scroll(true);
             up.loadContent(AssetManager.Instance);
 
             // Create the down-button
-            down = new GuiButton(new Rectangle(new Point(0, 0), new Point(16)), "testure");
+            down = new GuiButton(new Rectangle(new Point(0, 0), new Point(16)), "ArrowDown");
             down.ClickHandler = () => scroll(false);
             down.loadContent(AssetManager.Instance);
 
@@ -99,7 +101,7 @@ namespace Ebilkill.Gui.Elements
             up.Visible = down.Visible = labelList.Count > displayableItemsCount;
 
             itemHeight = labelList[0].Bounds.Height;
-            int height = itemHeight * Math.Min(labelList.Count, displayableItemsCount);
+            int height = Math.Max(34, itemHeight * Math.Min(labelList.Count, displayableItemsCount));
             int width = maxWidth;
 
             Bounds = new Rectangle(Bounds.Location, new Point(width, height));
