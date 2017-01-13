@@ -185,6 +185,11 @@ namespace MaxOfEmpires.Units
             return range.InRange(DistanceTo(p.X, p.Y));
         }
 
+        /// <summary>
+        /// Whether this Soldier is of the same type as another. For instance, whether both are Archers or both are Snipers.
+        /// </summary>
+        /// <param name="other">The other Soldier to see whether these are of equal type.</param>
+        /// <returns>True when the Soldiers are of equal type, false otherwise.</returns>
         public bool IsSameType(Soldier other)
         {
             return other.name.Equals(name);

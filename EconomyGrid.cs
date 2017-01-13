@@ -97,6 +97,7 @@ namespace MaxOfEmpires
         public void OnPlayerWinBattle(Army remainingArmy)
         {
             (this[battlePosition] as Tile).SetUnit(remainingArmy);
+            battlePosition = InvalidTile;
         }
 
         /// <summary>

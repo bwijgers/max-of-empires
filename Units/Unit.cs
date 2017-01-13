@@ -69,7 +69,7 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
-        /// Moves this Unit to the specified position. Returns false if this Unit can't reach the specified position.
+        /// Checks if this Unit can move to the specified position. Returns false if this Unit can't reach the specified position.
         /// Assumes the specified position is not occupied.
         /// </summary>
         /// <param name="x">The x-coord of the position to move to.</param>
@@ -86,11 +86,9 @@ namespace MaxOfEmpires.Units
             // Get the distance to the specified position.
             int distance = Pathfinding.ShortestPath(this, new Point(x, y)).cost;
 
-            // Check if we can move to this position before actually just moving there. CanMoveTo decrements MovesLeft as well, if it is possible to move to the position.
+            // Check if we can move to this position. Decrements moves left as well if we can.
             if (distance <= movesLeft)
             {
-                this.x = x;
-                this.y = y;
                 movesLeft -= distance;
                 return true;
             }

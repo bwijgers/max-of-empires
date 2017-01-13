@@ -187,6 +187,7 @@ namespace MaxOfEmpires
 
             // And clear all target positions after we populated the field.
             ClearAllTargetPositions();
+            currentPlayer = attacker.Owner;
         }
 
         /// <summary>

@@ -30,9 +30,10 @@ namespace MaxOfEmpires.GameStates
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
+            // Draw the economy grid and then the overlay, followed by possible fading (in/out)
             ecoGrid.Draw(time, s);
-
             overlay.draw(s);
+            base.Draw(time, s);
         }
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
@@ -64,6 +65,7 @@ namespace MaxOfEmpires.GameStates
 
         public override void Update(GameTime time)
         {
+            base.Update(time);
             ecoGrid.Update(time);
             if (shouldTurnUpdate)
             {
@@ -72,6 +74,10 @@ namespace MaxOfEmpires.GameStates
             }
         }
 
+        /// <summary>
+        /// Called when a player wins a battle in the battle state.
+        /// </summary>
+        /// <param name="remainingArmy">The remaining army after the battle has ended.</param>
         public void OnPlayerWinBattle(Army remainingArmy)
         {
             ecoGrid.OnPlayerWinBattle(remainingArmy);

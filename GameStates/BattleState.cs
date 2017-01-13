@@ -50,6 +50,7 @@ namespace MaxOfEmpires.GameStates
         {
             battleGrid.Draw(time, s);
             overlay.draw(s);
+            base.Draw(time, s);
         }
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
@@ -80,6 +81,11 @@ namespace MaxOfEmpires.GameStates
             overlay.update(helper);
         }
 
+        /// <summary>
+        /// Called when a player initiates a battle from the Economy state.
+        /// </summary>
+        /// <param name="attackingArmy">The army that attacked.</param>
+        /// <param name="defendingArmy">The army that was attacked.</param>
         public void OnInitiateBattle(Army attackingArmy, Army defendingArmy)
         {
             battleGrid.InitField();
@@ -116,6 +122,9 @@ namespace MaxOfEmpires.GameStates
 
         public override void Update(GameTime time)
         {
+            // Update fade in / fade out
+            base.Update(time);
+
             // Update the grid
             battleGrid.Update(time);
 
