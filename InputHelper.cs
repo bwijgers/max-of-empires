@@ -57,10 +57,12 @@ namespace MaxOfEmpires
 
             else
             {
-                return currentMouse.Position.ToVector2() / MaxOfEmpires.Zoom;
+                return currentMouse.Position.ToVector2() / MaxOfEmpires.camera.Zoom;
             }
-        }
-
+        } 
         public bool MouseRightButtonPressed => currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released;
+        public bool MouseScrollUp => currentMouse.ScrollWheelValue < previousMouse.ScrollWheelValue;
+        public bool MouseScrollDown => currentMouse.ScrollWheelValue > previousMouse.ScrollWheelValue;
     }
 }
+ 

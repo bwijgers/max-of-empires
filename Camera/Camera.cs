@@ -4,39 +4,79 @@ namespace MaxOfEmpires
 {
     public partial class Camera
     {
+        // Variables
+
+        /// <summary>
+        /// The Vector2 determining the position of the camera
+        /// </summary>
         private Vector2 position;
+
+        /// <summary>
+        /// A float determining the zoom value of the camera
+        /// </summary>
+        private float zoom;
+
+        // Functions
 
         /// <summary>
         /// initialises the camera at position 0, 0
         /// </summary>
         public Camera()
         {
-            position = new Vector2(0, 0);
+            Position = new Vector2(0, 0);
+            Zoom = 1.0f;
         }
 
         /// <summary>
-        /// returns or sets the camera position
+        /// Resets the camera to (0, 0)
         /// </summary>
-        public Vector2 Position
-        {
-            get { return position; }
-            set
-            {
-                position = value;
-            }
-        }
-
         public void Reset()
         {
             Position = new Vector2(0, 0);
         }
 
+
+        // Properties
+
         /// <summary>
-        /// returns or sets the camera centre
+        /// Gets or sets the camera position
         /// </summary>
-        public Vector2 Centre
+        public Vector2 Position
         {
-            get { return new Vector2(Position.X + 1920 / 2, Position.Y + 1080 / 2); }
+            get
+            {
+                return position;
+            }
+            set
+            {
+                position = value;
+            }
+        }
+        
+        /// <summary>
+        /// Gets or sets the zoom of the camera
+        /// </summary>
+        public float Zoom
+        {
+            get
+            {
+                return zoom;
+            }
+            set
+            {
+                zoom = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the camera centre
+        /// </summary>
+        public Vector2 Center
+        {
+            get
+            {
+                return new Vector2(Position.X + 1920 / 2, Position.Y + 1080 / 2);
+            }
             set
             {
                 position.X = value.X - 1920 / 2;

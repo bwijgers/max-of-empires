@@ -19,7 +19,6 @@ namespace MaxOfEmpires
         private static Random random = new Random((int) DateTime.Now.Ticks);
         private static bool running = true;
         public static Camera camera = new Camera();
-        public static float Zoom = 1.00f;
 
         public MaxOfEmpires()
         {
@@ -112,7 +111,7 @@ namespace MaxOfEmpires
         {
             GraphicsDevice.Clear(Color.White);
 
-            Matrix transform = Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)); // Zoom default 1
+            Matrix transform = Matrix.CreateScale(new Vector3(camera.Zoom, camera.Zoom, 1)); // Zoom default 1
 
             overlaySpriteBatch.Begin();
             gameObjectSpriteBatch.Begin( // SpriteBatch variable
