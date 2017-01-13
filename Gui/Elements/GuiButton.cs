@@ -79,7 +79,7 @@ namespace Ebilkill.Gui.Elements
         {
             base.move(pos);
 
-            label.move(pos + new Point(2));
+            label?.move(pos + new Point(2));
         }
 
         public override void onClick(ClickEvent e)
