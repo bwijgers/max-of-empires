@@ -14,6 +14,9 @@ namespace MaxOfEmpires
         private MouseState currentMouse, previousMouse;
         private KeyboardState currentKeyboard, previousKeyboard;
 
+        /// <summary>
+        /// Creates a new input helper.
+        /// </summary>
         public InputHelper()
         {
             alphabetKeys = new Dictionary<Keys, char>();
@@ -21,6 +24,12 @@ namespace MaxOfEmpires
             currentMouse = previousMouse = Mouse.GetState();
         }
 
+        /// <summary>
+        /// Checks whether a key on the keyboard was pressed during the last update.
+        /// </summary>
+        /// <param name="k">The key to check.</param>
+        /// <param name="v"></param>
+        /// <returns>True if the key was pressed last frame, false otherwise.</returns>
         public bool KeyPressed(Keys k, bool v = true)
         {
             return currentKeyboard.IsKeyDown(k) && previousKeyboard.IsKeyUp(k);
@@ -41,6 +50,11 @@ namespace MaxOfEmpires
             currentKeyboard = Keyboard.GetState();
         }
 
+        /// <summary>
+        /// Checks whether a key on the keyboard is currently held down.
+        /// </summary>
+        /// <param name="k">The key to check.</param>
+        /// <returns>True if the key is currently down, false otherwise.</returns>
         public bool IsKeyDown(Keys k)
         {
             return currentKeyboard.IsKeyDown(k);
@@ -48,7 +62,22 @@ namespace MaxOfEmpires
 
         public Dictionary<Keys, char> TextKeys => alphabetKeys;
         public bool MouseLeftButtonPressed => currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released;
-        public Vector2 MousePosition => currentMouse.Position.ToVector2();
+        public Vector2 GetMousePosition(bool basedOnCamera)
+        {
+            if (!basedOnCamera)
+            {
+                return currentMouse.Position.ToVector2();
+            }
+
+            else
+            {
+                return currentMouse.Position.ToVector2() / MaxOfEmpires.camera.Zoom;
+            }
+        } 
+
         public bool MouseRightButtonPressed => currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released;
+        public bool MouseScrollUp => currentMouse.ScrollWheelValue > previousMouse.ScrollWheelValue;
+        public bool MouseScrollDown => currentMouse.ScrollWheelValue < previousMouse.ScrollWheelValue;
     }
 }
+ 

@@ -28,11 +28,14 @@ namespace MaxOfEmpires.GameStates
         /// </summary>
         public FadeoutEndCallback fadeoutEndCallback;
 
-        public virtual void Draw(GameTime time, SpriteBatch s)
+        public virtual void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS)
         {
             if (fadeAmount != 0)
-                DrawingHelper.Instance.DrawRectangle(s, new Rectangle(Point.Zero, MaxOfEmpires.ScreenSize), new Color(0, 0, 0, (float)fadeAmount));
+                DrawingHelper.Instance.DrawRectangle(overlayS, new Rectangle(Point.Zero, MaxOfEmpires.ScreenSize), new Color(0, 0, 0, (float)fadeAmount));
         }
+
+        public abstract Vector2 GetCurrentGridSize();
+
 
         public virtual void HandleInput(InputHelper helper, KeyManager manager)
         {

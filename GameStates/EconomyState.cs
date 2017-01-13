@@ -28,12 +28,17 @@ namespace MaxOfEmpires.GameStates
             Reset();
         }
 
-        public override void Draw(GameTime time, SpriteBatch s)
+        public override void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS)
         {
             // Draw the economy grid and then the overlay, followed by possible fading (in/out)
-            ecoGrid.Draw(time, s);
-            overlay.draw(s);
-            base.Draw(time, s);
+            ecoGrid.Draw(time, gameObjectS);
+            overlay.draw(overlayS);
+            base.Draw(time, gameObjectS, overlayS);
+        }
+
+        public override Vector2 GetCurrentGridSize()
+        {
+            return new Vector2(ecoGrid.Width, ecoGrid.Height);
         }
 
         public override void HandleInput(InputHelper helper, KeyManager manager)

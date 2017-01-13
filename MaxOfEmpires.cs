@@ -15,7 +15,8 @@ namespace MaxOfEmpires
     public class MaxOfEmpires : Game
     {
         private static GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
+        private SpriteBatch gameObjectSpriteBatch;
+        private SpriteBatch overlaySpriteBatch;
         private InputHelper inputHelper;
         private static Random random = new Random((int) DateTime.Now.Ticks);
         private static bool running = true;
@@ -64,7 +65,8 @@ namespace MaxOfEmpires
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            gameObjectSpriteBatch = new SpriteBatch(GraphicsDevice);
+            overlaySpriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Init AssetManager and DrawingHelper
             AssetManager.Init(Content);
@@ -111,7 +113,7 @@ namespace MaxOfEmpires
             //TIJDELIJKE CODE TOT WE SETTINGS HEBBEN OM TE SWITCHEN TUSSEN MOUSE EN KEYBOARD CONTROLL VAN DE CAMERA
             if (inputHelper.KeyPressed(Keys.K))
             {
-                camera.useMouse = !camera.useMouse;
+                camera.UseMouse = !camera.UseMouse;
             }
             //EINDE TIJDELIJKE CODE
 
@@ -125,10 +127,22 @@ namespace MaxOfEmpires
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
+            Matrix transform = Matrix.CreateScale(new Vector3(camera.Zoom, camera.Zoom, 1)); // Zoom default 1
 
-            spriteBatch.Begin();
-            GameStateManager.Draw(gameTime, spriteBatch); // Draw the current game state
-            spriteBatch.End();
+            overlaySpriteBatch.Begin();
+            gameObjectSpriteBatch.Begin( // SpriteBatch variable
+                        SpriteSortMode.Deferred, // Sprite sort mode - not related
+                        BlendState.NonPremultiplied, // BelndState - not related
+                        null,
+                        null,
+                        null,
+                        null,
+                        transform); // set camera tranformation
+
+            GameStateManager.Draw(gameTime, gameObjectSpriteBatch, overlaySpriteBatch);// Draw the current game state
+
+            gameObjectSpriteBatch.End();
+            overlaySpriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -144,6 +158,9 @@ namespace MaxOfEmpires
             KeyManager.Instance.RegisterKey("moveCameraDown", (Keys)config.GetProperty<int>("moveCameraDown"));
             KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft"));
             KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight"));
+
+            KeyManager.Instance.RegisterKey("zoomCameraIn", Keys.PageUp);
+            KeyManager.Instance.RegisterKey("zoomCameraOut", Keys.PageDown);
         }
 
         /// <summary>

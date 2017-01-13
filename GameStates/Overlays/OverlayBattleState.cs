@@ -1,4 +1,5 @@
-﻿using Ebilkill.Gui.Elements;
+﻿using Ebilkill.Gui;
+using Ebilkill.Gui.Elements;
 using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MaxOfEmpires.GameStates.Overlays
 {
@@ -35,6 +37,12 @@ namespace MaxOfEmpires.GameStates.Overlays
             addElement(labelUnitHp);
             addElement(labelUnitAtt);
             addElement(labelUnitHit);
+        }
+
+        public override void draw(SpriteBatch spriteBatch)
+        {
+            DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle(480, 0, MaxOfEmpires.ScreenSize.X, MaxOfEmpires.ScreenSize.Y), Color.DeepPink);
+            base.draw(spriteBatch);
         }
 
         /// <summary>

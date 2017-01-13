@@ -75,9 +75,9 @@ namespace Ebilkill.Gui
                         continue;
 
                     // Check if this is a clicked element
-                    if (element.Bounds.Contains(inputHelper.MousePosition)) {
+                    if (element.Bounds.Contains(inputHelper.GetMousePosition(false))) {
                         // Handle the click
-                        element.onClick(new Events.ClickEvent(inputHelper.MousePosition));
+                        element.onClick(new Events.ClickEvent(inputHelper.GetMousePosition(false)));
 
                         // Make this element active
                         activeElement = i;
