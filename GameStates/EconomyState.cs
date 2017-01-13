@@ -41,10 +41,30 @@ namespace MaxOfEmpires.GameStates
             return new Vector2(ecoGrid.Width, ecoGrid.Height);
         }
 
+
         public override void HandleInput(InputHelper helper, KeyManager manager)
         {
-            // Handle input for the grid
+            // Handle input for the grid (things like moving and attacking units)
             ecoGrid.HandleInput(helper, manager);
+
+            // Get the selected Unit
+            Army u = (Army)ecoGrid.SelectedTile?.Unit;
+
+            // Print the selected Unit's information, if it exists
+            if (u != null)
+            {
+                overlay.PrintArmyInfo(u);
+            }
+            // if there is no selected Unit...
+            else
+            {
+                // ... get the tile the mouse is over, and show the Unit's information, if this Unit exists. 
+                Tile t = ecoGrid.GetTileUnderMouse(helper);
+                if (t != null)
+                {
+                    overlay.PrintArmyInfo((Army)t.Unit);
+                }
+            }
 
             // Update the overlay
             overlay.update(helper);
@@ -52,7 +72,7 @@ namespace MaxOfEmpires.GameStates
 
         private void InitOverlay()
         {
-            overlay.buttonEndTurn.ClickHandler = () => shouldTurnUpdate = true;
+            overlay.EndTurnHandler = () => shouldTurnUpdate = true;
         }
 
         /// <summary>
@@ -65,7 +85,7 @@ namespace MaxOfEmpires.GameStates
                 ++turnNum;
             ecoGrid.TurnUpdate(turnNum, currentPlayer);
 
-            overlay.labelCurrentPlayer.setLabelText("Current player: " + (currentPlayer ? "Blue" : "Red"));
+            overlay.LabelCurrentPlayer.setLabelText("Current player: " + (currentPlayer ? "Blue" : "Red"));
         }
 
         public override void Update(GameTime time)
