@@ -49,8 +49,8 @@ namespace MaxOfEmpires
         /// <summary>
         /// A function that checks if the mouse is in such a position that the camera should move.
         /// </summary>
-        /// <param name="useMouse"> A boolean that determines if the camera should be controlled through the mouse or keyboard</param>
-        /// <param name="inputHelper">the input helper</param>
+        /// <param name="useMouse">A boolean that determines if the camera should be controlled through the mouse or keyboard.</param>
+        /// <param name="inputHelper">The input helper.</param>
         public void CheckMousePositionForCamera(bool useMouse, bool useBoth, InputHelper inputHelper, KeyManager keyManager)
         {
             if (!useMouse || useBoth)
@@ -125,12 +125,12 @@ namespace MaxOfEmpires
         /// <summary>
         /// This function moves the camera in a specified direction.
         /// </summary>
-        /// <param name="direction"> The direction to which the camera should move (up, down, left, right) </param>
+        /// <param name="direction">The direction to which the camera should move (up, down, left, right).</param>
         public void MoveCamera(string direction)
         {
             switch (direction)
             {
-                //Moves the camera upwards
+                // Moves the camera upwards
                 case "up":
                 case "Up":
                     { 
@@ -138,7 +138,7 @@ namespace MaxOfEmpires
                         break;
                     }
 
-                //moves the camera downwards
+                // Moves the camera downwards
                 case "down":
                 case "Down":
                     {
@@ -146,7 +146,7 @@ namespace MaxOfEmpires
                         break;
                     }
 
-                //moves the camera towards the left
+                // Moves the camera towards the left
                 case "left":
                 case "Left":
                     {
@@ -154,7 +154,7 @@ namespace MaxOfEmpires
                         break;
                     }
                     
-                //moves the camera towards the right
+                // Moves the camera towards the right
                 case "right":
                 case "Right":
                     {
@@ -162,7 +162,7 @@ namespace MaxOfEmpires
                         break;
                     }
 
-                //zooms the camera in
+                // Zooms the camera in
                 case "in":
                 case "In":
                     {
@@ -170,7 +170,7 @@ namespace MaxOfEmpires
                         break;
                     }
 
-                //zooms the camera out
+                // Zooms the camera out
                 case "out":
                 case "Out":
                     {
@@ -181,12 +181,12 @@ namespace MaxOfEmpires
 
             }
             
-            //calculations needed to cap the camera
+            // Calculations needed to cap the camera
             float cameraGridCompFactorX = ((GameStateManager.GridSize.X - 15) * 32);
             float cameraGridCompFactorY = ((GameStateManager.GridSize.Y - 15) * 32);
             float cameraGridCalc = 480 - (480 / Zoom);
 
-            //caps the camera so it wont move past the grid
+            // Caps the camera so it wont move past the grid
             float x = MathHelper.Clamp(MaxOfEmpires.camera.Position.X, 0.0f, (int)(cameraGridCalc + cameraGridCompFactorX));
             float y = MathHelper.Clamp(MaxOfEmpires.camera.Position.Y, 0.0f, (int)(cameraGridCalc + cameraGridCompFactorY));
             MaxOfEmpires.camera.Position = new Vector2(x, y);
@@ -195,8 +195,8 @@ namespace MaxOfEmpires
         /// <summary>
         /// The update of the camera.
         /// </summary>
-        /// <param name="gameTime"> the current game time</param>
-        /// <param name="inputHelper"> the inputhelper</param>
+        /// <param name="gameTime">The current game time.</param>
+        /// <param name="inputHelper">The inputhelper.</param>
         public void Update(GameTime gameTime, InputHelper inputHelper, KeyManager keyManager)
         {
             CheckMousePositionForCamera(UseMouse, UseBoth, inputHelper, keyManager);
@@ -205,7 +205,7 @@ namespace MaxOfEmpires
         // Properties
 
         /// <summary>
-        /// Gets or sets the speed with which the camera moves
+        /// Gets or sets the speed with which the camera moves.
         /// </summary>
         public float CameraMoveSpeed
         {
@@ -220,7 +220,7 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
-        /// Gets or sets the speed with which the camera zooms
+        /// Gets or sets the speed with which the camera zooms.
         /// </summary>
         public float ZoomSpeed
         {
@@ -235,7 +235,7 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
-        /// Gets or sets the horizontal breakoff point for the mouse controlled camera
+        /// Gets or sets the horizontal breakoff point for the mouse controlled camera.
         /// </summary>
         public int CameraBreakoffX
         {
@@ -250,7 +250,7 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
-        /// Gets or sets the vertical breakoff point for the mouse controlled camera
+        /// Gets or sets the vertical breakoff point for the mouse controlled camera.
         /// </summary>
         public int CameraBreakoffY
         {
@@ -265,7 +265,7 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
-        /// Gets or sets the margin in pixels from the breakoff points with which the mouse will move the camera
+        /// Gets or sets the margin in pixels from the breakoff points with which the mouse will move the camera.
         /// </summary>
         public int CameraMouseMargin
         {
