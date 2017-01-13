@@ -159,8 +159,8 @@ namespace MaxOfEmpires
             KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft"));
             KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight"));
 
-            KeyManager.Instance.RegisterKey("zoomCameraIn", Keys.PageUp);
-            KeyManager.Instance.RegisterKey("zoomCameraOut", Keys.PageDown);
+            KeyManager.Instance.RegisterKey("zoomCameraIn", (Keys)config.GetProperty<int>("moveCameraIn"));
+            KeyManager.Instance.RegisterKey("zoomCameraOut", (Keys)config.GetProperty<int>("moveCameraOut"));
         }
 
         /// <summary>
