@@ -24,7 +24,7 @@ namespace MaxOfEmpires
         /// </summary>
         private GameObjectList unitTargets;
 
-        public Grid(int width, int height, string id = "") : base(width, height, id) // TODO: make this load from a file or something similar
+        public Grid(int width, int height, string id = "") : base(width, height, id) 
         {
             selectedTile = InvalidTile;
             currentPlayer = true;

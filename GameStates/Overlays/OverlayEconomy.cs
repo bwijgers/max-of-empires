@@ -3,16 +3,15 @@ using Ebilkill.Gui.Elements;
 using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Text;
 
 namespace MaxOfEmpires.GameStates.Overlays
 {
     class OverlayEconomyState : GuiScreen
     {
-        public GuiLabel labelCurrentPlayer;
-        public GuiLabel labelUnitHp;
-        public GuiLabel labelUnitAtt;
-        public GuiLabel labelUnitHit;
-        public GuiButton buttonEndTurn;
+        private GuiLabel labelCurrentPlayer;
+        private GuiList listArmySoldiers;
+        private GuiButton buttonEndTurn;
 
         public OverlayEconomyState()
         {
@@ -25,13 +24,9 @@ namespace MaxOfEmpires.GameStates.Overlays
             addElement(labelCurrentPlayer);
 
             // Add labels for unit stats
-            labelUnitHp = GuiLabel.createNewLabel(new Vector2(buttonEndTurn.Bounds.Left, buttonEndTurn.Bounds.Bottom + 100), "Unit Hp/Max: ", "font");
-            labelUnitAtt = GuiLabel.createNewLabel(new Vector2(labelUnitHp.Bounds.Left, labelUnitHp.Bounds.Bottom + 2), "Unit Att/Def: ", "font");
-            labelUnitHit = GuiLabel.createNewLabel(new Vector2(labelUnitAtt.Bounds.Left, labelUnitAtt.Bounds.Bottom + 2), "Unit Hit/Dodge: ", "font");
+            listArmySoldiers = GuiList.createNewList(new Point(buttonEndTurn.Bounds.Location.X, labelCurrentPlayer.Bounds.Bottom + 5), 5, new System.Collections.Generic.List<GuiLabel>(), 300);
 
-            addElement(labelUnitHp);
-            addElement(labelUnitAtt);
-            addElement(labelUnitHit);
+            addElement(listArmySoldiers);
         }
 
         public override void draw(SpriteBatch spriteBatch)
@@ -43,15 +38,43 @@ namespace MaxOfEmpires.GameStates.Overlays
         /// <summary>
         /// Prints a Unit's information on the screen, or makes the information labels disappear if there is no Unit.
         /// </summary>
-        /// <param name="u">The Unit of which the information should be printed.</param>
-        public void PrintArmyInfo(Army u)
+        /// <param name="a">The Army of which the information should be printed.</param>
+        public void PrintArmyInfo(Army a)
         {
-            // No Unit? Make the unit info disappear :o
-            if (u == null)
+            // No Army? Make the info disappear :o
+            if (a == null)
             {
-                labelUnitHp.Visible = labelUnitAtt.Visible = labelUnitHit.Visible = false;
+                listArmySoldiers.Visible = false;
                 return;
             }
+
+            // Hey, we have an army to print :)
+            listArmySoldiers.Visible = true;
+            listArmySoldiers.clear();
+            foreach (string soldierType in a.UnitsAndCounts.Keys)
+            {
+                // Create the label to add to the list
+                StringBuilder sb = new StringBuilder();
+                sb.Append(soldierType);
+                sb.Append(": ");
+                sb.Append(a.UnitsAndCounts[soldierType]);
+
+                // Add this label to the list
+                listArmySoldiers.addLabel(GuiLabel.createNewLabel(new Vector2(), sb.ToString(), "font"));
+            }
         }
+
+        /// <summary>
+        /// The function that is executed when the "End turn" button is pressed.
+        /// </summary>
+        public GuiButton.OnClickHandler EndTurnHandler
+        {
+            set
+            {
+                buttonEndTurn.ClickHandler = value;
+            }
+        }
+
+        public GuiLabel LabelCurrentPlayer => labelCurrentPlayer;
     }
 }

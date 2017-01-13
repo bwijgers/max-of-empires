@@ -14,14 +14,6 @@ namespace MaxOfEmpires.GameStates
     
    class BattleState : GameState
     {
-
-        public override Vector2 GetCurrentGridSize()
-        {
-            int x = battleGrid.Width;
-            int y = battleGrid.Height;
-            return new Vector2(x, y);
-        }
-
         /// <summary>
         /// The battlegrid.
         /// </summary>
@@ -61,6 +53,13 @@ namespace MaxOfEmpires.GameStates
             base.Draw(time, gameObjectS, overlayS);
         }
 
+        public override Vector2 GetCurrentGridSize()
+        {
+            int x = battleGrid.Width;
+            int y = battleGrid.Height;
+            return new Vector2(x, y);
+        }
+
         public override void HandleInput(InputHelper helper, KeyManager manager)
         {
             // Handle input for the grid (things like moving and attacking units)
@@ -72,7 +71,7 @@ namespace MaxOfEmpires.GameStates
             // Print the selected Unit's information, if it exists
             if (u != null)
             {
-                overlay.PrintUnitInfo(u);
+                overlay.PrintSoldierInfo(u);
             }
             // if there is no selected Unit...
             else
@@ -81,7 +80,7 @@ namespace MaxOfEmpires.GameStates
                 Tile t = battleGrid.GetTileUnderMouse(helper);
                 if (t != null)
                 {
-                    overlay.PrintUnitInfo((Soldier) t.Unit);
+                    overlay.PrintSoldierInfo((Soldier) t.Unit);
                 }
             }
 
@@ -106,7 +105,7 @@ namespace MaxOfEmpires.GameStates
         private void InitOverlay()
         {
             // Add a click handler to the end turn button.
-            overlay.buttonEndTurn.ClickHandler = () => { shouldTurnUpdate = true; };
+            overlay.EndTurnHandler = () => { shouldTurnUpdate = true; };
         }
 
         /// <summary>
@@ -125,7 +124,7 @@ namespace MaxOfEmpires.GameStates
             battleGrid.TurnUpdate(turnNum, currentPlayer);
 
             // Show whose turn it is in the overlay
-            overlay.labelCurrentPlayer.setLabelText("Current player: " + (currentPlayer ? "Blue" : "Red"));
+            overlay.LabelCurrentPlayer.setLabelText("Current player: " + (currentPlayer ? "Blue" : "Red"));
         }
 
         public override void Update(GameTime time)
