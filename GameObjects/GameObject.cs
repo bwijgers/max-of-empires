@@ -19,15 +19,15 @@ namespace MaxOfEmpires.GameObjects
         private string id;
 
         /// <summary>
-        /// The drawing position relative to the parent. 
-        /// </summary>
-        protected Vector2 position;
-
-        /// <summary>
         /// The parent object of this GameObject. Is most likely a GameObjectList
         /// </summary>
         /// <see cref="GameObjectList"/>
         private GameObject parent;
+
+        /// <summary>
+        /// The drawing position relative to the parent. 
+        /// </summary>
+        protected Vector2 position;
 
         /// <summary>
         /// Base constructor for new GameObjects. They can require to have some sort of id string.

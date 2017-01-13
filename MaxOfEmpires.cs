@@ -14,27 +14,41 @@ namespace MaxOfEmpires
     /// </summary>
     public class MaxOfEmpires : Game
     {
-        public static GraphicsDeviceManager graphics;
-        private SpriteBatch gameObjectSpriteBatch;
-        private SpriteBatch overlaySpriteBatch;
+        #region statics
         public static InputHelper inputHelper;
-        private static Random random = new Random((int) DateTime.Now.Ticks);
-        private static bool running = true;
-        private Configuration mainConfiguration;
         public static Camera camera;
+        public static GraphicsDeviceManager graphics;
+        private static Random random = new Random((int)DateTime.Now.Ticks);
+        private static bool running = true;
         public static Vector2 overlayPos;
 
-        /// <summary>
-        /// 800 * 480 = 15 * 15
-        /// 1280 * 768 = 24 * 24
-        /// 1920 * 1080 = 34 * 34
+		/// <summary>
+        /// The minimal size of the grid.
         /// </summary>
         public static Point minGridSize = new Point(24, 24);
 
         /// <summary>
-        /// The fullscreen scaling matrix
+        /// The size of the grid
         /// </summary>
-        private Matrix spriteScale = Matrix.CreateScale(1, 1, 1);
+        private static Point gridSize = new Point(48, 48);
+        
+        /// <summary>
+        /// Quits the game. Effectively closes the game.
+        /// </summary>
+        public static void Quit()
+        {
+            running = false;
+        }
+
+        public static Point GridSize => gridSize;
+        public static Vector2 OverlayPos => overlayPos;
+        public static Random Random => random;
+        public static Point ScreenSize => new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+        #endregion
+
+        private SpriteBatch gameObjectSpriteBatch;
+        private Configuration mainConfiguration;
+        private SpriteBatch overlaySpriteBatch;
 
         public MaxOfEmpires()
         {
@@ -43,7 +57,7 @@ namespace MaxOfEmpires
 
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 768;
-            overlayPos = new Vector2((graphics.PreferredBackBufferWidth - (graphics.PreferredBackBufferWidth - graphics.PreferredBackBufferHeight)), 0);
+            overlayPos = new Vector2(graphics.PreferredBackBufferHeight, 0);
 
             camera = new Camera();
         }
@@ -59,7 +73,24 @@ namespace MaxOfEmpires
             inputHelper = new InputHelper();
             IsMouseVisible = true;
 
+            
             base.Initialize();
+        }
+
+        /// <summary>
+        /// Initializes all keybinds, loaded from Keys.cfg
+        /// </summary>
+        /// <param name="config">The configuration file and section to use for loading.</param>
+        private void InitializeKeys(Configuration config)
+        {
+            KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys)config.GetProperty<int>("unitTargetOverlay"));
+            KeyManager.Instance.RegisterKey("moveCameraUp", (Keys)config.GetProperty<int>("moveCameraUp"));
+            KeyManager.Instance.RegisterKey("moveCameraDown", (Keys)config.GetProperty<int>("moveCameraDown"));
+            KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft"));
+            KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight"));
+
+            KeyManager.Instance.RegisterKey("zoomCameraIn", (Keys)config.GetProperty<int>("moveCameraIn"));
+            KeyManager.Instance.RegisterKey("zoomCameraOut", (Keys)config.GetProperty<int>("moveCameraOut"));
         }
 
         protected void LoadConfiguration()
@@ -161,7 +192,7 @@ namespace MaxOfEmpires
                         null,
                         null,
                         null,
-                        transform * SpriteScale); // set camera tranformation
+                        transform); // set camera tranformation
 
             GameStateManager.Draw(gameTime, gameObjectSpriteBatch, overlaySpriteBatch);// Draw the current game state
 
@@ -171,47 +202,5 @@ namespace MaxOfEmpires
             base.Draw(gameTime);
         }
 
-        /// <summary>
-        /// Initializes all keybinds, loaded from Keys.cfg
-        /// </summary>
-        /// <param name="config">The configuration file and section to use for loading.</param>
-        private void InitializeKeys(Configuration config)
-        {
-            KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys) config.GetProperty<int>("unitTargetOverlay"));
-            KeyManager.Instance.RegisterKey("moveCameraUp", (Keys)config.GetProperty<int>("moveCameraUp"));
-            KeyManager.Instance.RegisterKey("moveCameraDown", (Keys)config.GetProperty<int>("moveCameraDown"));
-            KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft"));
-            KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight"));
-
-            KeyManager.Instance.RegisterKey("zoomCameraIn", (Keys)config.GetProperty<int>("moveCameraIn"));
-            KeyManager.Instance.RegisterKey("zoomCameraOut", (Keys)config.GetProperty<int>("moveCameraOut"));
-        }
-
-        /// <summary>
-        /// Quits the game. Effectively closes the game.
-        /// </summary>
-        public static void Quit()
-        {
-            running = false;
-        }
-
-        /// <summary>
-        /// The fullscreen scaling matrix
-        /// </summary>
-        public Matrix SpriteScale
-        {
-            get
-            {
-                return spriteScale;
-            }
-            set
-            {
-                spriteScale = value;
-            }
-        }
-
-        public static Vector2 OverlayPos => overlayPos;
-        public static Random Random => random;
-        public static Point ScreenSize => new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
     }
 }

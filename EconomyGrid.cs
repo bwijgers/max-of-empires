@@ -18,6 +18,27 @@ namespace MaxOfEmpires
             battlePosition = InvalidTile;
         }
 
+        /// <summary>
+        /// Initiates a battle between two Armies.
+        /// </summary>
+        /// <param name="attacker">The Army that initiated the attack.</param>
+        /// <param name="defender">The Army that is being attacked.</param>
+        private void InitBattle(Army attacker, Army defender)
+        {
+            // Save the square on which the battle is occuring (the defender's square)
+            battlePosition = defender.PositionInGrid;
+
+            // Remove BOTH armies from the grid; one will be replaced by what is remaining, the other will be annihilated
+            (this[attacker.PositionInGrid] as Tile).SetUnit(null);
+            (this[defender.PositionInGrid] as Tile).SetUnit(null);
+
+            // Unselect the current tile as we move to another state
+            SelectTile(InvalidTile);
+
+            // Tell the battle state that we want to initiate a battle
+            GameStateManager.OnInitiateBattle(attacker, defender);
+        }
+
         public override void InitField()
         {
             // Set all the tiles in the field to Terrain.Plains
@@ -98,27 +119,6 @@ namespace MaxOfEmpires
         {
             (this[battlePosition] as Tile).SetUnit(remainingArmy);
             battlePosition = InvalidTile;
-        }
-
-        /// <summary>
-        /// Initiates a battle between two Armies.
-        /// </summary>
-        /// <param name="attacker">The Army that initiated the attack.</param>
-        /// <param name="defender">The Army that is being attacked.</param>
-        private void InitBattle(Army attacker, Army defender)
-        {
-            // Save the square on which the battle is occuring (the defender's square)
-            battlePosition = defender.PositionInGrid;
-
-            // Remove BOTH armies from the grid; one will be replaced by what is remaining, the other will be annihilated
-            (this[attacker.PositionInGrid] as Tile).SetUnit(null);
-            (this[defender.PositionInGrid] as Tile).SetUnit(null);
-
-            // Unselect the current tile as we move to another state
-            SelectTile(InvalidTile);
-
-            // Tell the battle state that we want to initiate a battle
-            GameStateManager.OnInitiateBattle(attacker, defender);
         }
     }
 }

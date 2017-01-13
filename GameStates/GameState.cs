@@ -36,7 +36,6 @@ namespace MaxOfEmpires.GameStates
 
         public abstract Vector2 GetCurrentGridSize();
 
-
         public virtual void HandleInput(InputHelper helper, KeyManager manager)
         {
         }

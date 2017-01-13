@@ -4,8 +4,6 @@ namespace MaxOfEmpires
 {
     public partial class Camera
     {
-        // Variables
-
         /// <summary>
         /// The Vector2 determining the position of the camera
         /// </summary>
@@ -18,6 +16,7 @@ namespace MaxOfEmpires
 
 
         // Functions
+
 
         /// <summary>
         /// initialises the camera at position 0, 0
@@ -36,8 +35,23 @@ namespace MaxOfEmpires
             Position = new Vector2(0, 0);
         }
 
+		// Properties
 
-        // Properties
+        /// <summary>
+        /// Gets or sets the camera center
+        /// </summary>
+        public Vector2 Center
+        {
+            get
+            {
+                return new Vector2(Position.X + 1920 / 2, Position.Y + 1080 / 2);
+            }
+            set
+            {
+                position.X = value.X - 1920 / 2;
+                position.Y = value.Y - 1080 / 2;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the camera position
@@ -68,22 +82,5 @@ namespace MaxOfEmpires
                 zoom = value;
             }
         }
-
-        /// <summary>
-        /// Gets or sets the camera center
-        /// </summary>
-        public Vector2 Center
-        {
-            get
-            {
-                return new Vector2(Position.X + 1920 / 2, Position.Y + 1080 / 2);
-            }
-            set
-            {
-                position.X = value.X - 1920 / 2;
-                position.Y = value.Y - 1080 / 2;
-            }
-        }
-
     }
 }

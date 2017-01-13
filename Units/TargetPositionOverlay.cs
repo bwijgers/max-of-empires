@@ -10,12 +10,12 @@ namespace MaxOfEmpires.Units
         private const double DRAW_INTERVAL_TIME = 0.05D;
         private const float MOVEMENT_SPEED = 16.0F;
 
-        private Pathfinding.PathToTile path;
-        private int indexInPath;
         private Vector2 drawPos;
-        private Vector2 nextEnd;
-        private double timeUntilNextDraw;
         private bool doneParticles;
+        private int indexInPath;
+        private Vector2 nextEnd;
+        private Pathfinding.PathToTile path;
+        private double timeUntilNextDraw;
 
         public TargetPositionOverlay(Unit u)
         {

@@ -10,13 +10,16 @@ namespace MaxOfEmpires
     public class AssetManager
     {
         private static AssetManager instance;
-        private Dictionary<string, object> assetDict;
-        private ContentManager content;
 
         public static void Init(ContentManager content)
         {
             instance = new AssetManager(content);
         }
+
+        public static AssetManager Instance => instance;
+
+        private Dictionary<string, object> assetDict;
+        private ContentManager content;
 
         private AssetManager(ContentManager content)
         {
@@ -57,7 +60,5 @@ namespace MaxOfEmpires
         {
             get { return assetDict[s]; }
         }
-
-        public static AssetManager Instance => instance;
     }
 }

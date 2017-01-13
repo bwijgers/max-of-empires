@@ -12,8 +12,8 @@ namespace MaxOfEmpires.GameStates
     class GameStateManager
     {
         private static GameState currentState;
-        private static Dictionary<string, GameState> stateDict = new Dictionary<string, GameState>();
         private static Vector2 gridSize = new Vector2(0, 0);
+        private static Dictionary<string, GameState> stateDict = new Dictionary<string, GameState>();
 
         public static void AddState(string name, GameState state)
         {
@@ -25,11 +25,6 @@ namespace MaxOfEmpires.GameStates
             CurrentState?.Draw(time, gameObjectS, overlayS);
         }
 
-        public static void HandleInput(InputHelper helper, KeyManager keys)
-        {
-            CurrentState?.HandleInput(helper, keys);
-        }
-
         private static GameState GetState(string name)
         {
             if (stateDict.ContainsKey(name))
@@ -37,6 +32,11 @@ namespace MaxOfEmpires.GameStates
                 return stateDict[name];
             }
             throw new KeyNotFoundException("GameState with name '" + name + "' does not exist.");
+        }
+
+        public static void HandleInput(InputHelper helper, KeyManager keys)
+        {
+            CurrentState?.HandleInput(helper, keys);
         }
 
         /// <summary>

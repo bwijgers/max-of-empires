@@ -12,8 +12,8 @@ namespace MaxOfEmpires.GameStates.Overlays
     class OverlayMainMenu : GuiScreen
     {
         private GuiButton buttonQuit;
-        private GuiButton buttonSure;
         private GuiButton buttonStart;
+        private GuiButton buttonSure;
         private GuiLabel labelTitle; 
 
         public OverlayMainMenu()

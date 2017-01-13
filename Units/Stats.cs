@@ -7,8 +7,37 @@ using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Units
 {
-    class Stats 
+    class Stats
     {
+        /// <summary>
+        /// Loads a new Stats object from a configuration file/subsection.
+        /// </summary>
+        /// Important to keep in mind: the configuration section needs to contain these keys:
+        ///   - hp
+        ///   - att
+        ///   - def
+        ///   - hit
+        ///   - dodge
+        /// <param name="config">The configuration file/subsection to use.</param>
+        /// <returns>The configured Stats object.</returns>
+        public static Stats LoadFromConfiguration(Configuration config)
+        {
+            // Load everything in Stats from the config
+            int hp = config.GetProperty<int>("hp");
+            int att = config.GetProperty<int>("att");
+            int def = config.GetProperty<int>("def");
+            int hit = config.GetProperty<int>("hit");
+            int dodge = config.GetProperty<int>("dodge");
+
+            // Return stats loaded from config
+            return new Stats(hp, att, def, hit, dodge);
+        }
+
+        /// <summary>
+        /// Returns an empty Stats object.
+        /// </summary>
+        public static Stats Empty => new Stats(0, 0, 0, 0, 0);
+
         public int hp;
         public int maxHp;
         public int att; // damage
@@ -43,30 +72,6 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
-        /// Loads a new Stats object from a configuration file/subsection.
-        /// </summary>
-        /// Important to keep in mind: the configuration section needs to contain these keys:
-        ///   - hp
-        ///   - att
-        ///   - def
-        ///   - hit
-        ///   - dodge
-        /// <param name="config">The configuration file/subsection to use.</param>
-        /// <returns>The configured Stats object.</returns>
-        public static Stats LoadFromConfiguration(Configuration config)
-        {
-            // Load everything in Stats from the config
-            int hp = config.GetProperty<int>("hp");
-            int att = config.GetProperty<int>("att");
-            int def = config.GetProperty<int>("def");
-            int hit = config.GetProperty<int>("hit");
-            int dodge = config.GetProperty<int>("dodge");
-
-            // Return stats loaded from config
-            return new Stats(hp, att, def, hit, dodge);
-        }
-
-        /// <summary>
         /// Returns a deep copy of this Stats object.
         /// </summary>
         /// <returns></returns>
@@ -77,10 +82,5 @@ namespace MaxOfEmpires.Units
 
         //public int crit; // crit chance
         //public int avoid; // crit chance
-
-        /// <summary>
-        /// Returns an empty Stats object.
-        /// </summary>
-        public static Stats Empty => new Stats(0, 0, 0, 0, 0);
     }
 }

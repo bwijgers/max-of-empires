@@ -9,9 +9,9 @@ namespace MaxOfEmpires.GameStates.Overlays
 {
     class OverlayEconomyState : GuiScreen
     {
+        private GuiButton buttonEndTurn;
         private GuiLabel labelCurrentPlayer;
         private GuiList listArmySoldiers;
-        private GuiButton buttonEndTurn;
 
         public OverlayEconomyState()
         {

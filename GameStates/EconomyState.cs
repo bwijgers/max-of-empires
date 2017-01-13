@@ -11,17 +11,15 @@ namespace MaxOfEmpires.GameStates
 {
     class EconomyState : GameState
     {
-        private EconomyGrid ecoGrid;
-
-        private Overlays.OverlayEconomyState overlay; 
-
-        private uint turnNum;
         private bool currentPlayer;
+        private EconomyGrid ecoGrid;
+        private Overlays.OverlayEconomyState overlay;
         private bool shouldTurnUpdate;
+        private uint turnNum;
 
         public EconomyState()
         {
-            ecoGrid = new EconomyGrid(MaxOfEmpires.minGridSize.X, MaxOfEmpires.minGridSize.Y);
+            ecoGrid = new EconomyGrid(MaxOfEmpires.GridSize.X, MaxOfEmpires.GridSize.Y);
 
             overlay = new Overlays.OverlayEconomyState();
             InitOverlay();
@@ -40,7 +38,6 @@ namespace MaxOfEmpires.GameStates
         {
             return new Vector2(ecoGrid.Width, ecoGrid.Height);
         }
-
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
         {
@@ -76,6 +73,29 @@ namespace MaxOfEmpires.GameStates
         }
 
         /// <summary>
+        /// Called when a player wins a battle in the battle state.
+        /// </summary>
+        /// <param name="remainingArmy">The remaining army after the battle has ended.</param>
+        public void OnPlayerWinBattle(Army remainingArmy)
+        {
+            ecoGrid.OnPlayerWinBattle(remainingArmy);
+        }
+
+        public override void Reset()
+        {
+            // Initialize the field
+            ecoGrid.InitField();
+
+            // Player 1 starts
+            currentPlayer = true;
+
+            // Turn number starts at 1, so 0 and double TurnUpdate
+            turnNum = 0;
+            TurnUpdate();
+            TurnUpdate();
+        }
+
+        /// <summary>
         /// Called when the turn is updated. Sets the current player to the other player and then calls Grid.TurnUpdate.
         /// </summary>
         public void TurnUpdate()
@@ -97,29 +117,6 @@ namespace MaxOfEmpires.GameStates
                 shouldTurnUpdate = false;
                 TurnUpdate();
             }
-        }
-
-        /// <summary>
-        /// Called when a player wins a battle in the battle state.
-        /// </summary>
-        /// <param name="remainingArmy">The remaining army after the battle has ended.</param>
-        public void OnPlayerWinBattle(Army remainingArmy)
-        {
-            ecoGrid.OnPlayerWinBattle(remainingArmy);
-        }
-
-        public override void Reset()
-        {
-            // Initialize the field
-            ecoGrid.InitField();
-
-            // Player 1 starts
-            currentPlayer = true;
-
-            // Turn number starts at 1, so 0 and double TurnUpdate
-            turnNum = 0;
-            TurnUpdate();
-            TurnUpdate();
         }
     }
 }
