@@ -1,11 +1,8 @@
 ﻿using MaxOfEmpires.GameStates;
 using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MaxOfEmpires.Buildings;
 
 namespace MaxOfEmpires
 {
@@ -16,6 +13,14 @@ namespace MaxOfEmpires
         public EconomyGrid(int width, int height, List<Player> players, string id = "") : base(width, height, players, id)
         {
             battlePosition = InvalidTile;
+        }
+
+        public void Build(Builder builder, Building building)
+        {
+            builder.MovesLeft = 0;
+            Tile t = this[builder.PositionInGrid] as Tile;
+            t.Building = building;
+            SelectTile(InvalidTile);
         }
 
         /// <summary>
@@ -51,8 +56,10 @@ namespace MaxOfEmpires
             }
 
             // Generate 2 armies and place them on the field.
-            (this[1, 1] as Tile).SetUnit(Army.GenerateArmy(players[0]));
-            (this[5, 5] as Tile).SetUnit(Army.GenerateArmy(players[1]));
+            (this[0, 0] as Tile).SetUnit(new Builder(0, 0, players[0]));
+            (this[14, 14] as Tile).SetUnit(new Builder(0, 0, players[1]));
+//            (this[0, 0] as Tile).SetUnit(Army.GenerateArmy(players[0]));
+//            (this[14, 14] as Tile).SetUnit(Army.GenerateArmy(players[1]));
 
             // Clear the Armies' targets
             ClearAllTargetPositions();
@@ -71,7 +78,7 @@ namespace MaxOfEmpires
             if (SelectedTile != null && SelectedTile.Occupied)
             {
                 // Check if we're attacking another player's army
-                if (IsAdjacent(clickedTile.GridPos, SelectedTile.GridPos) && clickedTile.Occupied)
+                if (SelectedTile.Unit is Army && IsAdjacent(clickedTile.GridPos, SelectedTile.GridPos) && clickedTile.Occupied)
                 {
                     // If we're clicking on our own army, do nothing
                     if (SelectedTile.Unit.Owner == clickedTile.Unit.Owner)
@@ -79,8 +86,18 @@ namespace MaxOfEmpires
                         return;
                     }
 
+                    // If it's an enemy Builder, kill it and overwrite it
+                    Unit enemy = clickedTile.Unit;
+                    if (enemy is Builder)
+                    {
+                        SelectedTile.Unit.MovesLeft -= 1;
+                        clickedTile.SetUnit(null);
+                        clickedTile.SetUnit(SelectedTile.Unit);
+                        SelectedTile.SetUnit(null);
+                    }
+
                     // Initiate a battle between armies
-                    InitBattle((Army) SelectedTile.Unit, (Army) clickedTile.Unit);
+                    InitBattle((Army) SelectedTile.Unit, (Army) enemy);
                     return;
                 }
 
@@ -103,7 +120,8 @@ namespace MaxOfEmpires
                 {
                     Point[] walkablePositions = Pathfinding.ReachableTiles(clickedTile.Unit);
                     SetUnitWalkingOverlay(walkablePositions);
-                    SetArmyAttackingOverlay((Army) clickedTile.Unit);
+                    if (clickedTile.Unit is Army)
+                        SetArmyAttackingOverlay((Army) clickedTile.Unit);
                 }
 
                 // This unit can be selected. Show the player it is selected too

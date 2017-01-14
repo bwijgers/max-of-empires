@@ -1,4 +1,5 @@
 ﻿using Ebilkill.Gui;
+using MaxOfEmpires.Buildings;
 using MaxOfEmpires.Files;
 using MaxOfEmpires.GameStates;
 using MaxOfEmpires.Units;
@@ -83,6 +84,12 @@ namespace MaxOfEmpires
             // Initialize units
             Configuration unitConfiguration = mainConfiguration.GetPropertySection("unit");
             SoldierRegistry.Init(unitConfiguration);
+
+            // Initialize buildings
+            Configuration buildingConfiguration = mainConfiguration.GetPropertySection("building");
+            BuildingRegistry.InitBuildings(buildingConfiguration);
+
+            Mine.LoadFromConfig(buildingConfiguration);
 
             // Initialize keys
             InitializeKeys(FileManager.LoadConfig("Keys").GetPropertySection("key"));

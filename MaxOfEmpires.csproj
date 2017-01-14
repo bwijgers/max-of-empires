@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
     <Compile Include="BattleGrid.cs" />
+    <Compile Include="Buildings\BuildingRegistry.cs" />
     <Compile Include="Buildings\Mine.cs" />
     <Compile Include="EconomyGrid.cs" />
     <Compile Include="Files\Configuration.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="GameObjects\GameObjectList.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Units\Army.cs" />
+    <Compile Include="Units\Builder.cs" />
     <Compile Include="Units\Range.cs" />
     <Compile Include="Units\Stats.cs" />
     <Compile Include="Units\Soldier.cs" />

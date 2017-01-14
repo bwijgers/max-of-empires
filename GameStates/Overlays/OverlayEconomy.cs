@@ -4,13 +4,22 @@ using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Text;
+using System;
+using MaxOfEmpires.Buildings;
 
 namespace MaxOfEmpires.GameStates.Overlays
 {
     class OverlayEconomyState : GuiScreen
     {
         private GuiButton buttonEndTurn;
+        private GuiButton buttonBuildMine;
+
+        private Builder currentBuilder;
+
+        private GuiLabel labelBuildMine;
         private GuiLabel labelCurrentPlayer;
+        private GuiLabel labelPlayerMoney;
+
         private GuiList listArmySoldiers;
 
         public OverlayEconomyState()
@@ -23,10 +32,19 @@ namespace MaxOfEmpires.GameStates.Overlays
             labelCurrentPlayer = GuiLabel.createNewLabel(new Vector2(buttonEndTurn.Bounds.Right + 2, buttonEndTurn.Bounds.Top + 2), "Current player: ", "font");
             addElement(labelCurrentPlayer);
 
-            // Add labels for unit stats
-            listArmySoldiers = GuiList.createNewList(new Point(buttonEndTurn.Bounds.Location.X, labelCurrentPlayer.Bounds.Bottom + 5), 5, new System.Collections.Generic.List<GuiLabel>(), 300);
+            // Add a label telling the player how much money they have
+            labelPlayerMoney = GuiLabel.createNewLabel(new Vector2(labelCurrentPlayer.Bounds.Left, labelCurrentPlayer.Bounds.Bottom + 5), "Money: ", "font");
+            addElement(labelPlayerMoney);
 
+            // Add labels for unit stats
+            listArmySoldiers = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Location.X, labelPlayerMoney.Bounds.Bottom + 5), 5, new System.Collections.Generic.List<GuiLabel>(), 300);
             addElement(listArmySoldiers);
+
+            // Add labels+buttons for building buildings (lel)
+            labelBuildMine = GuiLabel.createNewLabel(new Vector2(labelPlayerMoney.Bounds.Left, labelPlayerMoney.Bounds.Bottom + 5), "Mine (100G): ", "font");
+            buttonBuildMine = GuiButton.createButtonWithLabel(new Point(labelBuildMine.Bounds.Right + 5, labelBuildMine.Bounds.Top), "Build", null, "font");
+            addElement(labelBuildMine);
+            addElement(buttonBuildMine);
         }
 
         public override void draw(SpriteBatch spriteBatch)
@@ -64,6 +82,29 @@ namespace MaxOfEmpires.GameStates.Overlays
             }
         }
 
+        public void PrintBuilderInfo(Builder builder, Player owner)
+        {
+            currentBuilder = builder;
+            if (builder == null)
+            {
+                labelBuildMine.Visible = buttonBuildMine.Visible = false;
+                return;
+            }
+            labelBuildMine.Visible = buttonBuildMine.Visible = true;
+        }
+
+        public void InitBuildingFunctions(EconomyGrid grid)
+        {
+            buttonBuildMine.ClickHandler = () => {
+                Tile t = grid[currentBuilder.PositionInGrid] as Tile; 
+                if (!t.BuiltOn && currentBuilder.Owner.CanAfford(BuildingRegistry.GetCost("mine")))
+                {
+                    currentBuilder.Owner.Buy(BuildingRegistry.GetCost("mine"));
+                    grid.Build(currentBuilder, new Mine(currentBuilder.PositionInGrid, currentBuilder.Owner));
+                }
+            };
+        }
+
         /// <summary>
         /// The function that is executed when the "End turn" button is pressed.
         /// </summary>
@@ -76,5 +117,6 @@ namespace MaxOfEmpires.GameStates.Overlays
         }
 
         public GuiLabel LabelCurrentPlayer => labelCurrentPlayer;
+        public GuiLabel LabelPlayerMoney => labelPlayerMoney;
     }
 }

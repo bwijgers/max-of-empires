@@ -50,32 +50,48 @@ namespace MaxOfEmpires.GameStates
             // Handle input for the grid (things like moving and attacking units)
             ecoGrid.HandleInput(helper, manager);
 
-            // Get the selected Unit
-            Army u = (Army)ecoGrid.SelectedTile?.Unit;
-
-            // Print the selected Unit's information, if it exists
-            if (u != null)
-            {
-                overlay.PrintArmyInfo(u);
-            }
-            // if there is no selected Unit...
-            else
-            {
-                // ... get the tile the mouse is over, and show the Unit's information, if this Unit exists. 
-                Tile t = ecoGrid.GetTileUnderMouse(helper);
-                if (t != null)
-                {
-                    overlay.PrintArmyInfo((Army)t.Unit);
-                }
-            }
-
             // Update the overlay
             overlay.update(helper);
+
+            // Get the Unit under the mouse...
+            Unit unitUnderMouse = ecoGrid.GetTileUnderMouse(helper)?.Unit;
+
+            // ... and the selected Unit...
+            Unit selectedUnit = ecoGrid.SelectedTile?.Unit;
+
+            // Show nothing by default
+            PrintArmyInfo(null);
+            PrintBuilderInfo(null);
+
+            // ... and print their information if it's an Army...
+            if (unitUnderMouse is Army)
+            {
+                PrintArmyInfo((Army)unitUnderMouse);
+                return;
+            }
+            if (selectedUnit is Army)
+            {
+                PrintArmyInfo((Army)selectedUnit);
+                return;
+            }
+
+            // ... or set the building information if it's a Builder
+            if (selectedUnit is Builder && !ecoGrid.SelectedTile.BuiltOn)
+            {
+                PrintBuilderInfo((Builder)selectedUnit);
+                return;
+            }
         }
 
         private void InitOverlay()
         {
             overlay.EndTurnHandler = () => shouldTurnUpdate = true;
+            overlay.InitBuildingFunctions(ecoGrid);
+
+            foreach (Player p in players)
+            {
+                p.OnUpdateMoney(UpdateMoneyDisplay);
+            }
         }
 
         /// <summary>
@@ -85,6 +101,16 @@ namespace MaxOfEmpires.GameStates
         public void OnPlayerWinBattle(Army remainingArmy)
         {
             ecoGrid.OnPlayerWinBattle(remainingArmy);
+        }
+
+        private void PrintArmyInfo(Army a)
+        {
+            overlay.PrintArmyInfo(a);
+        }
+
+        private void PrintBuilderInfo(Builder builder)
+        {
+            overlay.PrintBuilderInfo(builder, builder?.Owner);
         }
 
         public override void Reset()
@@ -120,6 +146,7 @@ namespace MaxOfEmpires.GameStates
             ecoGrid.TurnUpdate(turnNum, CurrentPlayer);
 
             overlay.LabelCurrentPlayer.setLabelText("Current player: " + CurrentPlayer.Name);
+            UpdateMoneyDisplay(CurrentPlayer);
         }
 
         public override void Update(GameTime time)
@@ -131,6 +158,11 @@ namespace MaxOfEmpires.GameStates
                 shouldTurnUpdate = false;
                 TurnUpdate();
             }
+        }
+
+        private void UpdateMoneyDisplay(Player p)
+        {
+            overlay.LabelPlayerMoney.setLabelText("Money: " + p.Money + "G");
         }
 
         private Player CurrentPlayer => players[currentPlayer];

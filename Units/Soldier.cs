@@ -63,7 +63,7 @@ namespace MaxOfEmpires.Units
             this.name = name;
             this.range = range;
             Stats = stats;
-            this.texName = resName;
+            texName = resName;
             this.moveSpeed = moveSpeed;
         }
 
@@ -239,6 +239,7 @@ namespace MaxOfEmpires.Units
             // This should be called at the right time during the animation
             DealDamage(enemy);
         }
+
         public override void TurnUpdate(uint turn, Player player)
         {
             base.TurnUpdate(turn, player);

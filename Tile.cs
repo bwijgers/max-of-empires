@@ -129,7 +129,18 @@ namespace MaxOfEmpires
         /// <summary>
         /// The Building built on this Tile.
         /// </summary>
-        public Building Building => building;
+        public Building Building
+        {
+            get
+            {
+                return building;
+            }
+            set
+            {
+                building = value;
+                value.Parent = this;
+            }
+        }
 
         /// <summary>
         /// Whether there is a Building on this Tile.
