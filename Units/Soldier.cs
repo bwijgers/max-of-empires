@@ -98,7 +98,7 @@ namespace MaxOfEmpires.Units
             }
 
             Soldier enemy = u as Soldier;
-            DealDamage(enemy);
+            OnSoldierStartAttack(enemy);
 
             // Don't do anything else if the enemy is dead. 
             if (enemy.IsDead)
@@ -108,7 +108,7 @@ namespace MaxOfEmpires.Units
             if (enemy.IsInRange(PositionInGrid))
             {
                 // Okay, retaliate. 
-                enemy.DealDamage(this);
+                enemy.OnSoldierStartAttack(this);
             }
 
             // Unit has attacked
@@ -230,6 +230,14 @@ namespace MaxOfEmpires.Units
 
             // Load the Unit's texture based on the name supplied and the player controlling the unit.
             DrawingTexture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString());
+        }
+
+        public void OnSoldierStartAttack(Soldier enemy)
+        {
+            // TODO: Call animation code here
+
+            // This should be called at the right time during the animation
+            DealDamage(enemy);
         }
 
         public override void TurnUpdate(uint turn, bool player)

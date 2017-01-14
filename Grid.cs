@@ -41,13 +41,11 @@ namespace MaxOfEmpires
         public bool CheckMoveUnit(Point newPos, Unit unit)
         {
             Tile targetTile = this[newPos] as Tile;
-            Tile originTile = this[unit.PositionInGrid] as Tile;
 
             // If the Unit can move to its target, move it and tell the caller that we moved.
             if (targetTile != null && !targetTile.Occupied && unit.Move(newPos.X, newPos.Y))
             {
-                targetTile.SetUnit(unit);
-                originTile.SetUnit(null);
+                OnUnitStartMoving(unit, newPos);
                 return true;
             }
 
@@ -160,6 +158,26 @@ namespace MaxOfEmpires
         /// <param name="helper">The InputHelper used for mouse input.</param>
         public virtual void OnLeftClick(InputHelper helper)
         {
+        }
+
+        public void OnUnitFinishMoving(Unit u, Point targetPos)
+        {
+            // TODO: Call this when the animation is done
+
+            // Get the tiles to move the Units from/to
+            Tile targetTile = this[targetPos] as Tile;
+            Tile originTile = this[u.PositionInGrid] as Tile;
+
+            // Move the Unit from its tile to the target tile
+            targetTile.SetUnit(u);
+            originTile.SetUnit(null);
+        }
+
+        public void OnUnitStartMoving(Unit u, Point targetPos)
+        {
+            // Can make Unit movement animated by not calling this instantly (or from update or something, idk)
+            // TODO: Start animating here
+            OnUnitFinishMoving(u, targetPos);
         }
 
         /// <summary>
