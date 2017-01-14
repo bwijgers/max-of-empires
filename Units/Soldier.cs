@@ -36,7 +36,7 @@ namespace MaxOfEmpires.Units
 
             // Load texture from config file
             string texName = config.GetProperty<string>("texture.name");
-            return new Soldier(config.GetProperty<string>("name"), 0, 0, false, texName, moveSpeed, stats, range);
+            return new Soldier(config.GetProperty<string>("name"), 0, 0, new Player("none", "blue"), texName, moveSpeed, stats, range);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace MaxOfEmpires.Units
 
         private string texName;
 
-        private Soldier(string name, int x, int y, bool owner, string resName, int moveSpeed, Stats stats, Range range) : base(x, y, owner)
+        private Soldier(string name, int x, int y, Player owner, string resName, int moveSpeed, Stats stats, Range range) : base(x, y, owner)
         {
             // Set parameters
             this.name = name;
@@ -72,7 +72,7 @@ namespace MaxOfEmpires.Units
         /// </summary>
         /// <param name="original">The original to make a copy of.</param>
         /// <param name="owner">The owner of the copy of this Unit.</param>
-        public Soldier(Soldier original, bool owner) : this(new string(original.name.ToCharArray()), original.PositionInGrid.X, original.PositionInGrid.Y, owner, original.texName, original.moveSpeed, original.stats.Copy(), original.range.Copy())
+        public Soldier(Soldier original, Player owner) : this(new string(original.name.ToCharArray()), original.PositionInGrid.X, original.PositionInGrid.Y, owner, original.texName, original.moveSpeed, original.stats.Copy(), original.range.Copy())
         {
             // Make sure the texture is loaded, or the game will crash.
             LoadTexture();
@@ -120,7 +120,7 @@ namespace MaxOfEmpires.Units
         /// </summary>
         /// <param name="owner">The owner of the Copy.</param>
         /// <returns>A copy of the Unit.</returns>
-        public Soldier Copy(bool owner)
+        public Soldier Copy(Player owner)
         {
             // Create a new Unit instance
             Soldier copy = new Soldier(this, owner);
@@ -226,7 +226,7 @@ namespace MaxOfEmpires.Units
             // Get the texture based on the player (blue for p1, red for p2)
             StringBuilder texName = new StringBuilder();
             texName.Append(@"FE-Sprites\").Append(this.texName).Append('_');
-            texName.Append(owner ? "blue" : "red");
+            texName.Append(owner.ColorName.ToLower());
 
             // Load the Unit's texture based on the name supplied and the player controlling the unit.
             DrawingTexture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString());
@@ -239,8 +239,7 @@ namespace MaxOfEmpires.Units
             // This should be called at the right time during the animation
             DealDamage(enemy);
         }
-
-        public override void TurnUpdate(uint turn, bool player)
+        public override void TurnUpdate(uint turn, Player player)
         {
             base.TurnUpdate(turn, player);
             hasAttacked = false;

@@ -13,7 +13,7 @@ namespace MaxOfEmpires
     {
         private Point battlePosition;
 
-        public EconomyGrid(int width, int height, string id = "") : base(width, height, id)
+        public EconomyGrid(int width, int height, List<Player> players, string id = "") : base(width, height, players, id)
         {
             battlePosition = InvalidTile;
         }
@@ -51,8 +51,8 @@ namespace MaxOfEmpires
             }
 
             // Generate 2 armies and place them on the field.
-            (this[1, 1] as Tile).SetUnit(Army.GenerateArmy(true));
-            (this[5, 5] as Tile).SetUnit(Army.GenerateArmy(false));
+            (this[1, 1] as Tile).SetUnit(Army.GenerateArmy(players[0]));
+            (this[5, 5] as Tile).SetUnit(Army.GenerateArmy(players[1]));
 
             // Clear the Armies' targets
             ClearAllTargetPositions();

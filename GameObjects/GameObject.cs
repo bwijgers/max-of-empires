@@ -1,10 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MaxOfEmpires.GameObjects
 {
@@ -66,7 +61,7 @@ namespace MaxOfEmpires.GameObjects
         /// </summary>
         /// <param name="turn">The current turn.</param>
         /// <param name="player">The player whose turn it is.</param>
-        public virtual void TurnUpdate(uint turn, bool player)
+        public virtual void TurnUpdate(uint turn, Player player)
         {
         }
 

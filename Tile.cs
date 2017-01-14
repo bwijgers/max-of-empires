@@ -1,10 +1,6 @@
-﻿using MaxOfEmpires.GameObjects;
+﻿using MaxOfEmpires.Buildings;
+using MaxOfEmpires.GameObjects;
 using MaxOfEmpires.Units;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
@@ -113,7 +109,7 @@ namespace MaxOfEmpires
             }
         }
 
-        public override void TurnUpdate(uint turn, bool player)
+        public override void TurnUpdate(uint turn, Player player)
         {
             // Update the Unit at this position if it exists.
             if (Occupied)

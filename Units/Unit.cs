@@ -28,7 +28,7 @@ namespace MaxOfEmpires.Units
         /// </summary>
         protected int moveSpeed;
 
-        protected bool owner; // 2 is false, 1 is true
+        protected Player owner; // 2 is false, 1 is true
 
         /// <summary>
         /// The target position for this Unit.
@@ -40,7 +40,7 @@ namespace MaxOfEmpires.Units
         /// </summary>
         private int x, y;
 
-        public Unit(int x, int y, bool owner)
+        public Unit(int x, int y, Player owner)
         {
             this.x = x;
             this.y = y;
@@ -95,7 +95,7 @@ namespace MaxOfEmpires.Units
             return false;
         }
 
-        public override void TurnUpdate(uint turn, bool player)
+        public override void TurnUpdate(uint turn, Player player)
         {
             if (owner == player)
             {
@@ -142,7 +142,7 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The owner of this Unit. True => player 1, false => player 2.
         /// </summary>
-        public bool Owner
+        public Player Owner
         {
             get
             {

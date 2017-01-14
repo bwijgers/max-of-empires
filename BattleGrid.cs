@@ -1,19 +1,17 @@
-﻿using MaxOfEmpires.GameObjects;
-using MaxOfEmpires.GameStates;
+﻿using MaxOfEmpires.GameStates;
 using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MaxOfEmpires
 {
     class BattleGrid : Grid
     {
-        public BattleGrid(int width, int height, string id = "") : base(width, height, id) // TODO: make this load from procedural generation.
+        private Player attackingPlayer;
+        private Player defendingPlayer;
+
+        public BattleGrid(int width, int height, List<Player> players, string id = "") : base(width, height, players, id) // TODO: make this load from procedural generation.
         {
         }
 
@@ -106,7 +104,7 @@ namespace MaxOfEmpires
             // If we found no ally, the enemy won.
             if (!foundAlly)
             {
-                OnPlayerWinBattle(!deadSoldier.Owner);
+                OnPlayerWinBattle(deadSoldier.Owner == attackingPlayer ? defendingPlayer : attackingPlayer);
             }
         }
 
@@ -162,8 +160,12 @@ namespace MaxOfEmpires
         /// Called when a player wins a battle (because all enemies died).
         /// </summary>
         /// <param name="winningPlayer">The player that won the battle.</param>
-        private void OnPlayerWinBattle(bool winningPlayer)
+        private void OnPlayerWinBattle(Player winningPlayer)
         {
+            // Unset attacker and defender
+            attackingPlayer = null;
+            defendingPlayer = null;
+
             // Find what's left of our army
             Army remainingArmy = new Army(0, 0, winningPlayer);
             ForEach((obj, x, y) => {
@@ -187,6 +189,10 @@ namespace MaxOfEmpires
         /// <param name="defender">The defending Army.</param>
         public void PopulateField(Army attacker, Army defender)
         {
+            // Initialize which players are the attacker and the defender
+            attackingPlayer = attacker.Owner;
+            defendingPlayer = defender.Owner;
+
             // Initialize the attacker's field
             int currentX = 0;
             int currentY = 0;

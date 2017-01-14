@@ -18,7 +18,7 @@ namespace MaxOfEmpires.Units
         /// <param name="name">The unlocalized name of the Unit to load.</param>
         /// <param name="owner">The owner of the Unit.</param>
         /// <returns>The requested Unit with specified owner.</returns>
-        public static Soldier GetSoldier(string name, bool owner)
+        public static Soldier GetSoldier(string name, Player owner)
         {
             return unitsByName[name].Copy(owner);
         }

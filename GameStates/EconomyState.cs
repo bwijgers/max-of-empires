@@ -11,15 +11,21 @@ namespace MaxOfEmpires.GameStates
 {
     class EconomyState : GameState
     {
-        private bool currentPlayer;
+        private List<Player> players;
+        private int currentPlayer;
         private EconomyGrid ecoGrid;
         private Overlays.OverlayEconomyState overlay;
         private bool shouldTurnUpdate;
         private uint turnNum;
 
-        public EconomyState()
+        public EconomyState(Player blue, Player red)
         {
-            ecoGrid = new EconomyGrid(15, 15);
+            players = new List<Player>();
+            players.Add(blue);
+            players.Add(red);
+            currentPlayer = 0;
+
+            ecoGrid = new EconomyGrid(15, 15, players);
 
             overlay = new Overlays.OverlayEconomyState();
             InitOverlay();
@@ -87,7 +93,7 @@ namespace MaxOfEmpires.GameStates
             ecoGrid.InitField();
 
             // Player 1 starts
-            currentPlayer = true;
+            currentPlayer = 0;
 
             // Turn number starts at 1, so 0 and double TurnUpdate
             turnNum = 0;
@@ -95,17 +101,25 @@ namespace MaxOfEmpires.GameStates
             TurnUpdate();
         }
 
+        private void SelectNextPlayer()
+        {
+            ++currentPlayer;
+            if (currentPlayer >= players.Count)
+            {
+                currentPlayer = 0;
+                ++turnNum;
+            }
+        }
+
         /// <summary>
         /// Called when the turn is updated. Sets the current player to the other player and then calls Grid.TurnUpdate.
         /// </summary>
         public void TurnUpdate()
         {
-            currentPlayer = !currentPlayer;
-            if (currentPlayer)
-                ++turnNum;
-            ecoGrid.TurnUpdate(turnNum, currentPlayer);
+            SelectNextPlayer();
+            ecoGrid.TurnUpdate(turnNum, CurrentPlayer);
 
-            overlay.LabelCurrentPlayer.setLabelText("Current player: " + (currentPlayer ? "Blue" : "Red"));
+            overlay.LabelCurrentPlayer.setLabelText("Current player: " + CurrentPlayer.Name);
         }
 
         public override void Update(GameTime time)
@@ -118,5 +132,7 @@ namespace MaxOfEmpires.GameStates
                 TurnUpdate();
             }
         }
+
+        private Player CurrentPlayer => players[currentPlayer];
     }
 }

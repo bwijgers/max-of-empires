@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
     <Compile Include="BattleGrid.cs" />
+    <Compile Include="Buildings\Mine.cs" />
     <Compile Include="EconomyGrid.cs" />
     <Compile Include="Files\Configuration.cs" />
     <Compile Include="Files\FileManager.cs" />
@@ -49,7 +50,7 @@
     <Compile Include="GameObjects\GameObjectAnimated.cs" />
     <Compile Include="GameObjects\GameObjectDrawable.cs" />
     <Compile Include="GameStates\BattleState.cs" />
-    <Compile Include="Building.cs" />
+    <Compile Include="Buildings\Building.cs" />
     <Compile Include="GameStates\EconomyState.cs" />
     <Compile Include="GameStates\MainMenuState.cs" />
     <Compile Include="GameStates\Overlays\OverlayBattleState.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\GameObjectGrid.cs" />
     <Compile Include="GameObjects\GameObjectList.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Units\Army.cs" />
     <Compile Include="Units\Range.cs" />
     <Compile Include="Units\Stats.cs" />

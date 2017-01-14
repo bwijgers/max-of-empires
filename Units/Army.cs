@@ -15,7 +15,7 @@ namespace MaxOfEmpires.Units
         /// </summary>
         /// <param name="owner">The player that owns this Army.</param>
         /// <returns>The newly generated Army.</returns>
-        public static Army GenerateArmy(bool owner)
+        public static Army GenerateArmy(Player owner)
         {
             // Create a new Army
             Army retVal = new Army(0, 0, owner);
@@ -42,7 +42,7 @@ namespace MaxOfEmpires.Units
         /// <param name="x">The x-position on which this Army stands.</param>
         /// <param name="y">The y-position on which this Army stands.</param>
         /// <param name="owner">The player that is the owner of this Army.</param>
-        public Army(int x, int y, bool owner) : base(x, y, owner)
+        public Army(int x, int y, Player owner) : base(x, y, owner)
         {
             unitsAndCounts = new Dictionary<string, int>();
         }
@@ -54,7 +54,7 @@ namespace MaxOfEmpires.Units
         /// <param name="y">The y-position on which this Army stands.</param>
         /// <param name="owner">The player that is the owner of this Army.</param>
         /// <param name="currentSoldiers">The Soldiers to add to this Army.</param>
-        public Army(int x, int y, bool owner, Dictionary<string, int> currentSoldiers) : this(x, y, owner)
+        public Army(int x, int y, Player owner, Dictionary<string, int> currentSoldiers) : this(x, y, owner)
         {
             foreach (string unitName in currentSoldiers.Keys)
             {
@@ -67,6 +67,7 @@ namespace MaxOfEmpires.Units
             if (unitsAndCounts.ContainsKey(s.Name))
             {
                 ++unitsAndCounts[s.Name];
+                return;
             }
             unitsAndCounts[s.Name] = 1;
         }
@@ -99,7 +100,7 @@ namespace MaxOfEmpires.Units
             return slowest;
         }
 
-        public override void TurnUpdate(uint turn, bool player)
+        public override void TurnUpdate(uint turn, Player player)
         {
             this.moveSpeed = GetSlowestUnit().MoveSpeed;
             base.TurnUpdate(turn, player);

@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-using Ebilkill.Gui.Elements;
 using MaxOfEmpires.Units;
+using System.Collections.Generic;
 
 namespace MaxOfEmpires.GameStates
 {
     
    class BattleState : GameState
     {
+        private List<Player> players;
+        private int currentPlayer;
+
         /// <summary>
         /// The battlegrid.
         /// </summary>
         private BattleGrid battleGrid;
-        private bool currentPlayer; // false if player 2, true if player 1.
 
         /// <summary>
         /// The overlay. Things like buttons are defined here. everything other than the grid is in here.
@@ -31,10 +27,16 @@ namespace MaxOfEmpires.GameStates
         /// </summary>
         private uint turnNum;
 
-        public BattleState()
+        public BattleState(Player blue, Player red)
         {
+            // Initialize players
+            players = new List<Player>();
+            players.Add(blue);
+            players.Add(red);
+            currentPlayer = 0;
+
             // Initialize the battlefield.
-            battleGrid = new BattleGrid(15, 15);
+            battleGrid = new BattleGrid(15, 15, players);
             battleGrid.InitField();
 
             // Initialize the overlay.
@@ -110,7 +112,7 @@ namespace MaxOfEmpires.GameStates
         public override void Reset()
         {
             // Player 1 starts.
-            currentPlayer = true;
+            currentPlayer = 0;
 
             // Turn number starts at 1.
             turnNum = 0;
@@ -120,23 +122,29 @@ namespace MaxOfEmpires.GameStates
             TurnUpdate();
         }
 
+        private void SelectNextPlayer()
+        {
+            ++currentPlayer;
+            if (currentPlayer >= players.Count)
+            {
+                currentPlayer = 0;
+                ++turnNum;
+            }
+        }
+
         /// <summary>
         /// Called when the turn is updated. Sets the current player to the other player and then calls Grid.TurnUpdate.
         /// </summary>
         public void TurnUpdate()
         {
             // Change the current player
-            currentPlayer = !currentPlayer;
-
-            // Increase the turn number when the blue player starts their turn
-            if (currentPlayer)
-                ++turnNum;
+            SelectNextPlayer();
 
             // TurnUpdate the grid
-            battleGrid.TurnUpdate(turnNum, currentPlayer);
+            battleGrid.TurnUpdate(turnNum, CurrentPlayer);
 
             // Show whose turn it is in the overlay
-            overlay.LabelCurrentPlayer.setLabelText("Current player: " + (currentPlayer ? "Blue" : "Red"));
+            overlay.LabelCurrentPlayer.setLabelText("Current player: " + CurrentPlayer.Name);
         }
 
         public override void Update(GameTime time)
@@ -159,5 +167,7 @@ namespace MaxOfEmpires.GameStates
         /// Accessor for the BattleGrid.
         /// </summary>
         public BattleGrid BattleGrid => battleGrid;
+
+        public Player CurrentPlayer => players[currentPlayer];
     }
 }

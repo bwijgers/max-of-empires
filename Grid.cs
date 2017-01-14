@@ -12,7 +12,8 @@ namespace MaxOfEmpires
 {
     abstract class Grid : GameObjectGrid
     {
-        protected bool currentPlayer;
+        protected Player currentPlayer;
+        protected List<Player> players;
 
         /// <summary>
         /// The coords of the currently selected Tile within the grid.
@@ -24,10 +25,11 @@ namespace MaxOfEmpires
         /// </summary>
         private GameObjectList unitTargets;
 
-        public Grid(int width, int height, string id = "") : base(width, height, id) 
+        public Grid(int width, int height, List<Player> players, string id = "") : base(width, height, id) 
         {
             selectedTile = InvalidTile;
-            currentPlayer = true;
+            currentPlayer = null;
+            this.players = players;
             unitTargets = new GameObjectList();
             unitTargets.Parent = this;
         }
@@ -293,7 +295,7 @@ namespace MaxOfEmpires
             }
         }
 
-        public override void TurnUpdate(uint turn, bool player)
+        public override void TurnUpdate(uint turn, Player player)
         {
             base.TurnUpdate(turn, player);
 
@@ -301,7 +303,7 @@ namespace MaxOfEmpires
             SelectTile(InvalidTile);
 
             // So the grid knows who is the current player. Useful for selecting units that are your own. 
-            this.currentPlayer = player;
+            currentPlayer = player;
 
             // Makes the units go towards their target
             ForEach((obj, x, y) => {

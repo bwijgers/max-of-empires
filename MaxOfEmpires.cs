@@ -105,9 +105,13 @@ namespace MaxOfEmpires
             // Load the main configuration file, load all subconfigs
             LoadConfiguration();
 
+            // Load players
+            Player blue = new Player("Blue", "blue");
+            Player red = new Player("Red", "red");
+
             // Adds battleState to the GamestateManager
-            GameStateManager.AddState("economy", new EconomyState());
-            GameStateManager.AddState("battle", new BattleState());
+            GameStateManager.AddState("economy", new EconomyState(blue, red));
+            GameStateManager.AddState("battle", new BattleState(blue, red));
             GameStateManager.AddState("mainMenu", new MainMenuState());
             GameStateManager.SwitchState("mainMenu", true);
         }
