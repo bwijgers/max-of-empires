@@ -7,7 +7,7 @@ using MaxOfEmpires.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MaxOfEmpires
+namespace MaxOfEmpires.Buildings
 {
     class Building : GameObject
     {
