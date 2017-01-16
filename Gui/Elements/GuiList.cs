@@ -222,5 +222,7 @@ namespace Ebilkill.Gui.Elements
         }
 
         public List<GuiElement> AllLabels => allElements;
+
+        public int MaxHeight => itemHeight * displayableItemsCount;
     }
 }
