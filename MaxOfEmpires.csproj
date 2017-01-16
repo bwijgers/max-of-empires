@@ -42,6 +42,7 @@
     <Compile Include="BattleGrid.cs" />
     <Compile Include="Buildings\BuildingRegistry.cs" />
     <Compile Include="Buildings\Mine.cs" />
+    <Compile Include="Buildings\TrainingGrounds.cs" />
     <Compile Include="EconomyGrid.cs" />
     <Compile Include="Files\Configuration.cs" />
     <Compile Include="Files\FileManager.cs" />
@@ -56,7 +57,7 @@
     <Compile Include="GameStates\MainMenuState.cs" />
     <Compile Include="GameStates\Overlays\ElementBuildButton.cs" />
     <Compile Include="GameStates\Overlays\OverlayBattleState.cs" />
-    <Compile Include="GameStates\Overlays\OverlayEconomy.cs" />
+    <Compile Include="GameStates\Overlays\OverlayEconomyState.cs" />
     <Compile Include="GameStates\Overlays\OverlayMainMenu.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
@@ -110,9 +111,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </MonoGameContentReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Gui\Screens\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Content\configs\Keys.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

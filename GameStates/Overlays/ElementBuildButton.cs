@@ -17,10 +17,17 @@ namespace MaxOfEmpires.GameStates.Overlays
         /// <returns>The element with the label and the button.</returns>
         public static ElementBuildButton CreateBuildButton(Point startPos, string buildingString, GuiButton.OnClickHandler clickHandler)
         {
+            // Create the new element using the starting position, and add the click handler
             Rectangle rect = new Rectangle(startPos, new Point(0));
             ElementBuildButton retVal = new ElementBuildButton(startPos, buildingString);
             retVal.buttonBuildBuilding.ClickHandler = clickHandler;
-            retVal.Bounds = new Rectangle(retVal.labelBuildingNameAndCost.Bounds.Left, retVal.labelBuildingNameAndCost.Bounds.Top, retVal.buttonBuildBuilding.Bounds.Right, retVal.buttonBuildBuilding.Bounds.Bottom);
+
+            // Calculate the location and size of this object
+            Point location = new Point(retVal.labelBuildingNameAndCost.Bounds.Left, retVal.buttonBuildBuilding.Bounds.Top);
+            Point size = new Point(retVal.buttonBuildBuilding.Bounds.Right - location.X, retVal.buttonBuildBuilding.Bounds.Bottom - location.Y + 5);
+            retVal.Bounds = new Rectangle(location, size);
+
+            // Return the newly generated object
             return retVal;
         }
 
@@ -51,6 +58,19 @@ namespace MaxOfEmpires.GameStates.Overlays
             // Just load the content for both elements
             labelBuildingNameAndCost.loadContent(content);
             buttonBuildBuilding.loadContent(content);
+        }
+
+        public override void move(Point pos)
+        {
+            // Move this element
+            base.move(pos);
+
+            // Find the distance between both elements
+            int distance = buttonBuildBuilding.Bounds.Left - labelBuildingNameAndCost.Bounds.Left;
+            
+            // Move the child elements
+            labelBuildingNameAndCost.move(new Point(Bounds.Location.X, Bounds.Location.Y + 2)); // Move the label down a little; it looks better
+            buttonBuildBuilding.move(new Point(Bounds.Left + distance, Bounds.Top));
         }
 
         public override void onClick(ClickEvent e)

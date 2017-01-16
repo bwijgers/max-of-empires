@@ -12,11 +12,16 @@ namespace MaxOfEmpires.GameStates.Overlays
 {
     class OverlayEconomyState : GuiScreen
     {
+        // Statics
+        private static Point buildingInfoPosition;
+        public static Point BuildingInfoPosition => buildingInfoPosition;
+
         // Buttons
         private GuiButton buttonEndTurn;
 
-        // The currently selected builder, if applicable
+        // The currently selected builder and building, if applicable
         private Builder currentBuilder;
+        private Building currentBuilding;
 
         // Labels
         private GuiLabel labelCurrentPlayer;
@@ -24,6 +29,7 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         // Lists
         private GuiList listArmySoldiers;
+        private GuiList listBuilderActions;
         private GuiList listBuildingActions;
 
         public OverlayEconomyState()
@@ -43,6 +49,8 @@ namespace MaxOfEmpires.GameStates.Overlays
             // Add labels for unit stats
             listArmySoldiers = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Location.X, labelPlayerMoney.Bounds.Bottom + 5), 5, new List<GuiElement>(), 300);
             addElement(listArmySoldiers);
+
+            buildingInfoPosition = new Point(buttonEndTurn.Bounds.Left, listArmySoldiers.Bounds.Bottom + listArmySoldiers.MaxHeight + 5);
         }
 
         private GuiButton.OnClickHandler BuildBuilding(EconomyGrid grid, string buildingName, Type buildingType)
@@ -74,13 +82,18 @@ namespace MaxOfEmpires.GameStates.Overlays
         public void InitBuildingList(EconomyGrid grid)
         {
             // Create the list of building possibilities
-            listBuildingActions = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Left, labelPlayerMoney.Bounds.Bottom + 5), 5, new List<GuiElement>(), 300);
+            listBuilderActions = GuiList.createNewList(BuildingInfoPosition, 5, new List<GuiElement>(), 300);
 
             // Add all the corresponding elements to the building actions list
-            listBuildingActions.addElement(ElementBuildButton.CreateBuildButton(listBuildingActions.Bounds.Location, "Mine (100G): ", BuildBuilding(grid, "mine", typeof(Mine)))); // TODO: load cost number from somewhere
+            listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, "Mine (100G): ", BuildBuilding(grid, "mine", typeof(Mine)))); // TODO: load cost number from somewhere
+            listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, "Training Grounds (150G): ", BuildBuilding(grid, "trainingGrounds", typeof(TrainingGrounds))));
 
             // Make sure the list knows how big it is and add it to the screen
-            listBuildingActions.calculateElementPositions();
+            listBuilderActions.calculateElementPositions();
+            addElement(listBuilderActions);
+
+            // Create the building actions list and add it to the screen
+            listBuildingActions = GuiList.createNewList(BuildingInfoPosition, 5, new List<GuiElement>(), 300);
             addElement(listBuildingActions);
         }
 
@@ -113,15 +126,21 @@ namespace MaxOfEmpires.GameStates.Overlays
             }
         }
 
-        public void PrintBuilderInfo(Builder builder, Player owner)
+        public void PrintBuilderInfo(Builder builder)
         {
             currentBuilder = builder;
-            if (builder == null)
+            listBuilderActions.Visible = builder != null;
+        }
+
+        public void PrintBuildingInfo(Building building)
+        {
+            currentBuilding = building;
+            if (building != null)
             {
-                listBuildingActions.Visible = false;
-                return;
+                listBuildingActions.clear();
+                building.PopulateBuildingActions(listBuildingActions);
             }
-            listBuildingActions.Visible = true;
+            listBuildingActions.Visible = currentBuilding != null && listBuildingActions.AllLabels.Count > 0;
         }
 
         /// <summary>

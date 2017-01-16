@@ -150,7 +150,7 @@ namespace MaxOfEmpires
         /// <summary>
         /// The position in the Grid of this Tile.
         /// </summary>
-        public Point GridPos => new Point(x, y);
+        public Point PositionInGrid => new Point(x, y);
 
         /// <summary>
         /// Whether there is a Unit on this Tile.

@@ -97,6 +97,9 @@ namespace MaxOfEmpires.Units
                 return; // SHOULD NEVER HAPPEN
             }
 
+            // Unit has attacked
+            hasAttacked = true;
+
             Soldier enemy = u as Soldier;
             OnSoldierStartAttack(enemy);
 
@@ -110,9 +113,6 @@ namespace MaxOfEmpires.Units
                 // Okay, retaliate. 
                 enemy.OnSoldierStartAttack(this);
             }
-
-            // Unit has attacked
-            hasAttacked = true;
         }
 
         /// <summary>

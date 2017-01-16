@@ -10,6 +10,7 @@ namespace MaxOfEmpires.Units
     class SoldierRegistry
     {
         private static Dictionary<string, Soldier> unitsByName = new Dictionary<string, Soldier>();
+        private static Dictionary<string, int> unitCostsByName = new Dictionary<string, int>();
         private static List<Soldier> allSoldiers = new List<Soldier>();
 
         /// <summary>
@@ -21,6 +22,11 @@ namespace MaxOfEmpires.Units
         public static Soldier GetSoldier(string name, Player owner)
         {
             return unitsByName[name].Copy(owner);
+        }
+
+        public static int GetSoldierCost(string name)
+        {
+            return unitCostsByName[name];
         }
 
         /// <summary>
@@ -37,11 +43,12 @@ namespace MaxOfEmpires.Units
         /// Registers a Unit by its name into the Unit registry.
         /// </summary>
         /// <param name="name">The name to register the Unit by.</param>
-        /// <param name="u">The Unit to register.</param>
-        private static void RegisterSoldier(string name, Soldier u)
+        /// <param name="soldier">The Unit to register.</param>
+        private static void RegisterSoldier(string name, Soldier soldier, int cost)
         {
-            unitsByName[name] = u;
-            allSoldiers.Add(u);
+            unitsByName[name] = soldier;
+            unitCostsByName[name] = cost;
+            allSoldiers.Add(soldier);
         }
 
         /// <summary>
@@ -54,8 +61,11 @@ namespace MaxOfEmpires.Units
             // Create a Unit
             Soldier u = Soldier.LoadFromConfiguration(c);
 
+            // Get its cost
+            int cost = c.GetProperty<int>("cost");
+
             // Register the Unit
-            RegisterSoldier(name, u);
+            RegisterSoldier(name, u, cost);
         }
 
         public IList<Soldier> AllSoldiers => allSoldiers.AsReadOnly();

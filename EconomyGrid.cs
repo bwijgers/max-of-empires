@@ -74,58 +74,67 @@ namespace MaxOfEmpires
             if (clickedTile == null)
                 return;
 
-            // If the player had a tile selected and it contains an Army...
+            // If the player had a tile selected and it contains a Unit...
             if (SelectedTile != null && SelectedTile.Occupied)
             {
-                // Check if we're attacking another player's army
-                if (SelectedTile.Unit is Army && IsAdjacent(clickedTile.GridPos, SelectedTile.GridPos) && clickedTile.Occupied)
-                {
-                    // If we're clicking on our own army, do nothing
-                    if (SelectedTile.Unit.Owner == clickedTile.Unit.Owner)
-                    {
-                        return;
-                    }
-
-                    // If it's an enemy Builder, kill it and overwrite it
-                    Unit enemy = clickedTile.Unit;
-                    if (enemy is Builder)
-                    {
-                        SelectedTile.Unit.MovesLeft -= 1;
-                        clickedTile.SetUnit(null);
-                        clickedTile.SetUnit(SelectedTile.Unit);
-                        SelectedTile.SetUnit(null);
-                    }
-
-                    // Initiate a battle between armies
-                    InitBattle((Army) SelectedTile.Unit, (Army) enemy);
-                    return;
-                }
-
-                // ... move the Army there, if the square is not occupied and the Army is capable, then unselect the tile.
-                SelectedTile.Unit.TargetPosition = clickedTile.GridPos;
-                Point movePos = Pathfinding.MoveTowardsTarget(SelectedTile.Unit);
-
-                if (CheckMoveUnit(movePos, SelectedTile.Unit))
-                {
-                    SelectTile(InvalidTile);
-                    return;
-                }
+                OnMoveUnit(SelectedTile, clickedTile);
             }
 
             // Check if the player clicked a tile with a Unit on it, and select it if it's there. 
             else if (clickedTile.Occupied && clickedTile.Unit.Owner == currentPlayer && !clickedTile.Unit.HasMoved)
             {
                 // If the Unit can walk, show where it is allowed to walk. 
-                if (!clickedTile.Unit.HasMoved)
-                {
-                    Point[] walkablePositions = Pathfinding.ReachableTiles(clickedTile.Unit);
-                    SetUnitWalkingOverlay(walkablePositions);
-                    if (clickedTile.Unit is Army)
-                        SetArmyAttackingOverlay((Army) clickedTile.Unit);
-                }
+                Point[] walkablePositions = Pathfinding.ReachableTiles(clickedTile.Unit);
+                SetUnitWalkingOverlay(walkablePositions);
+                if (clickedTile.Unit is Army)
+                    SetArmyAttackingOverlay((Army)clickedTile.Unit);
 
                 // This unit can be selected. Show the player it is selected too
-                SelectTile(clickedTile.GridPos);
+                SelectTile(clickedTile.PositionInGrid);
+            }
+
+            // Check if the player clicked a tile with a Building they own
+            else if (clickedTile.BuiltOn && clickedTile.Building.Owner == currentPlayer)
+            {
+                // Select the building
+                SelectTile(clickedTile.PositionInGrid);
+            }
+        }
+
+        private void OnMoveUnit(Tile selectedTile, Tile clickedTile)
+        {
+            // Check if we're attacking another player's army
+            if (selectedTile.Unit is Army && IsAdjacent(clickedTile.PositionInGrid, selectedTile.PositionInGrid) && clickedTile.Occupied)
+            {
+                // If we're clicking on our own army, do nothing
+                if (selectedTile.Unit.Owner == clickedTile.Unit.Owner)
+                {
+                    return;
+                }
+
+                // If it's an enemy Builder, kill it and overwrite it
+                Unit enemy = clickedTile.Unit;
+                if (enemy is Builder)
+                {
+                    selectedTile.Unit.MovesLeft -= 1;
+                    clickedTile.SetUnit(null);
+                    clickedTile.SetUnit(selectedTile.Unit);
+                    selectedTile.SetUnit(null);
+                }
+
+                // Initiate a battle between armies
+                InitBattle((Army)selectedTile.Unit, (Army)enemy);
+                return;
+            }
+
+            // ... move the Army there, if the square is not occupied and the Army is capable, then unselect the tile.
+            selectedTile.Unit.TargetPosition = clickedTile.PositionInGrid;
+            Point movePos = Pathfinding.MoveTowardsTarget(selectedTile.Unit);
+
+            if (CheckMoveUnit(movePos, selectedTile.Unit))
+            {
+                SelectTile(InvalidTile);
+                return;
             }
         }
 

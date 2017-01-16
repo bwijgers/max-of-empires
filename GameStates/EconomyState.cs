@@ -63,6 +63,9 @@ namespace MaxOfEmpires.GameStates
             PrintArmyInfo(null);
             PrintBuilderInfo(null);
 
+            // ... show the information of the currently selected Building...
+            PrintBuildingInfo(ecoGrid.SelectedTile?.Building);
+
             // ... and print their information if it's an Army...
             if (unitUnderMouse is Army)
             {
@@ -75,7 +78,7 @@ namespace MaxOfEmpires.GameStates
                 return;
             }
 
-            // ... or set the building information if it's a Builder
+            // ... or set the building information if it's a Builder... 
             if (selectedUnit is Builder && !ecoGrid.SelectedTile.BuiltOn)
             {
                 PrintBuilderInfo((Builder)selectedUnit);
@@ -110,7 +113,12 @@ namespace MaxOfEmpires.GameStates
 
         private void PrintBuilderInfo(Builder builder)
         {
-            overlay.PrintBuilderInfo(builder, builder?.Owner);
+            overlay.PrintBuilderInfo(builder);
+        }
+
+        private void PrintBuildingInfo(Buildings.Building building)
+        {
+            overlay.PrintBuildingInfo(building);
         }
 
         public override void Reset()

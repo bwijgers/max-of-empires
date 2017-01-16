@@ -125,10 +125,10 @@ namespace MaxOfEmpires
             if (SelectedTile != null && SelectedTile.Occupied)
             {
                 // ... move the Unit there, if the square is not occupied and the unit is capable, then unselect the tile.
-                SelectedTile.Unit.TargetPosition = clickedTile.GridPos;
+                SelectedTile.Unit.TargetPosition = clickedTile.PositionInGrid;
                 Point movePos = Pathfinding.MoveTowardsTarget(SelectedTile.Unit);
 
-                if (CheckMoveUnit(movePos, SelectedTile.Unit) || CheckAttackSoldier(clickedTile.GridPos, (Soldier)SelectedTile.Unit))
+                if (CheckMoveUnit(movePos, SelectedTile.Unit) || CheckAttackSoldier(clickedTile.PositionInGrid, (Soldier)SelectedTile.Unit))
                 {
                     SelectTile(InvalidTile);
                     return;
@@ -146,7 +146,7 @@ namespace MaxOfEmpires
                 }
 
                 // This unit can be selected. Show the player it is selected too
-                SelectTile(clickedTile.GridPos);
+                SelectTile(clickedTile.PositionInGrid);
 
                 // Add an overlay for enemy units that can be attacked
                 if (!(clickedTile.Unit as Soldier).HasAttacked)
