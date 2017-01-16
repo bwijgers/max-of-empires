@@ -120,6 +120,8 @@ namespace MaxOfEmpires
                     clickedTile.SetUnit(null);
                     clickedTile.SetUnit(selectedTile.Unit);
                     selectedTile.SetUnit(null);
+                    SelectTile(InvalidTile);
+                    return;
                 }
 
                 // Initiate a battle between armies

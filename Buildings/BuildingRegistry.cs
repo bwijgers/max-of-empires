@@ -18,8 +18,8 @@ namespace MaxOfEmpires.Buildings
 
         public static void InitBuildings(Configuration config)
         {
-            buildingCosts["mine"] = config.GetProperty<int>("mine.cost");
-            buildingCosts["trainingGrounds"] = config.GetProperty<int>("trainingGrounds.cost");
+            buildingCosts["building.mine"] = config.GetProperty<int>("mine.cost");
+            buildingCosts["building.trainingGrounds"] = config.GetProperty<int>("trainingGrounds.cost");
         }
     }
 }

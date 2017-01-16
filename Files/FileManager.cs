@@ -29,8 +29,25 @@ namespace MaxOfEmpires.Files
             // Keep track of the current line number for errors.
             int lineNum = 0;
 
+            // Get the path to the file. If it defines its own directory, assume it's not inside the "configs" directory
+            StringBuilder pathToFile = new StringBuilder("Content/");
+            if (configName.Contains('/'))
+            {
+                pathToFile.Append(configName);
+            }
+            else
+            {
+                pathToFile.Append("configs/").Append(configName);
+            }
+
+            // If the config does not define its own extention, assume it's a .cfg file
+            if (!configName.Contains('.'))
+            {
+                pathToFile.Append(".cfg");
+            }
+
             // Create the reader
-            using (var reader = new StreamReader("Content/configs/" + configName + ".cfg"))
+            using (var reader = new StreamReader(pathToFile.ToString()))
             {
                 // Read everything in the file
                 while (!reader.EndOfStream)

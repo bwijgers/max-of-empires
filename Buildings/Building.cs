@@ -6,6 +6,8 @@ using Ebilkill.Gui.Elements;
 using MaxOfEmpires.GameStates.Overlays;
 using System.Collections.Generic;
 using MaxOfEmpires.Units;
+using System.Text;
+using MaxOfEmpires.Files;
 
 namespace MaxOfEmpires.Buildings
 {
@@ -28,6 +30,14 @@ namespace MaxOfEmpires.Buildings
         public virtual void PopulateBuildingActions(GuiList buildingActions)
         {
             
+        }
+
+        protected void AddRecruitingButton(GuiList buildingActions, string unitToRecruit)
+        {
+            StringBuilder buttonText = new StringBuilder();
+            buttonText.Append(Translations.GetTranslation(unitToRecruit)).Append(" (");
+            buttonText.Append(SoldierRegistry.GetSoldierCost(unitToRecruit)).Append("G): ");
+            buildingActions.addElement(ElementBuildButton.CreateBuildButton(buildingActions.Bounds.Location, buttonText.ToString(), () => TrySpawnUnit(unitToRecruit)));
         }
 
         protected void TrySpawnUnit(string soldierType)

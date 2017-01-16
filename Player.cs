@@ -11,9 +11,9 @@ namespace MaxOfEmpires
 
         private List<Action<Player>> updateMoneyHandlers;
 
-        public Player(string name, string colorName)
+        public Player(string name, string colorName, int startingMoney)
         {
-            money = 100;
+            money = startingMoney;
             this.colorName = colorName;
             this.name = name;
             updateMoneyHandlers = new List<Action<Player>>();

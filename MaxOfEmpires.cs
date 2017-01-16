@@ -91,6 +91,9 @@ namespace MaxOfEmpires
 
             Mine.LoadFromConfig(buildingConfiguration);
 
+            // Initialize language file
+            Translations.LoadLanguage("en_US");
+
             // Initialize keys
             InitializeKeys(FileManager.LoadConfig("Keys").GetPropertySection("key"));
         }
@@ -113,8 +116,8 @@ namespace MaxOfEmpires
             LoadConfiguration();
 
             // Load players
-            Player blue = new Player("Blue", "blue");
-            Player red = new Player("Red", "red");
+            Player blue = new Player("Blue", "blue", mainConfiguration.GetProperty<int>("player.startingMoney"));
+            Player red = new Player("Red", "red", mainConfiguration.GetProperty<int>("player.startingMoney"));
 
             // Adds battleState to the GamestateManager
             GameStateManager.AddState("economy", new EconomyState(blue, red));

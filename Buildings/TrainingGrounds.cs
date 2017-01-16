@@ -12,8 +12,8 @@ namespace MaxOfEmpires.Buildings
 
         public override void PopulateBuildingActions(GuiList buildingActions)
         {
-            buildingActions.addElement(ElementBuildButton.CreateBuildButton(buildingActions.Bounds.Location, "Swordsman (10G): ", () => TrySpawnUnit("unit.swordsman")));
-            buildingActions.addElement(ElementBuildButton.CreateBuildButton(buildingActions.Bounds.Location, "Archer (15G): ", () => TrySpawnUnit("unit.archer")));
+            AddRecruitingButton(buildingActions, "unit.swordsman");
+            AddRecruitingButton(buildingActions, "unit.archer");
             base.PopulateBuildingActions(buildingActions);
         }
     }

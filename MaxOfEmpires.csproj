@@ -49,6 +49,7 @@
     <Compile Include="Files\Property.cs" />
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="Camera\Camera_Control.cs" />
+    <Compile Include="Files\Translations.cs" />
     <Compile Include="GameObjects\GameObjectAnimated.cs" />
     <Compile Include="GameObjects\GameObjectDrawable.cs" />
     <Compile Include="GameStates\BattleState.cs" />
@@ -119,7 +120,9 @@
     <None Include="Content\configs\Main.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Content\Lang\en_US.lang" />
+    <None Include="Content\Lang\en_US.lang">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

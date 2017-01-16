@@ -7,6 +7,7 @@ using System.Text;
 using System;
 using MaxOfEmpires.Buildings;
 using System.Collections.Generic;
+using MaxOfEmpires.Files;
 
 namespace MaxOfEmpires.GameStates.Overlays
 {
@@ -48,9 +49,13 @@ namespace MaxOfEmpires.GameStates.Overlays
 
             // Add labels for unit stats
             listArmySoldiers = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Location.X, labelPlayerMoney.Bounds.Bottom + 5), 5, new List<GuiElement>(), 300);
+            listArmySoldiers.addElement(GuiLabel.createNewLabel(Vector2.Zero, "1", "font")); // Add this so that the size is calculated correctly
             addElement(listArmySoldiers);
 
             buildingInfoPosition = new Point(buttonEndTurn.Bounds.Left, listArmySoldiers.Bounds.Bottom + listArmySoldiers.MaxHeight + 5);
+
+            // Remove this label so that it doesn't display bullshit :)
+            listArmySoldiers.removeLabel(0);
         }
 
         private GuiButton.OnClickHandler BuildBuilding(EconomyGrid grid, string buildingName, Type buildingType)
@@ -85,8 +90,8 @@ namespace MaxOfEmpires.GameStates.Overlays
             listBuilderActions = GuiList.createNewList(BuildingInfoPosition, 5, new List<GuiElement>(), 300);
 
             // Add all the corresponding elements to the building actions list
-            listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, "Mine (100G): ", BuildBuilding(grid, "mine", typeof(Mine)))); // TODO: load cost number from somewhere
-            listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, "Training Grounds (150G): ", BuildBuilding(grid, "trainingGrounds", typeof(TrainingGrounds))));
+            listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, "Mine (100G): ", BuildBuilding(grid, "building.mine", typeof(Mine)))); // TODO: load cost number from somewhere
+            listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, "Training Grounds (150G): ", BuildBuilding(grid, "building.trainingGrounds", typeof(TrainingGrounds))));
 
             // Make sure the list knows how big it is and add it to the screen
             listBuilderActions.calculateElementPositions();
@@ -117,7 +122,7 @@ namespace MaxOfEmpires.GameStates.Overlays
             {
                 // Create the label to add to the list
                 StringBuilder sb = new StringBuilder();
-                sb.Append(soldierType);
+                sb.Append(Translations.GetTranslation(soldierType));
                 sb.Append(": ");
                 sb.Append(a.UnitsAndCounts[soldierType]);
 

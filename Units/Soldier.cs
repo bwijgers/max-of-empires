@@ -1,9 +1,4 @@
-﻿using MaxOfEmpires.GameObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
@@ -36,7 +31,7 @@ namespace MaxOfEmpires.Units
 
             // Load texture from config file
             string texName = config.GetProperty<string>("texture.name");
-            return new Soldier(config.GetProperty<string>("name"), 0, 0, new Player("none", "blue"), texName, moveSpeed, stats, range);
+            return new Soldier(config.GetProperty<string>("name"), 0, 0, new Player("none", "blue", 100), texName, moveSpeed, stats, range);
         }
 
         /// <summary>
