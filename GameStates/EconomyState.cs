@@ -86,7 +86,7 @@ namespace MaxOfEmpires.GameStates
         private void InitOverlay()
         {
             overlay.EndTurnHandler = () => shouldTurnUpdate = true;
-            overlay.InitBuildingFunctions(ecoGrid);
+            overlay.InitBuildingList(ecoGrid);
 
             foreach (Player p in players)
             {

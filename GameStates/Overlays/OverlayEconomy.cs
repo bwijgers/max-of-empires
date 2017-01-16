@@ -6,21 +6,25 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Text;
 using System;
 using MaxOfEmpires.Buildings;
+using System.Collections.Generic;
 
 namespace MaxOfEmpires.GameStates.Overlays
 {
     class OverlayEconomyState : GuiScreen
     {
+        // Buttons
         private GuiButton buttonEndTurn;
-        private GuiButton buttonBuildMine;
 
+        // The currently selected builder, if applicable
         private Builder currentBuilder;
 
-        private GuiLabel labelBuildMine;
+        // Labels
         private GuiLabel labelCurrentPlayer;
         private GuiLabel labelPlayerMoney;
 
+        // Lists
         private GuiList listArmySoldiers;
+        private GuiList listBuildingActions;
 
         public OverlayEconomyState()
         {
@@ -37,20 +41,47 @@ namespace MaxOfEmpires.GameStates.Overlays
             addElement(labelPlayerMoney);
 
             // Add labels for unit stats
-            listArmySoldiers = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Location.X, labelPlayerMoney.Bounds.Bottom + 5), 5, new System.Collections.Generic.List<GuiLabel>(), 300);
+            listArmySoldiers = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Location.X, labelPlayerMoney.Bounds.Bottom + 5), 5, new List<GuiElement>(), 300);
             addElement(listArmySoldiers);
+        }
 
-            // Add labels+buttons for building buildings (lel)
-            labelBuildMine = GuiLabel.createNewLabel(new Vector2(labelPlayerMoney.Bounds.Left, labelPlayerMoney.Bounds.Bottom + 5), "Mine (100G): ", "font");
-            buttonBuildMine = GuiButton.createButtonWithLabel(new Point(labelBuildMine.Bounds.Right + 5, labelBuildMine.Bounds.Top), "Build", null, "font");
-            addElement(labelBuildMine);
-            addElement(buttonBuildMine);
+        private GuiButton.OnClickHandler BuildBuilding(EconomyGrid grid, string buildingName, Type buildingType)
+        {
+            // Return an on click handler
+            return () => {
+                // That gets the tile the current builder is on
+                Tile t = grid[currentBuilder.PositionInGrid] as Tile;
+
+                // Then checks if we can build here, and if the player can afford the building
+                if (!t.BuiltOn && currentBuilder.Owner.CanAfford(BuildingRegistry.GetCost(buildingName)))
+                {
+                    // And remove the money if possible...
+                    currentBuilder.Owner.Buy(BuildingRegistry.GetCost(buildingName));
+
+                    // ... and tell the grid to build a building here, based on the passed type.
+                    // Basically the same as new Building(currentBuilder.PositionInGrid, currentBuilder.Owner), except we don't need to know WHICH building
+                    grid.Build(currentBuilder, (Building)Activator.CreateInstance(buildingType, new object[] { currentBuilder.PositionInGrid, currentBuilder.Owner }));
+                }
+            };
         }
 
         public override void draw(SpriteBatch spriteBatch)
         {
             DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle(480, 0, MaxOfEmpires.ScreenSize.X, MaxOfEmpires.ScreenSize.Y), Color.DeepPink);
             base.draw(spriteBatch);
+        }
+
+        public void InitBuildingList(EconomyGrid grid)
+        {
+            // Create the list of building possibilities
+            listBuildingActions = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Left, labelPlayerMoney.Bounds.Bottom + 5), 5, new List<GuiElement>(), 300);
+
+            // Add all the corresponding elements to the building actions list
+            listBuildingActions.addElement(ElementBuildButton.CreateBuildButton(listBuildingActions.Bounds.Location, "Mine (100G): ", BuildBuilding(grid, "mine", typeof(Mine)))); // TODO: load cost number from somewhere
+
+            // Make sure the list knows how big it is and add it to the screen
+            listBuildingActions.calculateElementPositions();
+            addElement(listBuildingActions);
         }
 
         /// <summary>
@@ -78,7 +109,7 @@ namespace MaxOfEmpires.GameStates.Overlays
                 sb.Append(a.UnitsAndCounts[soldierType]);
 
                 // Add this label to the list
-                listArmySoldiers.addLabel(GuiLabel.createNewLabel(new Vector2(), sb.ToString(), "font"));
+                listArmySoldiers.addElement(GuiLabel.createNewLabel(new Vector2(), sb.ToString(), "font"));
             }
         }
 
@@ -87,22 +118,10 @@ namespace MaxOfEmpires.GameStates.Overlays
             currentBuilder = builder;
             if (builder == null)
             {
-                labelBuildMine.Visible = buttonBuildMine.Visible = false;
+                listBuildingActions.Visible = false;
                 return;
             }
-            labelBuildMine.Visible = buttonBuildMine.Visible = true;
-        }
-
-        public void InitBuildingFunctions(EconomyGrid grid)
-        {
-            buttonBuildMine.ClickHandler = () => {
-                Tile t = grid[currentBuilder.PositionInGrid] as Tile; 
-                if (!t.BuiltOn && currentBuilder.Owner.CanAfford(BuildingRegistry.GetCost("mine")))
-                {
-                    currentBuilder.Owner.Buy(BuildingRegistry.GetCost("mine"));
-                    grid.Build(currentBuilder, new Mine(currentBuilder.PositionInGrid, currentBuilder.Owner));
-                }
-            };
+            listBuildingActions.Visible = true;
         }
 
         /// <summary>
