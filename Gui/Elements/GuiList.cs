@@ -15,14 +15,14 @@ namespace Ebilkill.Gui.Elements
     {
         private GuiButton up;
         private GuiButton down;
-        private List<GuiLabel> labelList;
+        private List<GuiElement> allElements;
         private int currentTop;
         private int displayableItemsCount;
         private int itemHeight;
         private int itemWidth;
         private int maxWidth;
 
-        public static GuiList createNewList(Point position, int displayableItems, List<GuiLabel> labels, int maxWidth = -1)
+        public static GuiList createNewList(Point position, int displayableItems, List<GuiElement> elements, int maxWidth = -1)
         {
             // Create a container for the width of the display
             int width = maxWidth;
@@ -33,9 +33,9 @@ namespace Ebilkill.Gui.Elements
                 width = 16;
 
                 // Get the biggest width of labels
-                foreach (GuiLabel label in labels)
+                foreach (GuiElement element in elements)
                 {
-                    width = Math.Max(label.Bounds.Width + 16, width);
+                    width = Math.Max(element.Bounds.Width + 16, width);
                 }
             }
 
@@ -43,7 +43,7 @@ namespace Ebilkill.Gui.Elements
             int height = 0;
             try
             {
-                height = labels[0].Bounds.Height * displayableItems;
+                height = elements[0].Bounds.Height * displayableItems;
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -52,15 +52,15 @@ namespace Ebilkill.Gui.Elements
             height = Math.Max(height, 34);
 
             // Return a new GuiList based on position, width and height. 
-            GuiList retVal = new GuiList(new Rectangle(position, new Point(width, height)), labels);
+            GuiList retVal = new GuiList(new Rectangle(position, new Point(width, height)), elements);
             retVal.displayableItemsCount = displayableItems;
             retVal.itemHeight = height / displayableItems;
             retVal.itemWidth = width - 16;
-            retVal.calculateLabelPositions();
+            retVal.calculateElementPositions();
             return retVal;
         }
 
-        private GuiList(Rectangle bounds, List<GuiLabel> labels) : base(bounds)
+        private GuiList(Rectangle bounds, List<GuiElement> elements) : base(bounds)
         {
             // Create the up-button
             up = new GuiButton(new Rectangle(new Point(0, 0), new Point(16)), "ArrowUp");
@@ -73,13 +73,13 @@ namespace Ebilkill.Gui.Elements
             down.loadContent(AssetManager.Instance);
 
             // Create the list-related variables
-            labelList = labels;
+            allElements = elements;
             currentTop = 0;
 
             // Make sure all labels know this is their parent
-            foreach (GuiLabel label in labelList)
+            foreach (GuiElement element in allElements)
             {
-                label.Parent = this;
+                element.Parent = this;
             }
 
             // Make sure the buttons know this is their parent
@@ -91,17 +91,17 @@ namespace Ebilkill.Gui.Elements
 
         private bool recalculateBounds()
         {
-            if (labelList.Count <= 0)
+            if (allElements.Count <= 0)
             {
                 Visible = false;
                 return false;
             }
 
             // Buttons should be visible only when we have to scroll...
-            up.Visible = down.Visible = labelList.Count > displayableItemsCount;
+            up.Visible = down.Visible = allElements.Count > displayableItemsCount;
 
-            itemHeight = labelList[0].Bounds.Height;
-            int height = Math.Max(34, itemHeight * Math.Min(labelList.Count, displayableItemsCount));
+            itemHeight = allElements[0].Bounds.Height;
+            int height = Math.Max(34, itemHeight * Math.Min(allElements.Count, displayableItemsCount));
             int width = maxWidth;
 
             Bounds = new Rectangle(Bounds.Location, new Point(width, height));
@@ -110,7 +110,7 @@ namespace Ebilkill.Gui.Elements
             return true;
         }
 
-        public void calculateLabelPositions()
+        public void calculateElementPositions()
         {
             // If we're not visible, just don't do anything at all.
             if (!recalculateBounds())
@@ -122,11 +122,11 @@ namespace Ebilkill.Gui.Elements
             bool visible = true;
 
             // Set every label's position
-            for (int i = 0; i < labelList.Count; ++i)
+            for (int i = 0; i < allElements.Count; ++i)
             {
                 // Set the location of the label to its position in the list
-                labelList[i].move(new Point(Bounds.Location.X, Bounds.Location.Y - (currentTop - i) * itemHeight));
-                if (!labelList[i].Visible)
+                allElements[i].move(new Point(Bounds.Location.X, Bounds.Location.Y - (currentTop - i) * itemHeight));
+                if (!allElements[i].Visible)
                     visible = false;
             }
             Visible = visible;
@@ -137,21 +137,21 @@ namespace Ebilkill.Gui.Elements
 
         public void clear()
         {
-            this.labelList.Clear();
-            calculateLabelPositions();
+            this.allElements.Clear();
+            calculateElementPositions();
         }
 
         private void scroll(bool up)
         {
             int move = up ? -1 : 1;
 
-            if (currentTop + move < 0 || currentTop + move + displayableItemsCount > labelList.Count)
+            if (currentTop + move < 0 || currentTop + move + displayableItemsCount > allElements.Count)
             {
                 return;
             }
 
             currentTop += move;
-            calculateLabelPositions();
+            calculateElementPositions();
         }
 
         public override void drawElement(SpriteBatch spriteBatch)
@@ -159,10 +159,11 @@ namespace Ebilkill.Gui.Elements
             if (!Visible)
                 return;
 
-            for (int i = currentTop; i < currentTop + displayableItemsCount && i < labelList.Count; ++i)
+            for (int i = currentTop; i < currentTop + displayableItemsCount && i < allElements.Count; ++i)
             {
-                labelList[i].drawElement(spriteBatch);
+                allElements[i].drawElement(spriteBatch);
             }
+
             up.drawElement(spriteBatch);
             down.drawElement(spriteBatch);
         }
@@ -171,8 +172,8 @@ namespace Ebilkill.Gui.Elements
         {
             up.loadContent(content);
             down.loadContent(content);
-            foreach (GuiLabel label in labelList)
-                label.loadContent(content);
+            foreach (GuiElement element in allElements)
+                element.loadContent(content);
         }
 
         public override void onClick(ClickEvent e)
@@ -182,36 +183,44 @@ namespace Ebilkill.Gui.Elements
 
             if (down.Bounds.Contains(e.Position))
                 down.onClick(e);
+
+            foreach (GuiElement element in allElements)
+            {
+                if (element.Bounds.Contains(e.Position))
+                {
+                    element.onClick(e);
+                }
+            }
         }
 
-        public void addLabel(GuiLabel label, int index = -1)
+        public void addElement(GuiElement label, int index = -1)
         {
             // Add the label, possibly at a specified index
-            if (index < 0 || index >= labelList.Count)
-                labelList.Add(label);
+            if (index < 0 || index >= allElements.Count)
+                allElements.Add(label);
             else
-                labelList.Insert(index, label);
+                allElements.Insert(index, label);
 
             // Make sure all labels are in the correct positions
-            calculateLabelPositions();
+            calculateElementPositions();
         }
 
         public void removeLabel(int index)
         {
             // Only remove the label if it's in a valid position
-            if (index > 0 && index < labelList.Count)
+            if (index > 0 && index < allElements.Count)
             {
-                labelList.RemoveAt(index);
+                allElements.RemoveAt(index);
             }
         }
 
         // TODO: see if this works as intended
         public void removeLabel(GuiLabel label)
         {
-            int index = labelList.FindIndex(gl => label.Equals(gl));
+            int index = allElements.FindIndex(gl => label.Equals(gl));
             removeLabel(index);
         }
 
-        public List<GuiLabel> AllLabels => labelList;
+        public List<GuiElement> AllLabels => allElements;
     }
 }

@@ -101,7 +101,7 @@ namespace Ebilkill.Gui.Elements
         {
             base.onVisibilityChange(newVisibility);
             if (Parent is GuiList)
-                (Parent as GuiList).calculateLabelPositions();
+                (Parent as GuiList).calculateElementPositions();
         }
 
         public override bool Visible
