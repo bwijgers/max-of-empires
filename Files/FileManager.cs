@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Files
 {
@@ -57,13 +56,15 @@ namespace MaxOfEmpires.Files
                     ++lineNum;
 
                     // Parse the line
-                    Property parsedLine = ParseLine(line);
-
-                    // Check if the line is valid
-                    if (parsedLine == null)
+                    Property parsedLine;
+                    try
+                    {
+                        parsedLine = ParseLine(line);
+                    }
+                    catch (FormatException e)
                     {
                         // Throw an error message if the line is not valid.
-                        throw new FileLoadException("Invalid configuration file '" + configName + "'. Error on line #" + lineNum + ".");
+                        throw new FileLoadException("Error on line #" + lineNum + " in file '" + configName + "': " + e.Message);
                     }
 
                     // Add the config to the file
@@ -93,8 +94,8 @@ namespace MaxOfEmpires.Files
             }
 
             // Placeholders for key and value
-            string key = "";
-            string value = "";
+            StringBuilder keyBuilder = new StringBuilder();
+            StringBuilder valueBuilder = new StringBuilder();
             bool inValue = false;
 
             // Parse the line
@@ -123,30 +124,119 @@ namespace MaxOfEmpires.Files
                 // Add this char to either the value or the key, depending on which is active
                 if (inValue)
                 {
-                    value += currentChar;
+                    valueBuilder.Append(currentChar);
                 }
                 else
                 {
-                    key += currentChar;
+                    keyBuilder.Append(currentChar);
                 }
             }
+
+            string key = keyBuilder.ToString().Trim();
+            string value = valueBuilder.ToString().Trim();
 
             // No key or a key ending in a '.' means there are formatting errors
             if (key.Length == 0 || key.EndsWith("."))
             {
-                return null;
+                throw new FormatException("Invalid key.");
+            }
+
+            return new Property(key, ParseValue(value));
+        }
+
+        private static object ParseValue(string rawValue)
+        {
+            // Try to see if it's a list
+            if (rawValue.Length > 0 && rawValue[0] == '[')
+            {
+                return ParseValueAsList(rawValue);
             }
 
             // Check if the value is an int, and set it in the Property accordingly
             try
             {
-                return new Property(key, int.Parse(value));
+                return int.Parse(rawValue);
             }
             catch (FormatException)
             {
             }
 
-            return new Property(key, value);
+            // Guess it's just a normal string
+            return rawValue;
+        }
+
+        private static List<string> ParseValueAsList(string rawValue)
+        {
+            // Initialize things we'll need later
+            List<string> retVal = new List<string>();
+            StringBuilder currentValue = new StringBuilder();
+            bool listEnd = false;
+            int i;
+
+            // Extract elements from this list
+            for (i = 1; i < rawValue.Length; ++i)
+            {
+                // Get the current character
+                char c = rawValue[i];
+
+                // Start of list... inside a list?
+                if (c == '[')
+                {
+                    throw new FormatException("List declaration inside list encountered.");
+                }
+
+                // End of list
+                if (c == ']')
+                {
+                    // End of the list
+                    if (currentValue.Length == 0 && retVal.Count != 0) // Allow empty lists
+                        throw new FormatException("List with empty element encountered.");
+                    retVal.Add(currentValue.ToString().Trim());
+                    listEnd = true;
+                    break;
+                }
+
+                // End of list element
+                if (c == ',')
+                {
+                    // If this is an empty element, throw an exception
+                    if (currentValue.Length == 0)
+                    {
+                        throw new FormatException("List with empty element encountered.");
+                    }
+
+                    // The element is not empty
+                    retVal.Add(currentValue.ToString().Trim());
+                    currentValue.Clear();
+                    continue;
+                }
+
+                // Space? Depending on where we find this, add it
+                if (c == ' ')
+                {
+                    if (currentValue.Length != 0)
+                        currentValue.Append(c);
+                    continue;
+                }
+
+                // Anything else? Just add it to the value
+                currentValue.Append(c);
+            }
+
+            // We didn't end the list, throw an exception.
+            if (!listEnd)
+            {
+                throw new FormatException("List was not closed.");
+            }
+
+            // The list was ended prematurely, throw an exception.
+            if (i != rawValue.Length - 1)
+            {
+                throw new FormatException("List has information after end.");
+            }
+
+            // No errors? Sad. Just return the list already :c
+            return retVal;
         }
     }
 }

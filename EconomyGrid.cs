@@ -58,8 +58,6 @@ namespace MaxOfEmpires
             // Generate 2 armies and place them on the field.
             (this[0, 0] as Tile).SetUnit(new Builder(0, 0, players[0]));
             (this[14, 14] as Tile).SetUnit(new Builder(0, 0, players[1]));
-//            (this[0, 0] as Tile).SetUnit(Army.GenerateArmy(players[0]));
-//            (this[14, 14] as Tile).SetUnit(Army.GenerateArmy(players[1]));
 
             // Clear the Armies' targets
             ClearAllTargetPositions();
@@ -117,7 +115,7 @@ namespace MaxOfEmpires
                 if (enemy is Builder)
                 {
                     selectedTile.Unit.MovesLeft -= 1;
-                    clickedTile.SetUnit(null);
+                    clickedTile.SetUnit(null); // TODO: Test if this line can be removed
                     clickedTile.SetUnit(selectedTile.Unit);
                     selectedTile.SetUnit(null);
                     SelectTile(InvalidTile);

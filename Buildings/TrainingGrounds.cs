@@ -1,6 +1,7 @@
 ﻿using Ebilkill.Gui.Elements;
 using MaxOfEmpires.GameStates.Overlays;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace MaxOfEmpires.Buildings
 {
@@ -12,8 +13,16 @@ namespace MaxOfEmpires.Buildings
 
         public override void PopulateBuildingActions(GuiList buildingActions)
         {
-            AddRecruitingButton(buildingActions, "unit.swordsman");
-            AddRecruitingButton(buildingActions, "unit.archer");
+            // Get this building's trainees
+            IList<string> trainees = BuildingRegistry.GetTrainees("building.trainingGrounds");
+
+            // Add a button for every trainee
+            foreach (string trainee in trainees)
+            {
+                AddRecruitingButton(buildingActions, trainee);
+            }
+
+            // Add the basic building actions
             base.PopulateBuildingActions(buildingActions);
         }
     }

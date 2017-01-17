@@ -77,7 +77,7 @@ namespace MaxOfEmpires.Files
         public T GetProperty<T>(string propName)
         {
             // Check if the requested property exists
-            if (propName == null || !properties.Exists(property => property.key.Equals(propName)))
+            if (propName == null || !ContainsProperty(propName))
             {
                 throw new ArgumentException("Property name '" + propName + "' not found in file '" + filename + "'. File is probably incorrect.");
             }
@@ -115,6 +115,16 @@ namespace MaxOfEmpires.Files
 
             // Return the sub-configuration
             return subConf;
+        }
+
+        /// <summary>
+        /// Checks whether a certain property exists in this Configuration.
+        /// </summary>
+        /// <param name="propName">The name of the property to check for.</param>
+        /// <returns>True if and only if the property exists in this Configuration.</returns>
+        public bool ContainsProperty(string propName)
+        {
+            return properties.Exists(property => property.key.Equals(propName));
         }
 
         /// <summary>
