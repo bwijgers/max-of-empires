@@ -1,3 +1,12 @@
-﻿# Units
+﻿# Buildings
+building.mine=Town
+building.trainingGrounds=Training Grounds
+building.academy=Academy
+
+# Units
 unit.archer=Archer
 unit.swordsman=Swordsman
+unit.axeman=Axeman
+unit.heavy=Heavy Infantry
+unit.horse=Horseman
+unit.mage=Mage

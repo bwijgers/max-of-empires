@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
     <Compile Include="BattleGrid.cs" />
+    <Compile Include="Buildings\Academy.cs" />
     <Compile Include="Buildings\BuildingRegistry.cs" />
     <Compile Include="Buildings\Mine.cs" />
     <Compile Include="Buildings\TrainingGrounds.cs" />

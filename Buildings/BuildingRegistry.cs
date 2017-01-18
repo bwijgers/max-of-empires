@@ -58,6 +58,7 @@ namespace MaxOfEmpires.Buildings
         {
             buildingInfo["building.mine"] = GetBuildingInformation(config.GetPropertySection("mine"));
             buildingInfo["building.trainingGrounds"] = GetBuildingInformation(config.GetPropertySection("trainingGrounds"));
+            buildingInfo["building.academy"] = GetBuildingInformation(config.GetPropertySection("academy"));
         }
 
         /// <summary>

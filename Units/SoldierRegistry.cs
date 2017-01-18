@@ -1,9 +1,5 @@
 ﻿using MaxOfEmpires.Files;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Units
 {
@@ -12,6 +8,7 @@ namespace MaxOfEmpires.Units
         private static Dictionary<string, Soldier> unitsByName = new Dictionary<string, Soldier>();
         private static Dictionary<string, int> unitCostsByName = new Dictionary<string, int>();
         private static List<Soldier> allSoldiers = new List<Soldier>();
+        private static string[] soldierNames = new string[] { "swordsman", "archer", "axeman", "horse", "heavy", "mage" };
 
         /// <summary>
         /// Gets a Unit by its name, with a specified owner. Position will be (0,0) until set in the Grid at a specified position.
@@ -35,8 +32,10 @@ namespace MaxOfEmpires.Units
         /// <param name="unitConfiguration">The configuration to load the Units from.</param>
         public static void Init(Configuration unitConfiguration)
         {
-            RegisterSoldierFromConfiguration("unit.swordsman", unitConfiguration.GetPropertySection("swordsman"));
-            RegisterSoldierFromConfiguration("unit.archer", unitConfiguration.GetPropertySection("archer"));
+            foreach (string s in soldierNames)
+            {
+                RegisterSoldierFromConfiguration("unit." + s, unitConfiguration.GetPropertySection(s));
+            }
         }
 
         /// <summary>

@@ -58,6 +58,14 @@ namespace MaxOfEmpires.GameStates.Overlays
             listArmySoldiers.removeLabel(0);
         }
 
+        private void AddBuilderButton(EconomyGrid grid, GuiList listBuilderActions, string buildingName, Type buildingType)
+        {
+            StringBuilder label = new StringBuilder();
+            label.Append(Translations.GetTranslation(buildingName)).Append(" (");
+            label.Append(BuildingRegistry.GetCost(buildingName)).Append("G): ");
+            listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, label.ToString(), BuildBuilding(grid, buildingName, buildingType))); // TODO: load cost number from somewhere
+        }
+
         private GuiButton.OnClickHandler BuildBuilding(EconomyGrid grid, string buildingName, Type buildingType)
         {
             // Return an on click handler
@@ -90,8 +98,9 @@ namespace MaxOfEmpires.GameStates.Overlays
             listBuilderActions = GuiList.createNewList(BuildingInfoPosition, 5, new List<GuiElement>(), 300);
 
             // Add all the corresponding elements to the building actions list
-            listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, "Mine (100G): ", BuildBuilding(grid, "building.mine", typeof(Mine)))); // TODO: load cost number from somewhere
-            listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, "Training Grounds (150G): ", BuildBuilding(grid, "building.trainingGrounds", typeof(TrainingGrounds))));
+            AddBuilderButton(grid, listBuilderActions, "building.mine", typeof(Mine));
+            AddBuilderButton(grid, listBuilderActions, "building.trainingGrounds", typeof(TrainingGrounds));
+            AddBuilderButton(grid, listBuilderActions, "building.academy", typeof(Academy));
 
             // Make sure the list knows how big it is and add it to the screen
             listBuilderActions.calculateElementPositions();

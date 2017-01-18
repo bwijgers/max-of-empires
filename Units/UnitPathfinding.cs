@@ -1,13 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Units
 {
-    class Pathfinding : GameObjects.GameObjectDrawable
+    class Pathfinding
     {
         private static List<PathToTile> shortestPaths;
 
