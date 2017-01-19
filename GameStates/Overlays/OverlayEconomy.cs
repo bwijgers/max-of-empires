@@ -17,7 +17,7 @@ namespace MaxOfEmpires.GameStates.Overlays
         public OverlayEconomyState()
         {
             // Add the end turn button
-            buttonEndTurn = GuiButton.createButtonWithLabel(new Point(500, 10), "End turn", null, "font");
+            buttonEndTurn = GuiButton.createButtonWithLabel(new Point((int)MaxOfEmpires.OverlayPos.X + 20, 10), "End turn", null, "font");
             addElement(buttonEndTurn);
 
             // Add a label showing whose turn it currently is
@@ -36,7 +36,7 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         public override void draw(SpriteBatch spriteBatch)
         {
-            DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle(480, 0, MaxOfEmpires.ScreenSize.X, MaxOfEmpires.ScreenSize.Y), Color.DeepPink);
+            DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle((int)MaxOfEmpires.OverlayPos.X, 0, MaxOfEmpires.ScreenSize.X, MaxOfEmpires.ScreenSize.Y), Color.DeepPink);
             base.draw(spriteBatch);
         }
 

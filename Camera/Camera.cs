@@ -16,6 +16,7 @@ namespace MaxOfEmpires
         /// </summary>
         private float zoom;
 
+
         // Functions
 
         /// <summary>

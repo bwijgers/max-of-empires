@@ -14,19 +14,38 @@ namespace MaxOfEmpires
     /// </summary>
     public class MaxOfEmpires : Game
     {
-        private static GraphicsDeviceManager graphics;
+        public static GraphicsDeviceManager graphics;
         private SpriteBatch gameObjectSpriteBatch;
         private SpriteBatch overlaySpriteBatch;
-        private InputHelper inputHelper;
+        public static InputHelper inputHelper;
         private static Random random = new Random((int) DateTime.Now.Ticks);
         private static bool running = true;
         private Configuration mainConfiguration;
-        public static Camera camera = new Camera();
+        public static Camera camera;
+        public static Vector2 overlayPos;
+
+        /// <summary>
+        /// 800 * 480 = 15 * 15
+        /// 1280 * 768 = 24 * 24
+        /// 1920 * 1080 = 34 * 34
+        /// </summary>
+        public static Point minGridSize = new Point(24, 24);
+
+        /// <summary>
+        /// The fullscreen scaling matrix
+        /// </summary>
+        private Matrix spriteScale = Matrix.CreateScale(1, 1, 1);
 
         public MaxOfEmpires()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 768;
+            overlayPos = new Vector2((graphics.PreferredBackBufferWidth - (graphics.PreferredBackBufferWidth - graphics.PreferredBackBufferHeight)), 0);
+
+            camera = new Camera();
         }
 
         /// <summary>
@@ -38,8 +57,6 @@ namespace MaxOfEmpires
         protected override void Initialize()
         {
             inputHelper = new InputHelper();
-
-            GraphicsDevice.Viewport = new Viewport(0, 0, 1280, 768);
             IsMouseVisible = true;
 
             base.Initialize();
@@ -117,6 +134,13 @@ namespace MaxOfEmpires
             }
             //EINDE TIJDELIJKE CODE
 
+            //TIJDELIJKE CODE OMDAT IK GEEN IDEE HEB WAAR IK DIT ANDERS ZOU KUNNEN ZETTEN
+            if (inputHelper.KeyPressed(Keys.F11))
+            {
+                graphics.ToggleFullScreen();
+            }
+            //EINDE TIJDELIJKE CODE
+
             base.Update(gameTime);
         }
 
@@ -137,7 +161,7 @@ namespace MaxOfEmpires
                         null,
                         null,
                         null,
-                        transform); // set camera tranformation
+                        transform * SpriteScale); // set camera tranformation
 
             GameStateManager.Draw(gameTime, gameObjectSpriteBatch, overlaySpriteBatch);// Draw the current game state
 
@@ -171,6 +195,22 @@ namespace MaxOfEmpires
             running = false;
         }
 
+        /// <summary>
+        /// The fullscreen scaling matrix
+        /// </summary>
+        public Matrix SpriteScale
+        {
+            get
+            {
+                return spriteScale;
+            }
+            set
+            {
+                spriteScale = value;
+            }
+        }
+
+        public static Vector2 OverlayPos => overlayPos;
         public static Random Random => random;
         public static Point ScreenSize => new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
     }

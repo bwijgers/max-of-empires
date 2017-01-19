@@ -21,7 +21,7 @@ namespace MaxOfEmpires.GameStates
 
         public EconomyState()
         {
-            ecoGrid = new EconomyGrid(15, 15);
+            ecoGrid = new EconomyGrid(MaxOfEmpires.minGridSize.X, MaxOfEmpires.minGridSize.Y);
 
             overlay = new Overlays.OverlayEconomyState();
             InitOverlay();

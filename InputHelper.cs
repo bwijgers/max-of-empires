@@ -13,6 +13,7 @@ namespace MaxOfEmpires
         private Dictionary<Keys, char> alphabetKeys;
         private MouseState currentMouse, previousMouse;
         private KeyboardState currentKeyboard, previousKeyboard;
+        private Point mousePos = new Point(0, 0);
 
         /// <summary>
         /// Creates a new input helper.
@@ -44,6 +45,9 @@ namespace MaxOfEmpires
             // Update mouse input
             previousMouse = currentMouse;
             currentMouse = Mouse.GetState();
+            mousePos = currentMouse.Position;
+            mousePos.X = (mousePos.X / 1920) * 800;
+            mousePos.Y = (mousePos.Y / 1080) * 480;
 
             // Update keyboard input
             previousKeyboard = currentKeyboard;
@@ -73,8 +77,9 @@ namespace MaxOfEmpires
             {
                 return currentMouse.Position.ToVector2() / MaxOfEmpires.camera.Zoom;
             }
-        } 
+        }
 
+        public Point MousePos => mousePos;
         public bool MouseRightButtonPressed => currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released;
         public bool MouseScrollUp => currentMouse.ScrollWheelValue > previousMouse.ScrollWheelValue;
         public bool MouseScrollDown => currentMouse.ScrollWheelValue < previousMouse.ScrollWheelValue;
