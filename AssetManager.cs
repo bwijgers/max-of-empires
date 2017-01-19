@@ -48,29 +48,43 @@ namespace MaxOfEmpires
             // The asset does not yet exist. Let's make it so
             if (typeof(T).Equals(typeof(Spritesheet)))
             {
-                Texture2D tex = content.Load<Texture2D>(name);
-                int width, height;
-                try
-                {
-                    string size = name.Split('@')[1];
-                    width = int.Parse(size.Split('x')[0]);
-                    height = int.Parse(size.Split('x')[1]);
-                }
-                catch (IndexOutOfRangeException e)
-                {
-                    width = height = 1;
-                }
-                catch (FormatException e)
-                {
-                    width = height = 1;
-                }
-                Spritesheet sheet = new Spritesheet(tex, width, height);
-                assetDict[name] = sheet;
-                return (T)assetDict[name];
+                return (T)LoadSpritesheet(name);
+            }
+            else if (typeof(T).Equals(typeof(Animation)))
+            {
+                return (T)LoadAnimation(name);
             }
 
             assetDict[name] = content.Load<T>(name);
             return (T)assetDict[name];
+        }
+
+        private object LoadAnimation(string name)
+        {
+            Spritesheet sheet = (Spritesheet)LoadSpritesheet(name);
+        }
+
+        private object LoadSpritesheet(string name)
+        {
+            Texture2D tex = content.Load<Texture2D>(name);
+            int width, height;
+            try
+            {
+                string size = name.Split('@')[1];
+                width = int.Parse(size.Split('x')[0]);
+                height = int.Parse(size.Split('x')[1]);
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                width = height = 1;
+            }
+            catch (FormatException e)
+            {
+                width = height = 1;
+            }
+            Spritesheet sheet = new Spritesheet(tex, width, height);
+            assetDict[name] = sheet;
+            return assetDict[name];
         }
 
         /// <summary>
@@ -78,9 +92,6 @@ namespace MaxOfEmpires
         /// </summary>
         /// <param name="s">The name of the asset to load</param>
         /// <returns>An <code>object</code> representing the asset.</returns>
-        public object this[string s]
-        {
-            get { return assetDict[s]; }
-        }
+        public object this[string s] => assetDict[s];
     }
 }

@@ -30,6 +30,20 @@ namespace MaxOfEmpires.GameObjects
             s.Draw(fullTexture, destination, spritePart, color);
         }
 
+        public void SelectNextSprite()
+        {
+            ++currentColumn;
+            if (currentColumn == columns)
+            {
+                currentColumn = 0;
+                ++currentRow;
+                if (currentRow == rows)
+                {
+                    currentRow = 0;
+                }
+            }
+        }
+
         public Point SelectedSprite
         {
             get
