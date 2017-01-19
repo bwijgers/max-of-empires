@@ -13,7 +13,7 @@ namespace MaxOfEmpires
         private Dictionary<Keys, char> alphabetKeys;
         private MouseState currentMouse, previousMouse;
         private KeyboardState currentKeyboard, previousKeyboard;
-        private Point mousePos = new Point(0, 0);
+        private Vector2 displayScale;
 
         /// <summary>
         /// Creates a new input helper.
@@ -23,6 +23,7 @@ namespace MaxOfEmpires
             alphabetKeys = new Dictionary<Keys, char>();
             currentKeyboard = previousKeyboard = Keyboard.GetState();
             currentMouse = previousMouse = Mouse.GetState();
+            displayScale = Vector2.One;
         }
 
         /// <summary>
@@ -45,9 +46,6 @@ namespace MaxOfEmpires
             // Update mouse input
             previousMouse = currentMouse;
             currentMouse = Mouse.GetState();
-            mousePos = currentMouse.Position;
-            mousePos.X = (mousePos.X / 1920) * 800;
-            mousePos.Y = (mousePos.Y / 1080) * 480;
 
             // Update keyboard input
             previousKeyboard = currentKeyboard;
@@ -70,16 +68,27 @@ namespace MaxOfEmpires
         {
             if (!basedOnCamera)
             {
-                return currentMouse.Position.ToVector2();
+                return currentMouse.Position.ToVector2() * displayScale;
             }
 
             else
             {
-                return currentMouse.Position.ToVector2() / MaxOfEmpires.camera.Zoom;
+                return currentMouse.Position.ToVector2() / MaxOfEmpires.camera.Zoom * displayScale;
             }
         }
 
-        public Point MousePos => mousePos;
+        public Vector2 DisplayScale
+        {
+            get
+            {
+                return displayScale;
+            }
+            set
+            {
+                displayScale = value;
+            }
+        }
+
         public bool MouseRightButtonPressed => currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released;
         public bool MouseScrollUp => currentMouse.ScrollWheelValue > previousMouse.ScrollWheelValue;
         public bool MouseScrollDown => currentMouse.ScrollWheelValue < previousMouse.ScrollWheelValue;

@@ -14,15 +14,17 @@ namespace MaxOfEmpires
     /// </summary>
     public class MaxOfEmpires : Game
     {
-        public static GraphicsDeviceManager graphics;
-        private SpriteBatch gameObjectSpriteBatch;
-        private SpriteBatch overlaySpriteBatch;
-        public static InputHelper inputHelper;
-        private static Random random = new Random((int) DateTime.Now.Ticks);
-        private static bool running = true;
-        private Configuration mainConfiguration;
         public static Camera camera;
         public static Vector2 overlayPos;
+        public static GraphicsDeviceManager graphics;
+        public static InputHelper inputHelper;
+        private static Random random = new Random((int)DateTime.Now.Ticks);
+        private static bool running = true;
+
+        private SpriteBatch gameObjectSpriteBatch;
+        private SpriteBatch overlaySpriteBatch;
+        private Configuration mainConfiguration;
+        private Vector2 windowSize = new Vector2(1280, 768);
 
         /// <summary>
         /// 800 * 480 = 15 * 15
@@ -41,8 +43,8 @@ namespace MaxOfEmpires
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferWidth = (int)windowSize.X;
+            graphics.PreferredBackBufferHeight = (int)windowSize.Y;
             overlayPos = new Vector2((graphics.PreferredBackBufferWidth - (graphics.PreferredBackBufferWidth - graphics.PreferredBackBufferHeight)), 0);
 
             camera = new Camera();
@@ -137,7 +139,7 @@ namespace MaxOfEmpires
             //TIJDELIJKE CODE OMDAT IK GEEN IDEE HEB WAAR IK DIT ANDERS ZOU KUNNEN ZETTEN
             if (inputHelper.KeyPressed(Keys.F11))
             {
-                graphics.ToggleFullScreen();
+                ToggleFullScreen();
             }
             //EINDE TIJDELIJKE CODE
 
@@ -193,6 +195,24 @@ namespace MaxOfEmpires
         public static void Quit()
         {
             running = false;
+        }
+
+        private void ToggleFullScreen()
+        {
+            if (!graphics.IsFullScreen)
+            {
+                graphics.IsFullScreen = true;
+
+                inputHelper.DisplayScale = new Vector2((float)graphics.PreferredBackBufferWidth / GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, (float)graphics.PreferredBackBufferHeight / GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+            }
+            else
+            {
+                graphics.IsFullScreen = false;
+
+                inputHelper.DisplayScale = new Vector2(graphics.PreferredBackBufferWidth / windowSize.X, graphics.PreferredBackBufferHeight / windowSize.Y);
+            }
+
+            graphics.ApplyChanges();
         }
 
         /// <summary>
