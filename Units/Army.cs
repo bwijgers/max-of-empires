@@ -107,6 +107,48 @@ namespace MaxOfEmpires.Units
             return amount;
         }
 
+        /// <summary>
+        /// Merges an army into this army. 
+        /// </summary>
+        /// <param name="other">The army to merge into this army.</param>
+        public void MergeArmy(Army other)
+        {
+            // TODO: test and call this
+            // Add all units of the other army to this army.
+            foreach (string s in other.unitsAndCounts.Keys)
+            {
+                if (!unitsAndCounts.ContainsKey(s))
+                {
+                    unitsAndCounts[s] = 0;
+                }
+                unitsAndCounts[s] += other.unitsAndCounts[s];
+            }
+        }
+
+        public Army SplitArmy(Dictionary<string, int> unitsAndCounts)
+        {
+            // TODO: Test and call this
+            // Check if we have enough of every Soldier type
+            foreach (string s in unitsAndCounts.Keys)
+            {
+                if (!this.unitsAndCounts.ContainsKey(s) || this.unitsAndCounts[s] < unitsAndCounts[s])
+                {
+                    // Return no army if we don't
+                    return null;
+                }
+            }
+
+            // Return the requested army if we do, and subtract the units from this army
+            Army retVal = new Army(PositionInGrid.X, PositionInGrid.Y, owner);
+            foreach (string s in unitsAndCounts.Keys)
+            {
+                retVal.unitsAndCounts[s] += unitsAndCounts[s];
+                this.unitsAndCounts[s] -= unitsAndCounts[s];
+            }
+
+            return retVal;
+        }
+
         public override void TurnUpdate(uint turn, Player player)
         {
             this.moveSpeed = GetSlowestUnit().MoveSpeed;
