@@ -13,7 +13,7 @@ namespace MaxOfEmpires.Units
         public TargetPositionParticle(Vector2 drawPos)
         {
             DrawPosition = drawPos;
-            DrawingTexture = AssetManager.Instance.getAsset<Texture2D>("TargetParticle");
+            DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>("TargetParticle");
             timeExisted = 0;
         }
 

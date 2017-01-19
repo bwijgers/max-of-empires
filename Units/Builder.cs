@@ -1,4 +1,4 @@
-﻿
+﻿using MaxOfEmpires.GameObjects;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MaxOfEmpires.Units
@@ -7,7 +7,7 @@ namespace MaxOfEmpires.Units
     {
         public Builder(int x, int y, Player owner) : base(x, y, owner)
         {
-            DrawingTexture = AssetManager.Instance.getAsset<Texture2D>(@"FE-Sprites\swordsman_blue");
+            DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(@"FE-Sprites\swordsman_blue");
             moveSpeed = 2;
         }
     }

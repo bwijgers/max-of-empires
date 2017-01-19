@@ -53,6 +53,7 @@
     <Compile Include="Files\Translations.cs" />
     <Compile Include="GameObjects\GameObjectAnimated.cs" />
     <Compile Include="GameObjects\GameObjectDrawable.cs" />
+    <Compile Include="GameObjects\Spritesheet.cs" />
     <Compile Include="GameStates\BattleState.cs" />
     <Compile Include="Buildings\Building.cs" />
     <Compile Include="GameStates\EconomyState.cs" />

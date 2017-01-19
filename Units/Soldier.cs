@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
 using MaxOfEmpires.Files;
+using MaxOfEmpires.GameObjects;
 
 namespace MaxOfEmpires.Units
 {
@@ -225,7 +226,7 @@ namespace MaxOfEmpires.Units
             texName.Append(owner.ColorName.ToLower());
 
             // Load the Unit's texture based on the name supplied and the player controlling the unit.
-            DrawingTexture = AssetManager.Instance.getAsset<Texture2D>(texName.ToString());
+            DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(texName.ToString());
         }
 
         public void OnSoldierStartAttack(Soldier enemy)

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
 
@@ -13,17 +8,17 @@ namespace MaxOfEmpires.GameObjects
     {
         private Color drawColor;
         private Vector2 size;
-        private Texture2D tex;
+        private Spritesheet tex;
 
         public GameObjectDrawable()
         {
-            tex = DrawingHelper.PixelTexture;
+            tex = new Spritesheet(DrawingHelper.PixelTexture, 1, 1);
             drawColor = Color.White;
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
-            s.Draw(tex, DrawPosition, drawColor);
+            tex.Draw(time, s, DrawPosition, drawColor);
         }
 
         public Rectangle Bounds
@@ -46,7 +41,7 @@ namespace MaxOfEmpires.GameObjects
             }
         }
 
-        public Texture2D DrawingTexture
+        public Spritesheet DrawingTexture
         {
             get
             {
@@ -62,7 +57,7 @@ namespace MaxOfEmpires.GameObjects
         {
             get
             {
-                return tex.Bounds.Size.ToVector2();
+                return tex.Size;
             }
         }
     }

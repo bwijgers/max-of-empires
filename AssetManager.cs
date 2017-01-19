@@ -1,9 +1,8 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using MaxOfEmpires.GameObjects;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MaxOfEmpires
 {
@@ -47,6 +46,29 @@ namespace MaxOfEmpires
             }
 
             // The asset does not yet exist. Let's make it so
+            if (typeof(T).Equals(typeof(Spritesheet)))
+            {
+                Texture2D tex = content.Load<Texture2D>(name);
+                int width, height;
+                try
+                {
+                    string size = name.Split('@')[1];
+                    width = int.Parse(size.Split('x')[0]);
+                    height = int.Parse(size.Split('x')[1]);
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    width = height = 1;
+                }
+                catch (FormatException e)
+                {
+                    width = height = 1;
+                }
+                Spritesheet sheet = new Spritesheet(tex, width, height);
+                assetDict[name] = sheet;
+                return (T)assetDict[name];
+            }
+
             assetDict[name] = content.Load<T>(name);
             return (T)assetDict[name];
         }
