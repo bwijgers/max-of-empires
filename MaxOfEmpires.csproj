@@ -49,10 +49,12 @@
     <Compile Include="GameStates\MainMenuState.cs" />
     <Compile Include="GameStates\Overlays\OverlayBattleState.cs" />
     <Compile Include="GameStates\Overlays\OverlayMainMenu.cs" />
+    <Compile Include="GenerateGrid.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\GameObjectGrid.cs" />
     <Compile Include="GameObjects\GameObjectList.cs" />
+    <Compile Include="Perlin.cs" />
     <Compile Include="Units\Range.cs" />
     <Compile Include="Units\Stats.cs" />
     <Compile Include="Units\Unit.cs" />
@@ -105,6 +107,45 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Content\configs\Main.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\TerrainGeneration.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\desertCompositionWH.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\tundraComposition.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\tundraCompositionWH.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\swampComposition.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\swampCompositionWH.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\desertComposition.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\jungleCompositionWH.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\jungleComposition.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\plainsCompositionWH.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\plainsComposition.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\forestCompositionWH.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\terrain\forestComposition.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Content\Lang\en_US.lang" />

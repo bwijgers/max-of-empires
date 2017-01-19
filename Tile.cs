@@ -35,6 +35,14 @@ namespace MaxOfEmpires
         /// </summary>
         private int x, y;
 
+        public bool hills;
+
+        public bool Mountain;
+
+        private Texture2D terrainTexture;
+
+        private Rectangle terrainSource; //TODO vervang door stuff
+
         /// <summary>
         /// Creates a new Tile at a specified position with a specified Terrain.
         /// </summary>
@@ -48,6 +56,7 @@ namespace MaxOfEmpires
             this.y = y;
             position = new Vector2(x * 32, y * 32);
             overlayAttack = overlayWalk = false;
+            terrainTexture = AssetManager.Instance.getAsset<Texture2D>("FE-Sprites/Terrain@5x4");
         }
 
         /// <summary>
@@ -57,12 +66,17 @@ namespace MaxOfEmpires
         /// <returns>The movement cost on this Tile for the specified Unit.</returns>
         public int Cost(Unit unit)
         {
-            return 1;
+            int terrainCost = terrain.Cost;
+            if (!hills)
+                return terrainCost;
+            else
+                return 1+terrainCost;
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
-            terrain.Draw(DrawPosition.ToPoint(), s);
+            TerrainSpriteSelect();
+            TerrainDraw(s);
             building?.Draw(time, s);
             unit?.Draw(time, s);
 
@@ -79,6 +93,85 @@ namespace MaxOfEmpires
             }
         }
 
+        void TerrainSpriteSelect()
+        {
+            if(terrain == Terrain.Plains&&!hills)
+            {
+                SelectSprite(3, 1);
+            }
+            else if (terrain == Terrain.Plains && hills)
+            {
+                SelectSprite(2, 1);
+            }
+            else if (terrain == Terrain.Forest && hills)
+            {
+                SelectSprite(4, 1);
+            }
+            else if (terrain == Terrain.Forest && !hills)
+            {
+                SelectSprite(5, 1);
+            }
+            else if (terrain == Terrain.Desert && !hills)
+            {
+                SelectSprite(3, 3);
+            }
+            else if (terrain == Terrain.Desert && hills)
+            {
+                SelectSprite(2, 3);
+            }
+            else if (terrain == Terrain.Tundra && !hills)
+            {
+                SelectSprite(3, 2);
+            }
+            else if (terrain == Terrain.Tundra && hills)
+            {
+                SelectSprite(2, 2);
+            }
+            else if (terrain == Terrain.Swamp && !hills)
+            {
+                SelectSprite(5, 2);
+            }
+            else if (terrain == Terrain.Swamp && hills)
+            {
+                SelectSprite(4, 2);
+            }
+            else if (terrain == Terrain.Jungle && !hills)
+            {
+                SelectSprite(5, 3);
+            }
+            else if (terrain == Terrain.Jungle && hills)
+            {
+                SelectSprite(4, 3);
+            }
+            else if (terrain == Terrain.Lake)
+            {
+                SelectSprite(1, 4);
+            }
+            else if (terrain == Terrain.Mountain)
+            {
+                SelectSprite(1, 1);
+            }
+            else if (terrain == Terrain.TundraMountain)
+            {
+                SelectSprite(1, 2);
+            }
+            else if (terrain == Terrain.DesertMountain)
+            {
+                SelectSprite(1, 3);
+            }
+
+        }
+
+        void SelectSprite(int x,int y)
+        {
+            terrainSource = new Rectangle((x-1) * 32, (y-1) * 32, 32, 32);
+        }
+
+        void TerrainDraw(SpriteBatch s)
+        {
+            s.Draw(terrainTexture, position, terrainSource, Color.White);
+        }
+
         /// <summary>
         /// Whether or not this Tile is passable for a certain unit. 
         /// </summary>
@@ -86,7 +179,7 @@ namespace MaxOfEmpires
         /// <returns>True if the Unit can pass through this Tile, false otherwise.</returns>
         public bool Passable(Unit unit)
         {
-            return !Occupied || Unit.Owner == unit.Owner;
+            return (!Occupied || Unit == null || Unit.Owner == unit.Owner) && unit.Passable(terrain);
         }
 
         /// <summary>
@@ -182,7 +275,16 @@ namespace MaxOfEmpires
         /// <summary>
         /// The Terrain of this Tile.
         /// </summary>
-        public Terrain Terrain => terrain;
+        public Terrain Terrain {
+            get
+            {
+                return terrain;
+            }
+            set
+            {
+                terrain = value;
+            }
+        }
 
         /// <summary>
         /// The Unit occupying this Tile.

@@ -285,6 +285,15 @@ namespace MaxOfEmpires.Units
             return copy;
         }
 
+        public bool Passable(Terrain terrain)
+        {
+            if (terrain == Terrain.Mountain || terrain == Terrain.Lake || terrain == Terrain.DesertMountain || terrain == Terrain.TundraMountain)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public override void TurnUpdate(uint turn, bool player)
         {
             if (owner == player)
@@ -333,12 +342,32 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The amount of tiles this Unit can still run this turn.
         /// </summary>
-        public int MovesLeft => movesLeft;
+        public int MovesLeft
+        {
+            get
+            {
+                return movesLeft;
+            }
+            set
+            {
+                movesLeft = value;
+            }
+        }
 
         /// <summary>
         /// The amount of tiles this Unit can run each turn.
         /// </summary>
-        public int MoveSpeed => moveSpeed;
+        public int MoveSpeed
+        {
+            get
+            {
+                return moveSpeed;
+            }
+            set
+            {
+                moveSpeed = value;
+            }
+        }
 
         /// <summary>
         /// The owner of this Unit. True => player 1, false => player 2.

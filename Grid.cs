@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MaxOfEmpires
 {
-    class Grid : GameObjectGrid
+    partial class Grid : GameObjectGrid
     {
         private bool currentPlayer;
 
@@ -177,6 +177,8 @@ namespace MaxOfEmpires
                     this[x, y] = new Tile(Terrain.Plains, x, y);
                 }
             }
+            EconomyGenerate();
+            //BattleGenerate(Terrain.Desert,false, Terrain.Tundra,false);
 
             // Place a swordsman for each player on the field.
             Unit u1 = UnitRegistry.GetUnit("swordsman", true);

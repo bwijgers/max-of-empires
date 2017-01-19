@@ -37,6 +37,9 @@ namespace MaxOfEmpires.GameStates
             // Initialize the battlefield.
             battleGrid = new Grid(15, 15);
 
+            // Initialize the field
+            battleGrid.InitField();
+
             // Initialize the overlay.
             overlay = new Overlays.OverlayBattleState();
             InitOverlay();
@@ -113,8 +116,6 @@ namespace MaxOfEmpires.GameStates
 
         public override void Reset()
         {
-            // Initialize the field
-            battleGrid.InitField();
 
             // Player 1 starts.
             currentPlayer = true;
