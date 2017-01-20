@@ -10,7 +10,7 @@ using MaxOfEmpires.Files;
 
 namespace MaxOfEmpires.Buildings
 {
-    class Building : GameObject
+    class Building : GameObjectDrawable
     {
         private Player owner;
         private Point positionInGrid;
@@ -21,11 +21,25 @@ namespace MaxOfEmpires.Buildings
             this.positionInGrid = positionInGrid;
             this.owner = owner;
             this.id = id;
+            LoadTexture();
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
-            DrawingHelper.Instance.DrawRectangle(s, new Rectangle(Parent.DrawPosition.ToPoint(), new Point(32)), new Color(0, 0, 0, 0.4F));
+            //            DrawingHelper.Instance.DrawRectangle(s, new Rectangle(Parent.DrawPosition.ToPoint(), new Point(32)), new Color(0, 0, 0, 0.4F));
+            base.Draw(time, s);
+        }
+
+        private void LoadTexture()
+        {
+            StringBuilder textureName = new StringBuilder();
+            textureName.Append("FE-Sprites/Buildings/");
+            textureName.Append(BuildingRegistry.GetTextureName(id));
+            textureName.Append("@1x2");
+
+            DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(textureName.ToString());
+
+            DrawingTexture.SelectedSprite = new Point(0, owner.ColorName.ToLower().Equals("blue") ? 0 : 1);
         }
 
         public virtual void PopulateBuildingActions(GuiList buildingActions)

@@ -7,7 +7,7 @@ namespace MaxOfEmpires.Buildings
     {
         public static int moneyPerTurn;
 
-        public Mine(Point positionInGrid, Player owner) : base(positionInGrid, owner,"building.mine")
+        public Mine(Point positionInGrid, Player owner) : base(positionInGrid, owner, "building.mine")
         {
         }
 

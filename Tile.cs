@@ -171,12 +171,12 @@ namespace MaxOfEmpires
 
         }
 
-        void SelectSprite(int x,int y)
+        private void SelectSprite(int x,int y)
         {
             terrainSource = new Rectangle((x-1) * 32, (y-1) * 32, 32, 32);
         }
 
-        void TerrainDraw(SpriteBatch s)
+        private void TerrainDraw(SpriteBatch s)
         {
             s.Draw(terrainTexture, position, terrainSource, Color.White);
         }
