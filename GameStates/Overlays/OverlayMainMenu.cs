@@ -13,6 +13,7 @@ namespace MaxOfEmpires.GameStates.Overlays
     {
         private GuiButton buttonQuit;
         private GuiButton buttonStart;
+        private GuiButton buttonSettings;
         private GuiButton buttonSure;
         private GuiLabel labelTitle; 
 
@@ -32,9 +33,14 @@ namespace MaxOfEmpires.GameStates.Overlays
             buttonSure.ClickHandler = () => { MaxOfEmpires.Quit(); };
             buttonSure.Visible = false;
             addElement(buttonSure);
+                        
+            // Settings button
+            buttonSettings = GuiButton.createButtonWithLabel(new Point(0, buttonQuit.Bounds.Y - 50), "Settings", null, "font");
+            buttonSettings.ClickHandler = () => GameStateManager.SwitchState("settingsMenu", true);
+            addElement(buttonSettings);
 
             // Start button
-            buttonStart = GuiButton.createButtonWithLabel(new Point(0, buttonQuit.Bounds.Y - 50), "Start Game", null, "font");
+            buttonStart = GuiButton.createButtonWithLabel(new Point(0, buttonSettings.Bounds.Y - 50), "Start Game", null, "font");
             buttonStart.ClickHandler = () => GameStateManager.SwitchState("economy", true);
             addElement(buttonStart);
 
@@ -51,6 +57,7 @@ namespace MaxOfEmpires.GameStates.Overlays
             MoveToCenter(buttonQuit);
             MoveToCenter(buttonStart);
             MoveToCenter(buttonSure);
+            MoveToCenter(buttonSettings);
         }
 
         private void MoveToCenter(GuiElement elem)

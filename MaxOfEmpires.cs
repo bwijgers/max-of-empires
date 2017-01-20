@@ -18,6 +18,7 @@ namespace MaxOfEmpires
         public static InputHelper inputHelper;
         public static Camera camera;
         public static GraphicsDeviceManager graphics;
+        public static Settings settings;
         private static Random random = new Random((int)DateTime.Now.Ticks);
         private static bool running = true;
         public static Vector2 overlayPos;
@@ -104,6 +105,10 @@ namespace MaxOfEmpires
 
             // Initialize keys
             InitializeKeys(FileManager.LoadConfig("Keys").GetPropertySection("key"));
+
+            //Initialises settings
+            settings = new Settings();
+            settings.InitializeSettingsFromFile();
         }
 
         /// <summary>
@@ -127,6 +132,7 @@ namespace MaxOfEmpires
             GameStateManager.AddState("economy", new EconomyState());
             GameStateManager.AddState("battle", new BattleState());
             GameStateManager.AddState("mainMenu", new MainMenuState());
+            GameStateManager.AddState("settingsMenu", new SettingsMenuState());
             GameStateManager.SwitchState("mainMenu", true);
         }
 

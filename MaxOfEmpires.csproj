@@ -55,10 +55,13 @@
     <Compile Include="GameStates\Overlays\OverlayBattleState.cs" />
     <Compile Include="GameStates\Overlays\OverlayEconomy.cs" />
     <Compile Include="GameStates\Overlays\OverlayMainMenu.cs" />
+    <Compile Include="GameStates\Overlays\OverlaySettingsState.cs" />
+    <Compile Include="GameStates\SettingsMenuState.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\GameObjectGrid.cs" />
     <Compile Include="GameObjects\GameObjectList.cs" />
+    <Compile Include="Settings\Settings.cs" />
     <Compile Include="Units\Army.cs" />
     <Compile Include="Units\Range.cs" />
     <Compile Include="Units\Stats.cs" />
@@ -113,6 +116,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Content\configs\Main.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\configs\Settings.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Content\Lang\en_US.lang" />
