@@ -65,6 +65,10 @@ namespace MaxOfEmpires
         /// <returns>The movement cost on this Tile for the specified Unit.</returns>
         public int Cost(Unit unit)
         {
+            if(unit.id == "builder")
+            {
+                return 1;
+            }
             int terrainCost = terrain.Cost;
             if (!hills)
                 return terrainCost;
