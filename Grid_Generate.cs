@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MaxOfEmpires.Units;
 
 namespace MaxOfEmpires
 {
@@ -368,11 +369,11 @@ namespace MaxOfEmpires
                     starty++;
                 }
             }
-            Units.Unit u = Units.UnitRegistry.GetUnit("swordsman", true);
+            Unit u = SoldierRegistry.GetSoldier("unit.swordsman", new Player("", "Blue", 1));
             u.Parent = this;
             u.MovesLeft = u.MoveSpeed = int.MaxValue;
             (this[startx, starty] as Tile).SetUnit(u);
-            u.GeneratePaths(u.PositionInGrid);
+            Pathfinding.GeneratePaths(u, u.PositionInGrid);
 
             // Tests if every other nonobstructed tile is accessible by this unit
             for (int gridX = 0; gridX < Width; ++gridX)
@@ -381,7 +382,7 @@ namespace MaxOfEmpires
                 {
                     Tile t = this[gridX, gridY] as Tile;
                     Terrain terrain = t.Terrain;
-                    if (u.Passable(terrain) && !(u.ReachableTiles().Contains(t.GridPos) || t.GridPos.Equals(u.PositionInGrid)))
+                    if (u.Passable(terrain) && !(Pathfinding.ReachableTiles(u).Contains(t.PositionInGrid) || t.PositionInGrid.Equals(u.PositionInGrid)))
                     {
                         mountainArray = ResetMountains(file);
                         lakeArray = ResetLakes(file);

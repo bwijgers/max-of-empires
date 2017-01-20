@@ -46,14 +46,7 @@ namespace MaxOfEmpires
 
         public override void InitField()
         {
-            // Set all the tiles in the field to Terrain.Plains
-            for (int x = 0; x < Width; ++x)
-            {
-                for (int y = 0; y < Height; ++y)
-                {
-                    this[x, y] = new Tile(Terrain.Plains, x, y);
-                }
-            }
+            base.InitField();
 
             // Generate 2 armies and place them on the field.
             (this[0, 0] as Tile).SetUnit(new Builder(0, 0, players[0]));

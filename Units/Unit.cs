@@ -95,20 +95,6 @@ namespace MaxOfEmpires.Units
             return false;
         }
 
-        /// <summary>
-        /// Copy this Unit and set an owner.
-        /// </summary>
-        /// <param name="owner">The owner of the Copy.</param>
-        /// <returns>A copy of the Unit.</returns>
-        public Unit Copy(bool owner)
-        {
-            // Create a new Unit instance
-            Unit copy = new Unit(this, owner);
-
-            // Return the Unit copy
-            return copy;
-        }
-
         public bool Passable(Terrain terrain)
         {
             return !(terrain == Terrain.Mountain || terrain == Terrain.Lake || terrain == Terrain.DesertMountain || terrain == Terrain.TundraMountain);

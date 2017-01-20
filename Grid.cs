@@ -140,7 +140,7 @@ namespace MaxOfEmpires
         /// <summary>
         /// Initializes the field.
         /// </summary>
-        public void InitField()
+        public virtual void InitField()
         {
             // Initialize the terrain
             for (int x = 0; x < Width; ++x)

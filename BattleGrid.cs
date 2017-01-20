@@ -64,21 +64,6 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
-        /// Initializes the field.
-        /// </summary>
-        public override void InitField()
-        {
-            // Initialize the terrain
-            for (int x = 0; x < Width; ++x)
-            {
-                for (int y = 0; y < Height; ++y)
-                {
-                    this[x, y] = new Tile(Terrain.Plains, x, y);
-                }
-            }
-        }
-
-        /// <summary>
         /// Called when a Soldier dies in battle.
         /// </summary>
         /// <param name="deadSoldier">The Soldier that died.</param>
