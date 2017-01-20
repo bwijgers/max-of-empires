@@ -19,6 +19,48 @@ namespace MaxOfEmpires.Units
                 this.path = path;
                 this.cost = cost;
             }
+
+            //I attempted to cause a preference for direct lines: as close as possible to a straight line
+            //double[] line(Point origin, Point target)
+            //{
+            //    double[] returnDoubles = new double[3];
+            //    if (origin.Y == target.Y)
+            //    {
+            //        returnDoubles[0] = 0;
+            //        returnDoubles[1] = 1;
+            //        returnDoubles[2] = origin.Y;
+            //        return returnDoubles;
+            //    }
+            //    double slope = (target.X - origin.X) / (target.Y - origin.Y);
+            //    returnDoubles[2] = target.Y + slope * -target.X;
+            //    returnDoubles[1] = -1;
+            //    returnDoubles[0] = slope;
+            //    return returnDoubles;
+            //}
+            //double distancePointToLine(double[] line, Point point)
+            //{
+            //    double upperPartFraction = Math.Abs(line[0] * point.X + line[1] * point.Y + line[2]);
+            //    double lowerPartFraction = Math.Sqrt(Math.Pow(line[0], 2) + Math.Pow(line[1], 2));
+            //    return (upperPartFraction / lowerPartFraction);
+            //}
+            //double cumulativeDistance()
+            //{
+            //    double returnValue = 0;
+            //    double[] totalLine = line(path[0], target);
+            //    foreach(Point p in path)
+            //    {
+            //        returnValue += distancePointToLine(totalLine, p);
+            //    }
+            //    return returnValue;
+            //}
+            //public double CumulativeDistance
+            //{
+            //    get
+            //    {
+            //        return cumulativeDistance();
+            //    }
+            //}
+
         }
 
         private Pathfinding() {}
@@ -37,8 +79,8 @@ namespace MaxOfEmpires.Units
             surroundingPoints.Add(startPath.target + new Point(0, 1));
             surroundingPoints.Add(startPath.target + new Point(-1, 0));
             surroundingPoints.Add(startPath.target + new Point(0, -1));
+            
             Grid grid = movingUnit.GameWorld as Grid;
-
             foreach (Point p in surroundingPoints)
             {
                 if (!grid.IsInGrid(p))
@@ -63,10 +105,16 @@ namespace MaxOfEmpires.Units
                     {
                         if (cost < shortestPathToTile.cost)
                         {
-                            newPaths.Remove(shortestPathToTile);
+                            shortestPaths.Remove(shortestPathToTile);
                             newPaths.Add(newPathToTile);
                             shortestPaths.Add(newPathToTile);
                         }
+                        //else if(cost == shortestPathToTile.cost && newPathToTile.CumulativeDistance < shortestPathToTile.CumulativeDistance)
+                        //{
+                        //    shortestPaths.Remove(shortestPathToTile);
+                        //    newPaths.Add(newPathToTile);
+                        //    shortestPaths.Add(newPathToTile);
+                        //}
                     }
                     // If there is no known path to the specified point, adds this path to the list.
                     else
@@ -76,6 +124,7 @@ namespace MaxOfEmpires.Units
                     }
                 }
             }
+            newPaths.Remove(startPath);
         }
 
         /// <summary>

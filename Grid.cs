@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MaxOfEmpires
 {
-    abstract class Grid : GameObjectGrid
+    abstract partial class Grid : GameObjectGrid
     {
         protected Player currentPlayer;
         protected List<Player> players;
@@ -140,7 +140,19 @@ namespace MaxOfEmpires
         /// <summary>
         /// Initializes the field.
         /// </summary>
-        public abstract void InitField();
+        public void InitField()
+        {
+            // Initialize the terrain
+            for (int x = 0; x < Width; ++x)
+            {
+                for (int y = 0; y < Height; ++y)
+                {
+                    this[x, y] = new Tile(Terrain.Plains, x, y);
+                }
+            }
+            EconomyGenerate();
+            //BattleGenerate(Terrain.Tundra,false, Terrain.Desert,true);
+        }
 
         /// <summary>
         /// Checks if two positions are adjacent. Points are not considered adjacent when they are diagonally adjacent.

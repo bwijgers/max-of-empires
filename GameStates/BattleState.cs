@@ -39,6 +39,9 @@ namespace MaxOfEmpires.GameStates
             battleGrid = new BattleGrid(15, 15, players);
             battleGrid.InitField();
 
+            // Initialize the field
+            battleGrid.InitField();
+
             // Initialize the overlay.
             overlay = new Overlays.OverlayBattleState();
             InitOverlay();
@@ -162,7 +165,7 @@ namespace MaxOfEmpires.GameStates
                 TurnUpdate();
             }
         }
-
+        
         /// <summary>
         /// Accessor for the BattleGrid.
         /// </summary>
