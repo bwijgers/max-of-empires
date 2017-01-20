@@ -375,6 +375,8 @@ namespace MaxOfEmpires
             (this[startx, starty] as Tile).SetUnit(u);
             Pathfinding.GeneratePaths(u, u.PositionInGrid);
 
+            Point[] reachableTiles = Pathfinding.ReachableTiles(u);
+
             // Tests if every other nonobstructed tile is accessible by this unit
             for (int gridX = 0; gridX < Width; ++gridX)
             {
@@ -382,7 +384,7 @@ namespace MaxOfEmpires
                 {
                     Tile t = this[gridX, gridY] as Tile;
                     Terrain terrain = t.Terrain;
-                    if (u.Passable(terrain) && !(Pathfinding.ReachableTiles(u).Contains(t.PositionInGrid) || t.PositionInGrid.Equals(u.PositionInGrid)))
+                    if (u.Passable(terrain) && !(reachableTiles.Contains(t.PositionInGrid) || t.PositionInGrid.Equals(u.PositionInGrid)))
                     {
                         mountainArray = ResetMountains(file);
                         lakeArray = ResetLakes(file);
