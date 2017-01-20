@@ -14,11 +14,13 @@ namespace MaxOfEmpires.Buildings
     {
         private Player owner;
         private Point positionInGrid;
+        public readonly string id;
 
-        public Building(Point positionInGrid, Player owner)
+        public Building(Point positionInGrid, Player owner, string id)
         {
             this.positionInGrid = positionInGrid;
             this.owner = owner;
+            this.id = id;
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
@@ -42,7 +44,7 @@ namespace MaxOfEmpires.Buildings
         {
             // Check if the player can afford this soldier
             int cost = SoldierRegistry.GetSoldierCost(soldierType);
-            if (!owner.CanAfford(cost))
+            if (!owner.CanAfford(cost) || owner.Population<=0)
             {
                 return;
             }
@@ -70,6 +72,7 @@ namespace MaxOfEmpires.Buildings
 
             // Buy the soldier, as we placed it.
             owner.Buy(cost);
+            owner.CalculatePopulation();
         }
 
         public Player Owner => owner;

@@ -1,5 +1,6 @@
 ﻿# Buildings
-building.mine=Town
+building.town=Town
+building.mine=Mine
 building.trainingGrounds=Training Grounds
 building.academy=Academy
 

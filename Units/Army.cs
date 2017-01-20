@@ -100,6 +100,16 @@ namespace MaxOfEmpires.Units
             return slowest;
         }
 
+        public int GetTotalUnitCount()
+        {
+            int amount = 0;
+            foreach(int i in unitsAndCounts.Values)
+            {
+                amount += i;
+            }
+            return amount;
+        }
+
         public override void TurnUpdate(uint turn, Player player)
         {
             this.moveSpeed = GetSlowestUnit().MoveSpeed;

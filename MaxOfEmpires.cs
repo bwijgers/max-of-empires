@@ -71,9 +71,10 @@ namespace MaxOfEmpires
             KeyManager.Instance.RegisterKey("moveCameraDown", (Keys)config.GetProperty<int>("moveCameraDown"));
             KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft"));
             KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight"));
-
             KeyManager.Instance.RegisterKey("zoomCameraIn", (Keys)config.GetProperty<int>("moveCameraIn"));
             KeyManager.Instance.RegisterKey("zoomCameraOut", (Keys)config.GetProperty<int>("moveCameraOut"));
+            KeyManager.Instance.RegisterKey("nextTurn", (Keys)config.GetProperty<int>("nextTurn"));
+                
         }
 
         protected void LoadConfiguration()
@@ -89,6 +90,7 @@ namespace MaxOfEmpires
             Configuration buildingConfiguration = mainConfiguration.GetPropertySection("building");
             BuildingRegistry.InitBuildings(buildingConfiguration);
 
+            Town.LoadFromConfig(buildingConfiguration);
             Mine.LoadFromConfig(buildingConfiguration);
 
             // Initialize language file
@@ -124,6 +126,8 @@ namespace MaxOfEmpires
             GameStateManager.AddState("battle", new BattleState(blue, red));
             GameStateManager.AddState("mainMenu", new MainMenuState());
             GameStateManager.SwitchState("mainMenu", true);
+
+
         }
 
         /// <summary>
