@@ -27,6 +27,9 @@ namespace MaxOfEmpires.GameStates
 
             ecoGrid = new EconomyGrid(50, 50, players);
 
+            // Initialize the field
+            ecoGrid.InitField();
+
             overlay = new Overlays.OverlayEconomyState();
             InitOverlay();
             Reset();
@@ -123,8 +126,7 @@ namespace MaxOfEmpires.GameStates
 
         public override void Reset()
         {
-            // Initialize the field
-            ecoGrid.InitField();
+
 
             // Player 1 starts
             currentPlayer = 0;
