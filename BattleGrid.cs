@@ -236,6 +236,7 @@ namespace MaxOfEmpires
                             ++currentY;
                         }
                     }
+                    (this[currentX, currentY] as Tile).SetUnit(soldier);
                     --currentX;
 
                     if (currentX < 0)
