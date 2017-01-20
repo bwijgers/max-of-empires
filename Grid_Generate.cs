@@ -53,7 +53,7 @@ namespace MaxOfEmpires
         private Terrain attackBonusTerrain;
         private Terrain defenseBonusTerrain;
 
-        // TODO create this! camera needed for debugging. double mirrors the grid to create a symmetrical field (with double width and height).
+        // Double mirrors the grid to create a symmetrical field (with double width and height).
         public void BalancedEconomyGrid(int gridWidth, int gridHeight)
         {
             int origridWidth = gridWidth/2;
