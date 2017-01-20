@@ -287,11 +287,7 @@ namespace MaxOfEmpires.Units
 
         public bool Passable(Terrain terrain)
         {
-            if (terrain == Terrain.Mountain || terrain == Terrain.Lake || terrain == Terrain.DesertMountain || terrain == Terrain.TundraMountain)
-            {
-                return false;
-            }
-            return true;
+            return !(terrain == Terrain.Mountain || terrain == Terrain.Lake || terrain == Terrain.DesertMountain || terrain == Terrain.TundraMountain);
         }
 
         public override void TurnUpdate(uint turn, bool player)

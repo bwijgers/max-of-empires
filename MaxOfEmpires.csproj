@@ -49,7 +49,7 @@
     <Compile Include="GameStates\MainMenuState.cs" />
     <Compile Include="GameStates\Overlays\OverlayBattleState.cs" />
     <Compile Include="GameStates\Overlays\OverlayMainMenu.cs" />
-    <Compile Include="GenerateGrid.cs" />
+    <Compile Include="Grid_Generate.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\GameObjectGrid.cs" />

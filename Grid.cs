@@ -178,7 +178,7 @@ namespace MaxOfEmpires
                 }
             }
             EconomyGenerate();
-            //BattleGenerate(Terrain.Desert,false, Terrain.Tundra,false);
+            //BattleGenerate(Terrain.Tundra,false, Terrain.Desert,true);
 
             // Place a swordsman for each player on the field.
             Unit u1 = UnitRegistry.GetUnit("swordsman", true);

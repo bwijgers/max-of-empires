@@ -10,7 +10,6 @@ namespace MaxOfEmpires
 {
     class Terrain
     {
-        public int cost;
 
         private static Terrain plains = new Terrain(TerrainType.PLAINS,1);
         private static Terrain jungle = new Terrain(TerrainType.JUNGLE,3);
@@ -48,8 +47,18 @@ namespace MaxOfEmpires
             DESERTMOUNTAIN
         }
 
+        public int cost;
         public TerrainType terrainType;
         private Texture2D tex;
+
+        private Terrain(TerrainType terrainType,int cost)
+        {
+            this.cost = cost;
+            this.terrainType = terrainType;
+            string texName = terrainType.ToString().ToLower();
+        //    tex = AssetManager.Instance.getAsset<Texture2D>(@"FE-Sprites\" + texName);
+            tex = AssetManager.Instance.getAsset<Texture2D>(@"FE-Sprites\plains");
+        }
 
         public int Cost
         {
@@ -61,17 +70,6 @@ namespace MaxOfEmpires
             {
                 cost = value;
             }
-        }
-
-
-
-        private Terrain(TerrainType terrainType,int cost)
-        {
-            this.cost = cost;
-            this.terrainType = terrainType;
-            string texName = terrainType.ToString().ToLower();
-        //    tex = AssetManager.Instance.getAsset<Texture2D>(@"FE-Sprites\" + texName);
-            tex = AssetManager.Instance.getAsset<Texture2D>(@"FE-Sprites\plains");
         }
     }
 }

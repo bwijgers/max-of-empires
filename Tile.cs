@@ -69,8 +69,7 @@ namespace MaxOfEmpires
             int terrainCost = terrain.Cost;
             if (!hills)
                 return terrainCost;
-            else
-                return 1+terrainCost;
+            return 1+terrainCost;
         }
 
         public override void Draw(GameTime time, SpriteBatch s)

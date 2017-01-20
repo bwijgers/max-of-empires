@@ -12,19 +12,7 @@ namespace MaxOfEmpires
     partial class Grid : GameObjects.GameObjectGrid
     {
 
-        private Heightpoint[] lakeArray;
-        private Heightpoint[] mountainArray;
-        private double[,] heightMap;
-        private Terrain attackBonusTerrain;
-        private Terrain defenseBonusTerrain;
-
-        //TODO create this! camera needed for debugging. double mirrors the grid to create a symmetrical field (with double width and height).
-        void BalancedEconomyGrid()
-        {
-
-        }
-
-        //a point that radiates (sometimes negative) value to the surrounding tiles. used to create heightmap, and humiditymap.
+        // A point that radiates (sometimes negative) value to the surrounding tiles. used to create heightmap, and humiditymap.
         private struct Heightpoint
         {
             public Vector2 position;
@@ -32,16 +20,7 @@ namespace MaxOfEmpires
             public double width;
         }
 
-        //converts min and max percentage into an actual amount
-        private int GetAmount(Configuration file, string min, string max)
-        {
-            int minPercentMountains = file.GetProperty<int>(min);
-            int maxPercentMountains = file.GetProperty<int>(max);
-            double percentMountainsOnMap = (minPercentMountains + MaxOfEmpires.Random.NextDouble() * (maxPercentMountains - minPercentMountains));
-            return (int)((percentMountainsOnMap / 100) * (Width * Height));
-        }
-
-        //specifications of one kind of terrain
+        // Specifications of one kind of terrain
         private struct TerrainToComposition
         {
             public double coldChance;
@@ -52,7 +31,43 @@ namespace MaxOfEmpires
             public double lakechance;
         }
 
-        //collects terrain specifications from files
+        // A combination of the coordinates of a tile and an integer value (used for height, humidity and temperature). usefull for sorting.
+        private struct TileWithHeight
+        {
+            public TileWithHeight(double height, int x, int y)
+            {
+                this.height = height;
+                this.x = x;
+                this.y = y;
+            }
+
+            public double height;
+            public int x;
+            public int y;
+        }
+
+        private Heightpoint[] lakeArray;
+        private Heightpoint[] mountainArray;
+        private double[,] heightMap;
+        private Terrain attackBonusTerrain;
+        private Terrain defenseBonusTerrain;
+
+        // TODO create this! camera needed for debugging. double mirrors the grid to create a symmetrical field (with double width and height).
+        public void BalancedEconomyGrid()
+        {
+
+        }
+
+        // Converts min and max percentage into an actual amount
+        private int GetAmount(Configuration file, string min, string max)
+        {
+            int minPercentMountains = file.GetProperty<int>(min);
+            int maxPercentMountains = file.GetProperty<int>(max);
+            double percentMountainsOnMap = (minPercentMountains + MaxOfEmpires.Random.NextDouble() * (maxPercentMountains - minPercentMountains));
+            return (int)((percentMountainsOnMap / 100) * (Width * Height));
+        }
+
+        // Collects terrain specifications from files
         private TerrainToComposition GetTerrainSpecsFromFile(Terrain terrain, bool hills)
         {
             string terrainString = "terrain/" + terrain.terrainType.ToString().ToLower() + "Composition";
@@ -69,7 +84,7 @@ namespace MaxOfEmpires
             return Composition;
         }
 
-        //generates a battlemap: a transition between two economygrid tiles
+        // Generates a battlemap: a transition between two economygrid tiles
         public void BattleGenerate(Terrain attackTerrain, bool attackHills, Terrain defendTerrain, bool defendHills)
         {
             defenseBonusTerrain = defendTerrain;
@@ -80,7 +95,7 @@ namespace MaxOfEmpires
             GenerateEnvironmentalValues(file, attackComposition, defendComposition);
         }
 
-        //generates terain using 3 layers of values: height, humidity, and temperature
+        // Generates terain using 3 layers of values: height, humidity, and temperature
         private void GenerateEnvironmentalValues(Configuration file,TerrainToComposition attackComposition, TerrainToComposition defendComposition)
         {
             double[] weighValue = new double[Height];
@@ -88,27 +103,27 @@ namespace MaxOfEmpires
             int defendingRows = (int)((defendingpercentage / 100.0)*Height);
             for(int i = 0; i < defendingRows; i++)
             {
-                weighValue[i] = 1.0; //the upper rows are determined only by the defending tile.
+                weighValue[i] = 1.0; // The upper rows are determined only by the defending tile.
             }
             for (int i = defendingRows; i < Height; i++)
             {
-                weighValue[i] = 1-((i - defendingRows)/ (double)(Height - 1 - defendingRows)); //generates a weighvalue for all transitionrows
+                weighValue[i] = 1-((i - defendingRows)/ (double)(Height - 1 - defendingRows)); // Generates a weighvalue for all transitionrows
             }
             bool validHeightMap = false;
             while (!validHeightMap)
             {
-                validHeightMap = GeneratePerlinHeights(file, attackComposition, defendComposition, weighValue); // if not evertything is accessible, generates new heightmap
+                validHeightMap = GeneratePerlinHeights(file, attackComposition, defendComposition, weighValue); // If not evertything is accessible, generates new heightmap
             }
             GeneratePerlinHumidity(file, attackComposition, defendComposition, weighValue);
             GeneratePerlinTemperature(file, attackComposition, defendComposition, weighValue);
 
         }
 
-        //distributes height using perlin noise
+        // Distributes height using perlin noise
         private bool GeneratePerlinHeights(Configuration file,TerrainToComposition attackComposition, TerrainToComposition defendComposition, double[] weighValue)
         {
             int structureSize = file.GetProperty<int>("structureSize");
-            double structureSizeApplicable = structureSize / 100.0;//determines randomness for PerlinGrid
+            double structureSizeApplicable = structureSize / 100.0; // Determines randomness for PerlinGrid
             double[,] heightMap = GeneratePerlinGrid(Width, Height, structureSizeApplicable);
             for(int x = 0; x < Width; x++)
             {
@@ -149,10 +164,10 @@ namespace MaxOfEmpires
                     }
                 }
             }
-            return checkIfEveryTileIsAccessible(file);
+            return CheckIfEveryTileIsAccessible(file);
         }
 
-        //distributes humidity using perlin noise
+        // Distributes humidity using perlin noise
         private void GeneratePerlinHumidity(Configuration file, TerrainToComposition attackComposition, TerrainToComposition defendComposition, double[] weighValue)
         {
             int structureSize = file.GetProperty<int>("structureSize");
@@ -180,7 +195,7 @@ namespace MaxOfEmpires
             }
         }
 
-        //distributes temperature using perlin noise
+        // Distributes temperature using perlin noise
         private void GeneratePerlinTemperature(Configuration file, TerrainToComposition attackComposition, TerrainToComposition defendComposition, double[] weighValue)
         {
             int structureSize = file.GetProperty<int>("structureSize");
@@ -234,7 +249,7 @@ namespace MaxOfEmpires
             }
         }
 
-        //converts spawnchance to required threshold for PerlinNoiseGrid
+        // Converts spawnchance to required threshold for PerlinNoiseGrid
         private double ChanceToThreshold(bool high, double chance)
         {
             if (!high)
@@ -247,7 +262,7 @@ namespace MaxOfEmpires
             }
         }
 
-        //generates an economy map using terrainGeneration.cfg
+        // Generates an economy map using terrainGeneration.cfg
         public void EconomyGenerate()
         {
             Configuration file = FileManager.LoadConfig("TerrainGeneration");
@@ -264,26 +279,11 @@ namespace MaxOfEmpires
             GenerateTemperature(file, Width, Height, 0.1);
         }
 
-        //A combination of the coordinates of a tile and an integer value (used for height, humidity and temperature). usefull for sorting.
-        private struct TileWithHeight
-        {
-            public TileWithHeight(double height, int x, int y)
-            {
-                this.height = height;
-                this.x = x;
-                this.y = y;
-            }
-
-            public double height;
-            public int x;
-            public int y;
-        }
-
-        //creates a double grid with Height values based on heightpoints in mountainArran and lakeArray
+        // Creates a double grid with Height values based on heightpoints in mountainArran and lakeArray
         private double[,] GenerateHeightmap(Configuration file)
         {
             heightMap = new double[Width, Height];
-            //lakes = hills = mountains = 0;
+            // Lakes = hills = mountains = 0;
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Height; y++)
@@ -293,7 +293,7 @@ namespace MaxOfEmpires
                         Vector2 position = new Vector2(x, y);
                         double distance = Math.Abs((mountainArray[i].position - position).Length());
 
-                        //punttopformule van Luuk
+                        // Punttopformule van Luuk
                         double mountainNoise = file.GetProperty<int>("mountainNoise") / (double)100;
                         heightMap[x, y] += ((1 - mountainNoise) + MaxOfEmpires.Random.NextDouble() * mountainNoise * 2) * (mountainArray[i].height - mountainArray[i].height * Math.Abs(Math.Sin(5 / (mountainArray[i].width * Math.PI) * distance)));
                     }
@@ -302,7 +302,7 @@ namespace MaxOfEmpires
                         Vector2 position = new Vector2(x, y);
                         double distance = Math.Abs((lakeArray[i].position - position).Length());
                         if (distance < lakeArray[i].width)
-                            //exponentiele formule van Luuk
+                            // Exponentiele formule van Luuk
                             heightMap[x, y] += lakeArray[i].height * Math.Pow(15, -Math.Pow((distance / lakeArray[i].width), 2));
                     }
                 }
@@ -310,7 +310,7 @@ namespace MaxOfEmpires
             return heightMap;
             }
 
-        //generates terrain based on height.
+        // Generates terrain based on height.
         private bool GenerateTerrain(Configuration file)
         {
             heightMap = GenerateHeightmap(file);
@@ -320,14 +320,14 @@ namespace MaxOfEmpires
             int numberOfHills = GetAmount(file, "percentage.hills.min", "percentage.hills.max");
 
             int currentHighestTile = 0;
-            //resets terrain
+            // Resets terrain
             foreach(TileWithHeight twh in listOfHeights)
             {
                 Tile currentTile = this[twh.x, twh.y] as Tile;
                 currentTile.Terrain = Terrain.Plains;
                 currentTile.hills = false;
             }
-            //generates terrain based on heighest and lowest values in listOfHeight
+            // Generates terrain based on heighest and lowest values in listOfHeight
             for (; currentHighestTile < numberOfMountains; currentHighestTile++)
             {
                 Tile currentTile = this[listOfHeights[currentHighestTile].x, listOfHeights[currentHighestTile].y] as Tile;
@@ -347,13 +347,13 @@ namespace MaxOfEmpires
                 currentTile.hills = false;
             }
 
-            return checkIfEveryTileIsAccessible(file);
+            return CheckIfEveryTileIsAccessible(file);
         } 
 
-        //creates a puppet unit to check if every tile is accessible from a certain unobstructed tile
-        private bool checkIfEveryTileIsAccessible(Configuration file)
+        // Creates a puppet unit to check if every tile is accessible from a certain unobstructed tile
+        private bool CheckIfEveryTileIsAccessible(Configuration file)
         {
-            //puts a unit on the first available tile
+            // Puts a unit on the first available tile
             int startx = 0;
             int starty = 0;
             while ((this[startx, starty] as Tile).Terrain == Terrain.Mountain || (this[startx, starty] as Tile).Terrain == Terrain.Lake)
@@ -374,7 +374,7 @@ namespace MaxOfEmpires
             (this[startx, starty] as Tile).SetUnit(u);
             u.GeneratePaths(u.PositionInGrid);
 
-            //tests if every other nonobstructed tile is accessible by this unit
+            // Tests if every other nonobstructed tile is accessible by this unit
             for (int gridX = 0; gridX < Width; ++gridX)
             {
                 for (int gridY = 0; gridY < Height; ++gridY)
@@ -397,7 +397,7 @@ namespace MaxOfEmpires
             return true;
         }
 
-        //creates a new array of random heightpoints
+        // Creates a new array of random heightpoints
         private Heightpoint[] ResetMountains(Configuration file)
         {
             int mountains = file.GetProperty<int>("mountainPeaks");
@@ -412,7 +412,7 @@ namespace MaxOfEmpires
             return returnlist;
         }
 
-        //creates a new arrai of random negative heightpoints
+        // Creates a new arrai of random negative heightpoints
         private Heightpoint[] ResetLakes(Configuration file)
         {
             int lakes = file.GetProperty<int>("lakeBottoms");
@@ -427,7 +427,7 @@ namespace MaxOfEmpires
             return returnlist;
         }
 
-        //creates humiditypoints based on mountains: lakes make their surroundings humid, mountains make their surroundings dry.
+        // Creates humiditypoints based on mountains: lakes make their surroundings humid, mountains make their surroundings dry.
         private Heightpoint[] SetHumidityPoints(Configuration file, Heightpoint[] mountainArray, Heightpoint[] lakeArray)
         {
             int extraHumidityPoints = file.GetProperty<int>("extraHumidityPoints");
@@ -444,7 +444,7 @@ namespace MaxOfEmpires
             return HumidityPoints;
         }
 
-        //creates a double grid with humidity values
+        // Creates a double grid with humidity values
         private void GenerateHumiditySim(Configuration file, Heightpoint[] humidityPoints)
         {
             double[,] gridSim = new double[Width,Height];
@@ -453,13 +453,13 @@ namespace MaxOfEmpires
             {
                 for (int y = 0; y < Height; y++)
                 {
-                    gridSim[x, y] = heightMap[x, y] * -((1 - humidityNoise) + MaxOfEmpires.Random.NextDouble() * humidityNoise*2); //duplicates heightmap with some randomizer
+                    gridSim[x, y] = heightMap[x, y] * -((1 - humidityNoise) + MaxOfEmpires.Random.NextDouble() * humidityNoise*2); //Duplicates heightmap with some randomizer
                     for (int i = 0; i < humidityPoints.Length; i++)
                     {
                         Vector2 position = new Vector2(x, y);
                         double distance = Math.Abs((humidityPoints[i].position - position).Length());
 
-                        //exponentiele formule van Luuk
+                        // Exponentiele formule van Luuk
                         gridSim[x, y] += ((1 - humidityNoise) + (MaxOfEmpires.Random.NextDouble() * humidityNoise)) * 2 * (humidityPoints[i].height * Math.Pow(15, -Math.Pow(((double)distance / humidityPoints[i].width), 2)));
                     }
                 }
@@ -467,7 +467,7 @@ namespace MaxOfEmpires
             ChangeHumidity(file, gridSim);
         }
 
-        //changes humidity based on a grid of humidity values
+        // Changes humidity based on a grid of humidity values
         private void ChangeHumidity(Configuration file, double[,] gridSim)
         {
             int numberOfHumid = GetAmount(file, "percentage.humid.min", "percentage.humid.max");
@@ -485,7 +485,7 @@ namespace MaxOfEmpires
             }
         }
 
-        //sorts a two dimensional array on double value and outputs it as a list of tiles with height
+        // Sorts a two dimensional array on double value and outputs it as a list of tiles with height
         private List<TileWithHeight> SortList(double[,] gridSim)
         {
             List<TileWithHeight> listToBeSorted = new List<TileWithHeight>();
@@ -500,7 +500,7 @@ namespace MaxOfEmpires
             return listToBeSorted;
         }
 
-        //generates temperature based on Perlin noise
+        // Generates temperature based on Perlin noise
         private void GenerateTemperature(Configuration file, int width, int height, double intensity)
         {
             double[,] gridSim = GeneratePerlinGrid(width, height, intensity);
@@ -547,7 +547,7 @@ namespace MaxOfEmpires
             }
         }
 
-        //generates Perlin noise and uses it to create a grid with double values, ranging from -1 to 1
+        //Generates Perlin noise and uses it to create a grid with double values, ranging from -1 to 1
         private double[,] GeneratePerlinGrid(int width, int height, double intensity)
         {
             double positionX = MaxOfEmpires.Random.NextDouble() * 1000;
@@ -572,7 +572,7 @@ namespace MaxOfEmpires
                     }
                 }
             }
-            //rescales range to -1 > 1
+            // Rescales range to -1 > 1
             double middle = highest - (0.5 * (highest - lowest));
             double range = highest - lowest;
             double newRange = 2 / range;

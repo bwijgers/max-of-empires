@@ -5,28 +5,35 @@
 
     public int repeat;
 
-    public Perlin(int repeat = -1)
+    public static double grad(int hash, double x, double y, double z)
     {
-        this.repeat = repeat;
+        int h = hash & 15;                                  // Take the hashed value and take the first 4 bits of it (15 == 0b1111)
+        double u = h < 8 /* 0b1000 */ ? x : y;              // If the most significant bit (MSB) of the hash is 0 then set u = x.  Otherwise y.
+
+        double v;                                           // In Ken Perlin's original implementation this was another conditional operator (?:).  I
+                                                            // expanded it for readability.
+
+        if (h < 4 /* 0b0100 */)                             // If the first and second significant bits are 0 set v = y
+            v = y;
+        else if (h == 12 /* 0b1100 */ || h == 14 /* 0b1110*/)// If the first and second significant bits are 1 set v = x
+            v = x;
+        else                                                // If the first and second significant bits are not equal (0/1, 1/0) set v = z
+            v = z;
+
+        return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v); // Use the last 2 bits to decide if u and v are positive or negative.  Then return their addition.
     }
 
-    public double OctavePerlin(double x, double y, double z, int octaves, double persistence)
+    public static double fade(double t)
     {
-        double total = 0;
-        double frequency = 1;
-        double amplitude = 1;
-        double maxValue = 0;            // Used for normalizing result to 0.0 - 1.0
-        for (int i = 0; i < octaves; i++)
-        {
-            total += perlin(x * frequency, y * frequency, z * frequency) * amplitude;
+        // Fade function as defined by Ken Perlin.  This eases coordinate values
+        // so that they will "ease" towards integral values.  This ends up smoothing
+        // the final output.
+        return t * t * t * (t * (t * 6 - 15) + 10);         // 6t^5 - 15t^4 + 10t^3
+    }
 
-            maxValue += amplitude;
-
-            amplitude *= persistence;
-            frequency *= 2;
-        }
-
-        return total / maxValue;
+    public static double lerp(double a, double b, double x)
+    {
+        return a + x * (b - a);
     }
 
     private static readonly int[] permutation = { 151,160,137,91,90,15,					// Hash lookup table as defined by Ken Perlin.  This is a randomly
@@ -53,6 +60,30 @@
         {
             p[x] = permutation[x % 256];
         }
+    }
+
+    public Perlin(int repeat = -1)
+    {
+        this.repeat = repeat;
+    }
+
+    public double OctavePerlin(double x, double y, double z, int octaves, double persistence)
+    {
+        double total = 0;
+        double frequency = 1;
+        double amplitude = 1;
+        double maxValue = 0;            // Used for normalizing result to 0.0 - 1.0
+        for (int i = 0; i < octaves; i++)
+        {
+            total += perlin(x * frequency, y * frequency, z * frequency) * amplitude;
+
+            maxValue += amplitude;
+
+            amplitude *= persistence;
+            frequency *= 2;
+        }
+
+        return total / maxValue;
     }
 
     public double perlin(double x, double y, double z)
@@ -113,34 +144,4 @@
         return num;
     }
 
-    public static double grad(int hash, double x, double y, double z)
-    {
-        int h = hash & 15;                                  // Take the hashed value and take the first 4 bits of it (15 == 0b1111)
-        double u = h < 8 /* 0b1000 */ ? x : y;              // If the most significant bit (MSB) of the hash is 0 then set u = x.  Otherwise y.
-
-        double v;                                           // In Ken Perlin's original implementation this was another conditional operator (?:).  I
-                                                            // expanded it for readability.
-
-        if (h < 4 /* 0b0100 */)                             // If the first and second significant bits are 0 set v = y
-            v = y;
-        else if (h == 12 /* 0b1100 */ || h == 14 /* 0b1110*/)// If the first and second significant bits are 1 set v = x
-            v = x;
-        else                                                // If the first and second significant bits are not equal (0/1, 1/0) set v = z
-            v = z;
-
-        return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v); // Use the last 2 bits to decide if u and v are positive or negative.  Then return their addition.
-    }
-
-    public static double fade(double t)
-    {
-        // Fade function as defined by Ken Perlin.  This eases coordinate values
-        // so that they will "ease" towards integral values.  This ends up smoothing
-        // the final output.
-        return t * t * t * (t * (t * 6 - 15) + 10);         // 6t^5 - 15t^4 + 10t^3
-    }
-
-    public static double lerp(double a, double b, double x)
-    {
-        return a + x * (b - a);
-    }
 }
