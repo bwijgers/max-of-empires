@@ -53,7 +53,7 @@ namespace MaxOfEmpires
             // Make sure the name supplied is registered
             if(!keysByName.ContainsKey(name))
             {
-                throw new ArgumentException("Key '" + name + "' was not registered but was asked for.");
+                throw new ArgumentException("Key '" + name + "' was not registered but was requested.");
             }
 
             // Return whether the specified key was pressed this update.

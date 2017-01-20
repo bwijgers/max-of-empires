@@ -20,7 +20,8 @@ namespace MaxOfEmpires.GameObjects
         /// <param name="obj">The GameObject the method is called upon.</param>
         /// <param name="x">The x-position in the grid of this GameObject.</param>
         /// <param name="y">The y-position in the grid of this GameObject.</param>
-        protected delegate void GridFunc(GameObject obj);
+
+        public delegate void GridFunc(GameObject obj);
 
         /// <summary>
         /// The grid. A digital-- Wait, I did this already.
@@ -49,7 +50,7 @@ namespace MaxOfEmpires.GameObjects
         /// Calles a function for every element in the grid.
         /// </summary>
         /// <param name="func">The function to call for each element.</param>
-        protected void ForEach(GridFunc func)
+        public void ForEach(GridFunc func)
         {
             // Make sure we gotta do something before we try doing something.
             if (func == null || func.GetInvocationList().Length == 0)

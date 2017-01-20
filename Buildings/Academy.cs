@@ -10,7 +10,7 @@ namespace MaxOfEmpires.Buildings
 {
     class Academy : Building
     {
-        public Academy(Point positionInGrid, Player owner) : base(positionInGrid, owner)
+        public Academy(Point positionInGrid, Player owner) : base(positionInGrid, owner, "building.academy")
         {
         }
 

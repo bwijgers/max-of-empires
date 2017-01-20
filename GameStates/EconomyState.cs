@@ -84,6 +84,11 @@ namespace MaxOfEmpires.GameStates
                 PrintBuilderInfo((Builder)selectedUnit);
                 return;
             }
+
+            if (manager.KeyPressed("nextTurn", helper))
+            {
+                shouldTurnUpdate = true;
+            }
         }
 
         private void InitOverlay()
@@ -94,6 +99,7 @@ namespace MaxOfEmpires.GameStates
             foreach (Player p in players)
             {
                 p.OnUpdateMoney(UpdateMoneyDisplay);
+                p.OnUpdatePopulation(UpdatePopulationDisplay);
             }
         }
 
@@ -155,6 +161,7 @@ namespace MaxOfEmpires.GameStates
 
             overlay.LabelCurrentPlayer.setLabelText("Current player: " + CurrentPlayer.Name);
             UpdateMoneyDisplay(CurrentPlayer);
+            UpdatePopulationDisplay(CurrentPlayer);
         }
 
         public override void Update(GameTime time)
@@ -171,6 +178,11 @@ namespace MaxOfEmpires.GameStates
         private void UpdateMoneyDisplay(Player p)
         {
             overlay.LabelPlayerMoney.setLabelText("Money: " + p.Money + "G");
+        }
+
+        public void UpdatePopulationDisplay(Player p)
+        {
+            overlay.LabelPlayerPopulation.setLabelText("Free Population: " + p.Population);
         }
 
         private Player CurrentPlayer => players[currentPlayer];

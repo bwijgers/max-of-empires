@@ -7,7 +7,7 @@ namespace MaxOfEmpires.Buildings
 {
     class TrainingGrounds : Building
     {
-        public TrainingGrounds(Point positionInGrid, Player owner) : base(positionInGrid, owner)
+        public TrainingGrounds(Point positionInGrid, Player owner) : base(positionInGrid, owner, "building.trainingground")
         {
         }
 

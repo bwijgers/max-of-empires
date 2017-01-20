@@ -13,7 +13,7 @@ namespace MaxOfEmpires
     abstract partial class Grid : GameObjectGrid
     {
         protected Player currentPlayer;
-        protected List<Player> players;
+        public List<Player> players;
 
         /// <summary>
         /// The coords of the currently selected Tile within the grid.

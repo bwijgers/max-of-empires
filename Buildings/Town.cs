@@ -3,11 +3,11 @@ using Microsoft.Xna.Framework;
 
 namespace MaxOfEmpires.Buildings
 {
-    class Mine : Building
+    class Town : Building
     {
         public static int moneyPerTurn;
 
-        public Mine(Point positionInGrid, Player owner) : base(positionInGrid, owner,"building.mine")
+        public Town(Point positionInGrid, Player owner) : base(positionInGrid, owner,"building.town")
         {
         }
 
@@ -22,7 +22,7 @@ namespace MaxOfEmpires.Buildings
 
         public static void LoadFromConfig(Configuration config)
         {
-            moneyPerTurn = config.GetProperty<int>("mine.moneyPerTurn");
+            moneyPerTurn = config.GetProperty<int>("town.moneyPerTurn");
         }
     }
 }

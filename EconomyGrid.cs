@@ -12,6 +12,10 @@ namespace MaxOfEmpires
 
         public EconomyGrid(int width, int height, List<Player> players, string id = "") : base(width, height, players, id)
         {
+            foreach(Player p in players)
+            {
+                p.grid = this;
+            }
             battlePosition = InvalidTile;
         }
 
@@ -139,6 +143,11 @@ namespace MaxOfEmpires
         {
             (this[battlePosition] as Tile).SetUnit(remainingArmy);
             battlePosition = InvalidTile;
+
+            foreach(Player p in players)
+            {
+                p.CalculatePopulation();
+            }
         }
     }
 }

@@ -27,6 +27,7 @@ namespace MaxOfEmpires.GameStates.Overlays
         // Labels
         private GuiLabel labelCurrentPlayer;
         private GuiLabel labelPlayerMoney;
+        private GuiLabel labelPlayerPopulation;
 
         // Lists
         private GuiList listArmySoldiers;
@@ -47,8 +48,12 @@ namespace MaxOfEmpires.GameStates.Overlays
             labelPlayerMoney = GuiLabel.createNewLabel(new Vector2(labelCurrentPlayer.Bounds.Left, labelCurrentPlayer.Bounds.Bottom + 5), "Money: ", "font");
             addElement(labelPlayerMoney);
 
+            // Add a label telling the player how much population they have
+            labelPlayerPopulation = GuiLabel.createNewLabel(new Vector2(labelCurrentPlayer.Bounds.Left, labelPlayerMoney.Bounds.Bottom + 5), "Free Population: 0", "font");
+            addElement(labelPlayerPopulation);
+
             // Add labels for unit stats
-            listArmySoldiers = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Location.X, labelPlayerMoney.Bounds.Bottom + 5), 5, new List<GuiElement>(), 300);
+            listArmySoldiers = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Location.X, labelPlayerPopulation.Bounds.Bottom + 5), 5, new List<GuiElement>(), 300);
             listArmySoldiers.addElement(GuiLabel.createNewLabel(Vector2.Zero, "1", "font")); // Add this so that the size is calculated correctly
             addElement(listArmySoldiers);
 
@@ -82,6 +87,9 @@ namespace MaxOfEmpires.GameStates.Overlays
                     // ... and tell the grid to build a building here, based on the passed type.
                     // Basically the same as new Building(currentBuilder.PositionInGrid, currentBuilder.Owner), except we don't need to know WHICH building
                     grid.Build(currentBuilder, (Building)Activator.CreateInstance(buildingType, new object[] { currentBuilder.PositionInGrid, currentBuilder.Owner }));
+
+                    currentBuilder.Owner.CalculatePopulation();
+
                 }
             };
         }
@@ -98,6 +106,7 @@ namespace MaxOfEmpires.GameStates.Overlays
             listBuilderActions = GuiList.createNewList(BuildingInfoPosition, 5, new List<GuiElement>(), 300);
 
             // Add all the corresponding elements to the building actions list
+            AddBuilderButton(grid, listBuilderActions, "building.town", typeof(Town));
             AddBuilderButton(grid, listBuilderActions, "building.mine", typeof(Mine));
             AddBuilderButton(grid, listBuilderActions, "building.trainingGrounds", typeof(TrainingGrounds));
             AddBuilderButton(grid, listBuilderActions, "building.academy", typeof(Academy));
@@ -170,5 +179,6 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         public GuiLabel LabelCurrentPlayer => labelCurrentPlayer;
         public GuiLabel LabelPlayerMoney => labelPlayerMoney;
+        public GuiLabel LabelPlayerPopulation => labelPlayerPopulation;
     }
 }

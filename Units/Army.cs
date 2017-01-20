@@ -101,19 +101,14 @@ namespace MaxOfEmpires.Units
             return slowest;
         }
 
-        private void UpdateArmySprite()
+        public int GetTotalUnitCount()
         {
-            // Set the drawing texture to the Unit that is most prevalent in this stack
-            int maxUnits = 0;
-            foreach (string soldierType in unitsAndCounts.Keys)
+            int amount = 0;
+            foreach(int i in unitsAndCounts.Values)
             {
-                if (unitsAndCounts[soldierType] > maxUnits)
-                {
-                    Soldier soldier = SoldierRegistry.GetSoldier(soldierType, owner);
-                    DrawingTexture = soldier.DrawingTexture;
-                    maxUnits = unitsAndCounts[soldierType];
-                }
+                amount += i;
             }
+            return amount;
         }
 
         public override void TurnUpdate(uint turn, Player player)
@@ -131,6 +126,21 @@ namespace MaxOfEmpires.Units
             {
                 CurrentTile.SetUnit(null);
                 return;
+            }
+        }
+
+        private void UpdateArmySprite()
+        {
+            // Set the drawing texture to the Unit that is most prevalent in this stack
+            int maxUnits = 0;
+            foreach (string soldierType in unitsAndCounts.Keys)
+            {
+                if (unitsAndCounts[soldierType] > maxUnits)
+                {
+                    Soldier soldier = SoldierRegistry.GetSoldier(soldierType, owner);
+                    DrawingTexture = soldier.DrawingTexture;
+                    maxUnits = unitsAndCounts[soldierType];
+                }
             }
         }
 

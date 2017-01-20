@@ -56,6 +56,7 @@ namespace MaxOfEmpires.Buildings
         /// <param name="config">The configuration section containing all buildings.</param>
         public static void InitBuildings(Configuration config)
         {
+            buildingInfo["building.town"] = GetBuildingInformation(config.GetPropertySection("town"));
             buildingInfo["building.mine"] = GetBuildingInformation(config.GetPropertySection("mine"));
             buildingInfo["building.trainingGrounds"] = GetBuildingInformation(config.GetPropertySection("trainingGrounds"));
             buildingInfo["building.academy"] = GetBuildingInformation(config.GetPropertySection("academy"));
