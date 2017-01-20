@@ -103,9 +103,17 @@ namespace MaxOfEmpires
             // Check if we're attacking another player's army
             if (selectedTile.Unit is Army && IsAdjacent(clickedTile.PositionInGrid, selectedTile.PositionInGrid) && clickedTile.Occupied)
             {
-                // If we're clicking on our own army, do nothing
+                // If we're clicking on our own army, merge the armies
                 if (selectedTile.Unit.Owner == clickedTile.Unit.Owner)
                 {
+                    // Merging with a non-army? No can do
+                    if (!(clickedTile.Unit is Army))
+                        return;
+
+                    // Hey, let's merge the armies :)
+                    (clickedTile.Unit as Army).MergeArmy((selectedTile.Unit as Army));
+                    selectedTile.SetUnit(null);
+                    SelectTile(InvalidTile);
                     return;
                 }
 

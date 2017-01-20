@@ -113,7 +113,6 @@ namespace MaxOfEmpires.Units
         /// <param name="other">The army to merge into this army.</param>
         public void MergeArmy(Army other)
         {
-            // TODO: test and call this
             // Add all units of the other army to this army.
             foreach (string s in other.unitsAndCounts.Keys)
             {
@@ -123,6 +122,13 @@ namespace MaxOfEmpires.Units
                 }
                 unitsAndCounts[s] += other.unitsAndCounts[s];
             }
+
+            // Armies can move as far as the slowest Soldier, eh? 
+            MoveSpeed = Math.Min(moveSpeed, other.moveSpeed);
+            MovesLeft = Math.Min(movesLeft, other.movesLeft);
+
+            // Update the sprite
+            UpdateArmySprite();
         }
 
         public Army SplitArmy(Dictionary<string, int> unitsAndCounts)

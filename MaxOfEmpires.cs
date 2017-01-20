@@ -126,8 +126,6 @@ namespace MaxOfEmpires
             GameStateManager.AddState("battle", new BattleState(blue, red));
             GameStateManager.AddState("mainMenu", new MainMenuState());
             GameStateManager.SwitchState("mainMenu", true);
-
-
         }
 
         /// <summary>
