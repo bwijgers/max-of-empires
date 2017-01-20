@@ -61,9 +61,14 @@ namespace MaxOfEmpires
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
+            DrawBackground(time, s);
+            DrawForeground(time, s);
+        }
+
+        public void DrawBackground(GameTime time, SpriteBatch s)
+        {
             terrain.Draw(DrawPosition.ToPoint(), s);
             building?.Draw(time, s);
-            unit?.Draw(time, s);
 
             // Draw a walking overlay if it should be drawn
             if (overlayWalk)
@@ -76,6 +81,11 @@ namespace MaxOfEmpires
             {
                 DrawingHelper.Instance.DrawRectangle(s, Bounds, new Color(0xFF, 0x00, 0x00, 0x88));
             }
+        }
+
+        public void DrawForeground(GameTime time, SpriteBatch s)
+        {
+            unit?.Draw(time, s);
         }
 
         /// <summary>

@@ -41,6 +41,11 @@ namespace MaxOfEmpires
                 if (s is T)
                     return (T)s;
 
+                if (s is Texture2D && typeof(T).Equals(typeof(Spritesheet)))
+                {
+                    return (T)LoadSpritesheet(name);
+                }
+
                 // The asset exists, but it is not of this type. This must be an error.
                 throw new ArgumentException("Asset " + name + " was loaded before, but is not of this type.");
             }
@@ -50,23 +55,14 @@ namespace MaxOfEmpires
             {
                 return (T)LoadSpritesheet(name);
             }
-            else if (typeof(T).Equals(typeof(Animation)))
-            {
-                return (T)LoadAnimation(name);
-            }
 
             assetDict[name] = content.Load<T>(name);
             return (T)assetDict[name];
         }
 
-        private object LoadAnimation(string name)
-        {
-            Spritesheet sheet = (Spritesheet)LoadSpritesheet(name);
-        }
-
         private object LoadSpritesheet(string name)
         {
-            Texture2D tex = content.Load<Texture2D>(name);
+            Texture2D tex = getAsset<Texture2D>(name);
             int width, height;
             try
             {
@@ -82,9 +78,7 @@ namespace MaxOfEmpires
             {
                 width = height = 1;
             }
-            Spritesheet sheet = new Spritesheet(tex, width, height);
-            assetDict[name] = sheet;
-            return assetDict[name];
+            return new Spritesheet(tex, width, height);
         }
 
         /// <summary>

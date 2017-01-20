@@ -1,34 +1,32 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MaxOfEmpires.GameObjects
 {
     class Animation
     {
+        private bool advanceRows;
         private Spritesheet sheet;
         private readonly double TIME_BETWEEN_FRAMES;
         private double timeThisFrame;
 
-        public Animation(Spritesheet sheet, double timeBetweenFrames = 0.30D)
+        public Animation(Spritesheet sheet, bool advanceRows, double timeBetweenFrames = 0.30D)
         {
             this.sheet = sheet;
+            this.advanceRows = advanceRows;
             TIME_BETWEEN_FRAMES = timeBetweenFrames;
             timeThisFrame = 0;
-        }
-
-        public void Draw(GameTime time, SpriteBatch s, Vector2 destination, Color color)
-        {
-            sheet.Draw(time, s, destination, color);
         }
 
         public void Update(GameTime time)
         {
             timeThisFrame += time.ElapsedGameTime.TotalSeconds;
-            while (timeThisFrame > TIME_BETWEEN_FRAMES)
+            if (timeThisFrame > TIME_BETWEEN_FRAMES)
             {
                 timeThisFrame -= TIME_BETWEEN_FRAMES;
-                sheet.SelectNextSprite();
+                sheet.SelectNextSprite(advanceRows);
             }
         }
+
+        public Spritesheet Spritesheet => sheet;
     }
 }

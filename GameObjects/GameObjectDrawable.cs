@@ -18,7 +18,7 @@ namespace MaxOfEmpires.GameObjects
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
-            tex.Draw(time, s, DrawPosition, drawColor);
+            DrawingTexture.Draw(time, s, DrawPosition, drawColor);
         }
 
         public Rectangle Bounds
@@ -41,7 +41,7 @@ namespace MaxOfEmpires.GameObjects
             }
         }
 
-        public Spritesheet DrawingTexture
+        public virtual Spritesheet DrawingTexture
         {
             get
             {

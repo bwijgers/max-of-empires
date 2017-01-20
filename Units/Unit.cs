@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Units
 {
-    abstract class Unit : GameObjectDrawable
+    abstract class Unit : GameObjectAnimated
     {
         /// <summary>
         /// Whether this unit has attacked. Units can only attack once.
@@ -40,7 +40,7 @@ namespace MaxOfEmpires.Units
         /// </summary>
         private int x, y;
 
-        public Unit(int x, int y, Player owner)
+        public Unit(int x, int y, Player owner) : base(false)
         {
             this.x = x;
             this.y = y;
@@ -101,6 +101,7 @@ namespace MaxOfEmpires.Units
             {
                 movesLeft = moveSpeed;
             }
+            ShouldAnimate = player == owner;
         }
 
         /// <summary>

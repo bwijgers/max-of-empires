@@ -11,14 +11,16 @@ namespace MaxOfEmpires.GameObjects
         private int columns;
         private int rows;
         private int currentColumn, currentRow;
+        private bool padded;
 
-        public Spritesheet(Texture2D texture, int width, int height)
+        public Spritesheet(Texture2D texture, int width, int height, bool padded = true)
         {
             fullTexture = texture;
             columns = width;
             rows = height;
             elementSize = new Point(texture.Width / columns, texture.Height / rows);
             SelectedSprite = new Point(0, 0);
+            this.padded = padded;
         }
 
         public void Draw(GameTime time, SpriteBatch s, Vector2 destination, Color color)
@@ -27,19 +29,25 @@ namespace MaxOfEmpires.GameObjects
             Point spriteStart = new Point(spriteSize.X * currentColumn, spriteSize.Y * currentRow);
             Rectangle spritePart = new Rectangle(spriteStart, spriteSize);
 
+            if (padded)
+                destination -= spriteSize.ToVector2() / 3;
+
             s.Draw(fullTexture, destination, spritePart, color);
         }
 
-        public void SelectNextSprite()
+        public void SelectNextSprite(bool advanceRows)
         {
             ++currentColumn;
             if (currentColumn == columns)
             {
                 currentColumn = 0;
-                ++currentRow;
-                if (currentRow == rows)
+                if (advanceRows)
                 {
-                    currentRow = 0;
+                    ++currentRow;
+                    if (currentRow == rows)
+                    {
+                        currentRow = 0;
+                    }
                 }
             }
         }

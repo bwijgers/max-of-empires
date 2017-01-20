@@ -61,8 +61,7 @@ namespace MaxOfEmpires
         protected void ClearAllTargetPositions()
         {
             // Clear the target positions (because this method kinda sucks :/)
-            ForEach((obj, x, y) =>
-            {
+            ForEach(obj => {
                 if ((obj as Tile).Occupied)
                     Pathfinding.ClearTargetPosition((obj as Tile).Unit);
             });
@@ -73,14 +72,14 @@ namespace MaxOfEmpires
         /// </summary>
         private void CreateUnitTargetOverlays()
         {
-            ForEach((obj, x, y) => {
+            ForEach(obj => {
                 Tile t = obj as Tile;
 
                 // If there is a Unit on this Tile and their target is not where they are
                 if (t.Occupied && t.Unit.TargetPosition != t.Unit.PositionInGrid)
                 {
                     // Recalculate the Unit's paths
-                    Pathfinding.GeneratePaths(t.Unit, new Point(x, y));
+                    Pathfinding.GeneratePaths(t.Unit, new Point(t.PositionInGrid.X, t.PositionInGrid.Y));
 
                     // Make a UnitTargetOverlay for this and add it to the list of overlays
                     TargetPositionOverlay uto = new TargetPositionOverlay(t.Unit);
@@ -91,7 +90,8 @@ namespace MaxOfEmpires
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
-            base.Draw(time, s);
+            ForEach(obj => (obj as Tile).DrawBackground(time, s));
+            ForEach(obj => (obj as Tile).DrawForeground(time, s));
 
             // Draw the Unit target overlay, if it exists
             unitTargets.Draw(time, s);
@@ -173,6 +173,8 @@ namespace MaxOfEmpires
             // Move the Unit from its tile to the target tile
             targetTile.SetUnit(u);
             originTile.SetUnit(null);
+
+            u.ShouldAnimate = u.HasAction;
         }
 
         public void OnUnitStartMoving(Unit u, Point targetPos)
@@ -195,19 +197,27 @@ namespace MaxOfEmpires
                 t.OverlayWalk = false;
             }
 
-            // Select the new tile
-            selectedTile = p;
-
-            // Unselecting a tile means the unit walking overlay will be non-existent
-            if (selectedTile == InvalidTile)
+            // Unselecting a tile means the unit walking overlay will be non-existent and the Unit will no longer be animated
+            if (p == InvalidTile)
             {
                 SetUnitWalkingOverlay(null);
                 SetUnitAttackingOverlay(null);
+
+                // Stop animating the Unit on this tile
+                if (SelectedTile != null && SelectedTile.Occupied)
+                    SelectedTile.Unit.ShouldAnimate = true;
             }
             else
             {
-                (this[p] as Tile).OverlayWalk = true;
+                t.OverlayWalk = true;
+
+                // Start animating the Unit on this tile
+                if (t.Occupied)
+                    t.Unit.ShouldAnimate = false;
             }
+
+            // Select the new tile
+            selectedTile = p;
         }
 
         /// <summary>
@@ -231,7 +241,7 @@ namespace MaxOfEmpires
             // If no Unit is selected (anymore), unset the attacking overlay everywhere
             if (u == null)
             {
-                ForEach((obj, x, y) => {
+                ForEach(obj => {
                     Tile t = obj as Tile;
                     if (t != null)
                         t.OverlayAttack = false;
@@ -277,7 +287,7 @@ namespace MaxOfEmpires
         protected void SetUnitWalkingOverlay(Point[] overlay)
         {
             // Remove overlay from everything
-            ForEach((obj, x, y) => (obj as Tile).OverlayWalk = false);
+            ForEach(obj => (obj as Tile).OverlayWalk = false);
 
             // No overlay should be drawn
             if (overlay == null || overlay.Length == 0)
@@ -297,21 +307,20 @@ namespace MaxOfEmpires
 
         public override void TurnUpdate(uint turn, Player player)
         {
-            base.TurnUpdate(turn, player);
-
             // Make sure that anything that was selected no longer is selected.
             SelectTile(InvalidTile);
 
+            base.TurnUpdate(turn, player);
+
             // So the grid knows who is the current player. Useful for selecting units that are your own. 
             currentPlayer = player;
-
-            // Makes the units go towards their target
-            ForEach((obj, x, y) => {
+            ForEach(obj => {
                 Tile tile = obj as Tile;
                 if(tile.Occupied)
                 {
+                    // Makes the units go towards their target
                     Unit unit = tile.Unit;
-                    if(unit.Owner != player) // End of turn for the player whose turn it is NOT right now.
+                    if (unit.Owner != player) // End of turn for the player whose turn it is NOT right now.
                     {
                         Point movePos = Pathfinding.MoveTowardsTarget(unit);
                         CheckMoveUnit(movePos, unit);

@@ -51,6 +51,7 @@
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="Camera\Camera_Control.cs" />
     <Compile Include="Files\Translations.cs" />
+    <Compile Include="GameObjects\Animation.cs" />
     <Compile Include="GameObjects\GameObjectAnimated.cs" />
     <Compile Include="GameObjects\GameObjectDrawable.cs" />
     <Compile Include="GameObjects\Spritesheet.cs" />

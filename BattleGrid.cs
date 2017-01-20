@@ -91,7 +91,7 @@ namespace MaxOfEmpires
             bool foundAlly = false;
 
             // Check all tiles
-            ForEach((obj, x, y) => {
+            ForEach(obj => {
                 Tile t = obj as Tile;
 
                 // If there is an ally, update this condition
@@ -168,7 +168,7 @@ namespace MaxOfEmpires
 
             // Find what's left of our army
             Army remainingArmy = new Army(0, 0, winningPlayer);
-            ForEach((obj, x, y) => {
+            ForEach(obj => {
                 Tile t = obj as Tile;
 
                 // See if there's a Soldier belonging to the winning player here

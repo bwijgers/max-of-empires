@@ -7,7 +7,7 @@ namespace MaxOfEmpires.Units
     {
         public Builder(int x, int y, Player owner) : base(x, y, owner)
         {
-            DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(@"FE-Sprites\swordsman_blue");
+            DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(@"FE-Sprites\Units\Builder" + owner.ColorName + "@4x5");
             moveSpeed = 2;
         }
     }

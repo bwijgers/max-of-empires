@@ -63,7 +63,7 @@ namespace MaxOfEmpires.GameStates.Overlays
             StringBuilder label = new StringBuilder();
             label.Append(Translations.GetTranslation(buildingName)).Append(" (");
             label.Append(BuildingRegistry.GetCost(buildingName)).Append("G): ");
-            listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, label.ToString(), BuildBuilding(grid, buildingName, buildingType))); // TODO: load cost number from somewhere
+            listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, label.ToString(), BuildBuilding(grid, buildingName, buildingType)));
         }
 
         private GuiButton.OnClickHandler BuildBuilding(EconomyGrid grid, string buildingName, Type buildingType)

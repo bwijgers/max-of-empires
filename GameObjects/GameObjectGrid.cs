@@ -20,7 +20,7 @@ namespace MaxOfEmpires.GameObjects
         /// <param name="obj">The GameObject the method is called upon.</param>
         /// <param name="x">The x-position in the grid of this GameObject.</param>
         /// <param name="y">The y-position in the grid of this GameObject.</param>
-        protected delegate void GridFunc(GameObject obj, int x, int y);
+        protected delegate void GridFunc(GameObject obj);
 
         /// <summary>
         /// The grid. A digital-- Wait, I did this already.
@@ -42,7 +42,7 @@ namespace MaxOfEmpires.GameObjects
         public override void Draw(GameTime time, SpriteBatch s)
         {
             // Draw every element on the grid if it is not null.
-            ForEach((obj, x, y) => obj?.Draw(time, s));
+            ForEach(obj => obj?.Draw(time, s));
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace MaxOfEmpires.GameObjects
             {
                 for (int y = 0; y < Height; ++y)
                 {
-                    func.Invoke(grid[x, y], x, y);
+                    func.Invoke(grid[x, y]);
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace MaxOfEmpires.GameObjects
         public override void HandleInput(InputHelper helper, KeyManager keyManager)
         {
             // Handle input for every element in grid
-            ForEach((obj, x, y) => obj?.HandleInput(helper, keyManager));
+            ForEach(obj => obj?.HandleInput(helper, keyManager));
         }
 
         /// <summary>
@@ -113,21 +113,21 @@ namespace MaxOfEmpires.GameObjects
         public override void Reset()
         {
             // Reset every element in the grid
-            ForEach((obj, x, y) => obj?.Reset());
+            ForEach(obj => obj?.Reset());
         }
 
         /// <see cref="GameObject.TurnUpdate(uint, bool)"/>
         public override void TurnUpdate(uint turn, Player player)
         {
             // Just TurnUpdate everything in the grid
-            ForEach((obj, x, y) => obj?.TurnUpdate(turn, player));
+            ForEach(obj => obj?.TurnUpdate(turn, player));
         }
 
         /// <see cref="GameObject.Update(GameTime)"/>
         public override void Update(GameTime time)
         {
             // Just update everything in the grid
-            ForEach((obj, x, y) => obj?.Update(time));
+            ForEach(obj => obj?.Update(time));
         }
 
         /// <summary>

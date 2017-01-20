@@ -9,6 +9,12 @@ namespace MaxOfEmpires.Units
 {
     class Soldier : Unit
     {
+        private const int ANIMATION_IDLE = 0;
+        private const int ANIMATION_WALK_UP = 1;
+        private const int ANIMATION_WALK_RIGHT = 2;
+        private const int ANIMATION_WALK_DOWN = 3;
+        private const int ANIMATION_WALK_LEFT = 4;
+
         /// <summary>
         /// Loads a Unit from a configuration. 
         /// </summary>
@@ -222,11 +228,12 @@ namespace MaxOfEmpires.Units
         {
             // Get the texture based on the player (blue for p1, red for p2)
             StringBuilder texName = new StringBuilder();
-            texName.Append(@"FE-Sprites\").Append(this.texName).Append('_');
-            texName.Append(owner.ColorName.ToLower());
+            texName.Append(@"FE-Sprites\Units\").Append(this.texName); // Correct again
+            texName.Append(owner.ColorName).Append("@4x5");
 
             // Load the Unit's texture based on the name supplied and the player controlling the unit.
             DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(texName.ToString());
+
         }
 
         public void OnSoldierStartAttack(Soldier enemy)

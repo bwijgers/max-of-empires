@@ -64,12 +64,13 @@ namespace MaxOfEmpires.Units
 
         public void AddSoldier(Soldier s)
         {
-            if (unitsAndCounts.ContainsKey(s.Name))
+            if (!unitsAndCounts.ContainsKey(s.Name))
             {
-                ++unitsAndCounts[s.Name];
-                return;
+                unitsAndCounts[s.Name] = 0;
             }
-            unitsAndCounts[s.Name] = 1;
+            ++unitsAndCounts[s.Name];
+
+            UpdateArmySprite();
         }
 
         /// <summary>
@@ -100,21 +101,8 @@ namespace MaxOfEmpires.Units
             return slowest;
         }
 
-        public override void TurnUpdate(uint turn, Player player)
+        private void UpdateArmySprite()
         {
-            this.moveSpeed = GetSlowestUnit().MoveSpeed;
-            base.TurnUpdate(turn, player);
-        }
-
-        public override void Update(GameTime time)
-        {
-            // If there are no more Soldiers in this stack, it will stop existing
-            if (unitsAndCounts.Keys.Count == 0)
-            {
-                CurrentTile.SetUnit(null);
-                return;
-            }
-
             // Set the drawing texture to the Unit that is most prevalent in this stack
             int maxUnits = 0;
             foreach (string soldierType in unitsAndCounts.Keys)
@@ -125,6 +113,24 @@ namespace MaxOfEmpires.Units
                     DrawingTexture = soldier.DrawingTexture;
                     maxUnits = unitsAndCounts[soldierType];
                 }
+            }
+        }
+
+        public override void TurnUpdate(uint turn, Player player)
+        {
+            this.moveSpeed = GetSlowestUnit().MoveSpeed;
+            base.TurnUpdate(turn, player);
+        }
+
+        public override void Update(GameTime time)
+        {
+            base.Update(time);
+
+            // If there are no more Soldiers in this stack, it will stop existing
+            if (unitsAndCounts.Keys.Count == 0)
+            {
+                CurrentTile.SetUnit(null);
+                return;
             }
         }
 
