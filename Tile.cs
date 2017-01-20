@@ -182,7 +182,7 @@ namespace MaxOfEmpires
 
         void TerrainDraw(SpriteBatch s)
         {
-            s.Draw(terrainTexture, position, terrainSource, Color.White);
+            s.Draw(terrainTexture, DrawPosition, terrainSource, Color.White);
         }
 
         /// <summary>

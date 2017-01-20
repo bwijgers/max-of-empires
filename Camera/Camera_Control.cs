@@ -24,7 +24,7 @@ namespace MaxOfEmpires
         /// <summary>
         /// The speed with which the camera moves
         /// </summary>
-        private float cameraMoveSpeed = 2.00f;
+        private float cameraMoveSpeed = 10.00f;
 
         /// <summary>
         /// A bool which, if true, will let the camera be controlled through both the mouse and the keyboard
@@ -40,7 +40,7 @@ namespace MaxOfEmpires
         /// <summary>
         /// The speed with which the camera zooms
         /// </summary>
-        private float zoomSpeed = 0.01f;
+        private float zoomSpeed = 0.02f;
 
         /// <summary>
         /// A function that checks if the mouse is in such a position that the camera should move.
@@ -124,6 +124,7 @@ namespace MaxOfEmpires
         /// <param name="direction">The direction to which the camera should move (up, down, left, right).</param>
         public void MoveCamera(string direction)
         {
+            double zoomCap = 15 / GameStateManager.GridSize.X;
             switch (direction)
             {
                 // Moves the camera upwards
@@ -162,7 +163,7 @@ namespace MaxOfEmpires
                 case "in":
                 case "In":
                     {
-                        Zoom = MathHelper.Clamp(Zoom + ZoomSpeed, 1.0f, 5.0f);
+                        Zoom = MathHelper.Clamp(Zoom + ZoomSpeed, (float)zoomCap, 5.0f);
                         break;
                     }
 
@@ -170,7 +171,7 @@ namespace MaxOfEmpires
                 case "out":
                 case "Out":
                     {
-                        Zoom = MathHelper.Clamp(Zoom - ZoomSpeed, 1.0f, 5.0f);
+                        Zoom = MathHelper.Clamp(Zoom - ZoomSpeed, (float)zoomCap, 5.0f);
                         break;
                     }
                 
@@ -250,7 +251,7 @@ namespace MaxOfEmpires
         {
             get
             {
-                return cameraMoveSpeed;
+                return cameraMoveSpeed/zoom;
             }
             set
             {
@@ -296,7 +297,7 @@ namespace MaxOfEmpires
         {
             get
             {
-                return zoomSpeed;
+                return zoomSpeed*zoom;
             }
             set
             {

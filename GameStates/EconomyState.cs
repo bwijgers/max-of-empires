@@ -25,7 +25,7 @@ namespace MaxOfEmpires.GameStates
             players.Add(red);
             currentPlayer = 0;
 
-            ecoGrid = new EconomyGrid(15, 15, players);
+            ecoGrid = new EconomyGrid(50, 50, players);
 
             overlay = new Overlays.OverlayEconomyState();
             InitOverlay();
