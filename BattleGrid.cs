@@ -191,7 +191,19 @@ namespace MaxOfEmpires
                 // Place them in a position based on how many soldiers we have passed so far.
                 for (; soldierCount > 0; --soldierCount)
                 {
-                    (this[currentX, currentY] as Tile).SetUnit(SoldierRegistry.GetSoldier(s, attacker.Owner));
+                    //only places soldier if terrain is passable
+                    Soldier soldier = SoldierRegistry.GetSoldier(s, attacker.Owner);
+                    while (!(this[currentX, currentY] as Tile).Passable(soldier))
+                    {
+                        ++currentX;
+                        if (currentX >= Width)
+                        {
+                            currentX = 0;
+                            ++currentY;
+                        }
+                    }
+
+                    (this[currentX, currentY] as Tile).SetUnit(soldier);
                     ++currentX;
 
                     // Make sure we don't create a line of soldiers longer than the field.
