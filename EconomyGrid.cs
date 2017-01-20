@@ -49,7 +49,7 @@ namespace MaxOfEmpires
         public override void InitField()
         {
             base.InitField();
-            EconomyGenerate();
+            BalancedEconomyGrid(Width, Height);
             // Generate 2 armies and place them on the field.
             (this[0, 0] as Tile).SetUnit(new Builder(0, 0, players[0]));
             (this[14, 14] as Tile).SetUnit(new Builder(0, 0, players[1]));

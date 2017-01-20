@@ -109,7 +109,7 @@ namespace MaxOfEmpires.GameStates
         public void OnInitiateBattle(Army attackingArmy, Army defendingArmy, Tile attackingTile, Tile defendingTile)
         {
             battleGrid.InitField();
-            battleGrid.BattleGenerate(attackingTile.Terrain, attackingTile.hills, defendingTile.Terrain, defendingTile.hills);
+            battleGrid.BattleGenerate(attackingTile.Terrain, attackingTile.hills, defendingTile.Terrain, defendingTile.hills,battleGrid.Width,battleGrid.Height);
             battleGrid.PopulateField(attackingArmy, defendingArmy);
         }
 
