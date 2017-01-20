@@ -71,7 +71,7 @@ namespace MaxOfEmpires
         // Collects terrain specifications from files
         private TerrainToComposition GetTerrainSpecsFromFile(Terrain terrain, bool hills)
         {
-            string terrainString = "terrain/" + terrain.terrainType.ToString().ToLower() + "Composition";
+            string terrainString = "configs/terrain/" + terrain.terrainType.ToString().ToLower() + "Composition";
             if (hills)
                 terrainString += "WH";
             TerrainToComposition Composition;

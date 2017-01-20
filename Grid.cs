@@ -150,7 +150,7 @@ namespace MaxOfEmpires
                     this[x, y] = new Tile(Terrain.Plains, x, y);
                 }
             }
-            EconomyGenerate();
+            
             //BattleGenerate(Terrain.Tundra,false, Terrain.Desert,true);
         }
 
