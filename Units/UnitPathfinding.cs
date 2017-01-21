@@ -69,7 +69,7 @@ namespace MaxOfEmpires.Units
         /// Adds the paths to the tiles surrounding the specified tile to the list.
         /// </summary>
         /// <param name="startPath">PathToTile to the tile from which you want the neighboring tiles.</param>
-        private static void AddSurroundingTiles(Unit movingUnit, PathToTile startPath, List<PathToTile> newPaths)
+        private static void AddSurroundingTiles(Unit movingUnit, PathToTile startPath, List<PathToTile> newPaths, int movement)
         {
             List<PathToTile> returnList = new List<PathToTile>();
 
@@ -100,27 +100,30 @@ namespace MaxOfEmpires.Units
                     PathToTile newPathToTile = new PathToTile(p, pathAsPoints, cost);
                     PathToTile shortestPathToTile = shortestPaths.Find(path => path.target.Equals(p));
 
-                    // If the current found path is shorter than an existent path, overrides it.
-                    if (shortestPathToTile != null)
+                    if (movement > cost)
                     {
-                        if (cost < shortestPathToTile.cost)
+                        // If the current found path is shorter than an existent path, overrides it.
+                        if (shortestPathToTile != null)
                         {
-                            shortestPaths.Remove(shortestPathToTile);
+                            if (cost < shortestPathToTile.cost)
+                            {
+                                shortestPaths.Remove(shortestPathToTile);
+                                newPaths.Add(newPathToTile);
+                                shortestPaths.Add(newPathToTile);
+                            }
+                            //else if(cost == shortestPathToTile.cost && newPathToTile.CumulativeDistance < shortestPathToTile.CumulativeDistance)
+                            //{
+                            //    shortestPaths.Remove(shortestPathToTile);
+                            //    newPaths.Add(newPathToTile);
+                            //    shortestPaths.Add(newPathToTile);
+                            //}
+                        }
+                        // If there is no known path to the specified point, adds this path to the list.
+                        else
+                        {
                             newPaths.Add(newPathToTile);
                             shortestPaths.Add(newPathToTile);
                         }
-                        //else if(cost == shortestPathToTile.cost && newPathToTile.CumulativeDistance < shortestPathToTile.CumulativeDistance)
-                        //{
-                        //    shortestPaths.Remove(shortestPathToTile);
-                        //    newPaths.Add(newPathToTile);
-                        //    shortestPaths.Add(newPathToTile);
-                        //}
-                    }
-                    // If there is no known path to the specified point, adds this path to the list.
-                    else
-                    {
-                        newPaths.Add(newPathToTile);
-                        shortestPaths.Add(newPathToTile);
                     }
                 }
             }
@@ -139,7 +142,7 @@ namespace MaxOfEmpires.Units
         /// Generates the list of shortest paths.
         /// </summary>
         /// <param name="startPosition">Position from which all paths are created.</param>
-        public static void GeneratePaths(Unit movingUnit, Point startPosition)
+        public static void GeneratePaths(Unit movingUnit, Point startPosition, int movement)
         {
             List<PathToTile> newPaths;
             PathToTile startPath = new PathToTile(startPosition, new Point[0], 0);
@@ -151,10 +154,9 @@ namespace MaxOfEmpires.Units
                 List<PathToTile> newNewPaths = new List<PathToTile>();
                 newNewPaths.AddRange(newPaths);
 
-
                 foreach (PathToTile p in newNewPaths)
                 {
-                    AddSurroundingTiles(movingUnit, p, newPaths);
+                    AddSurroundingTiles(movingUnit, p, newPaths, movement);
                     newPaths.Remove(p);
                 }
             }
@@ -185,7 +187,6 @@ namespace MaxOfEmpires.Units
 
             if (movingUnit.PositionInGrid != movingUnit.TargetPosition)
             {
-                GeneratePaths(movingUnit, movingUnit.PositionInGrid);
                 Point[] Path = ShortestPath(movingUnit, movingUnit.TargetPosition).path;
                 int i = 0;
                 bool foundPath = false;
@@ -232,7 +233,7 @@ namespace MaxOfEmpires.Units
         /// <returns>All reachable Tiles this turn/</returns>
         public static Point[] ReachableTiles(Unit movingUnit)
         {
-            GeneratePaths(movingUnit, movingUnit.PositionInGrid);
+            GeneratePaths(movingUnit, movingUnit.PositionInGrid, movingUnit.MovesLeft);
             List<PathToTile> reachablePaths = shortestPaths.FindAll(path => path.cost <= movingUnit.MovesLeft);
             Point[] retVal = new Point[reachablePaths.Count];
             for (int i = 0; i < reachablePaths.Count; i++)
@@ -249,7 +250,6 @@ namespace MaxOfEmpires.Units
         /// <returns></returns>
         public static PathToTile ShortestPath(Unit movingUnit, Point p)
         {
-            //GeneratePaths(movingUnit, movingUnit.PositionInGrid);
             return AStar(movingUnit, movingUnit.PositionInGrid, p);
         }
     }

@@ -78,9 +78,6 @@ namespace MaxOfEmpires
                 // If there is a Unit on this Tile and their target is not where they are
                 if (t.Occupied && t.Unit.TargetPosition != t.Unit.PositionInGrid)
                 {
-                    // Recalculate the Unit's paths
-                    Pathfinding.GeneratePaths(t.Unit, new Point(t.PositionInGrid.X, t.PositionInGrid.Y));
-
                     // Make a UnitTargetOverlay for this and add it to the list of overlays
                     TargetPositionOverlay uto = new TargetPositionOverlay(t.Unit);
                     unitTargets.Add(uto);

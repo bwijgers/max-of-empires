@@ -21,6 +21,7 @@ namespace MaxOfEmpires.Units
 
             // For each node, the cost to get there from the start
             Dictionary<Point, int> distanceToTile = new Dictionary<Point, int>();
+
             // The cost to get to the start is always 0 ;)
             distanceToTile[startingPoint] = 0;
 
@@ -86,8 +87,10 @@ namespace MaxOfEmpires.Units
 
         private static List<Point> GetNeighbors(Grid world, Point p)
         {
+            // Create list of neighbors
             List<Point> neighbors = new List<Point>();
 
+            // Add all neighbors that exist in the world
             if (world.IsInGrid(p + new Point(1, 0)))
                 neighbors.Add(p + new Point(1, 0));
 
@@ -100,14 +103,17 @@ namespace MaxOfEmpires.Units
             if (world.IsInGrid(p + new Point(0, -1)))
                 neighbors.Add(p + new Point(0, -1));
 
+            // Return neighbors
             return neighbors;
         }
 
         private static Point GetProbablyClosest(List<Point> openSet, Dictionary<Point, int> distanceToTarget)
         {
+            // Init lowest distance and closest point (to target)
             int lowestDistance = int.MaxValue;
             Point closestPoint = new Point(-1, -1);
 
+            // Go through all points in the open set to see which is closest
             foreach (Point p in openSet)
             {
                 if (distanceToTarget.ContainsKey(p) && lowestDistance > distanceToTarget[p])
@@ -117,11 +123,14 @@ namespace MaxOfEmpires.Units
                 }
             }
 
+            // Found no closest? Strange...
+#if DEBUG
             if (closestPoint.Equals(new Point(-1, -1)))
             {
                 throw new Exception("Hey we didn't find anything that's close mate.");
             }
-
+#endif
+            // Return the point that we think is closest
             return closestPoint;
         }
 
@@ -131,14 +140,16 @@ namespace MaxOfEmpires.Units
             List<Point> path = new List<Point>();
             int cost = 0;
 
+            // While there's still points in the path to pass over
             while (cameFrom.ContainsKey(probablyClosest) && probablyClosest != movingUnit.PositionInGrid)
             {
+                // Add the closest tiles, from target to start
                 path.Add(probablyClosest);
                 cost += (world[probablyClosest] as Tile).Cost(movingUnit);
                 probablyClosest = cameFrom[probablyClosest];
-                //cost += 1;
             }
 
+            // And reverse the path, to make sure it's from the Unit to its target
             path.Reverse();
             PathToTile pathToTile = new PathToTile(targetPoint, path.ToArray(), cost);
             return pathToTile;

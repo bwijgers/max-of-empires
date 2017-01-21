@@ -396,7 +396,6 @@ namespace MaxOfEmpires
             u.Parent = this;
             u.MovesLeft = u.MoveSpeed = int.MaxValue;
             (this[startx, starty] as Tile).SetUnit(u);
-            Pathfinding.GeneratePaths(u, u.PositionInGrid);
 
             Point[] reachableTiles = Pathfinding.ReachableTiles(u);
 
