@@ -397,7 +397,7 @@ namespace MaxOfEmpires
             u.MovesLeft = u.MoveSpeed = int.MaxValue;
             (this[startx, starty] as Tile).SetUnit(u);
 
-            Point[] reachableTiles = Pathfinding.ReachableTiles(u);
+            Point[] reachableTiles = Pathfinding.ReachableTiles(u, gridWidth, gridHeight);
 
             // Tests if every other nonobstructed tile is accessible by this unit
             for (int gridX = 0; gridX < gridWidth; ++gridX)
