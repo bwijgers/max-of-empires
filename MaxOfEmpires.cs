@@ -103,6 +103,7 @@ namespace MaxOfEmpires
             Configuration buildingConfiguration = mainConfiguration.GetPropertySection("building");
             BuildingRegistry.InitBuildings(buildingConfiguration);
 
+            Capital.LoadFromConfig(buildingConfiguration);
             Town.LoadFromConfig(buildingConfiguration);
             Mine.LoadFromConfig(buildingConfiguration);
 

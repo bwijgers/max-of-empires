@@ -1,7 +1,6 @@
 ﻿using MaxOfEmpires.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Ebilkill.Gui;
 using Ebilkill.Gui.Elements;
 using MaxOfEmpires.GameStates.Overlays;
 using MaxOfEmpires.Units;
@@ -58,7 +57,7 @@ namespace MaxOfEmpires.Buildings
         {
             // Check if the player can afford this soldier
             int cost = SoldierRegistry.GetSoldierCost(soldierType);
-            if (!owner.CanAfford(cost) || owner.Population<=0)
+            if (!owner.CanAfford(cost) || owner.Population <= 0)
             {
                 return;
             }
@@ -90,5 +89,6 @@ namespace MaxOfEmpires.Buildings
         }
 
         public Player Owner => owner;
+        public Point PositionInGrid => positionInGrid;
     }
 }
