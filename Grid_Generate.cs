@@ -33,9 +33,9 @@ namespace MaxOfEmpires
         }
 
         // A combination of the coordinates of a tile and an integer value (used for height, humidity and temperature). usefull for sorting.
-        private struct TileWithgridHeight
+        private struct TileWithHeight
         {
-            public TileWithgridHeight(double height, int x, int y)
+            public TileWithHeight(double height, int x, int y)
             {
                 this.height = height;
                 this.x = x;
@@ -338,14 +338,14 @@ namespace MaxOfEmpires
         private bool GenerateTerrain(Configuration file, int gridWidth, int gridHeight)
         {
             heightMap = GenerategridHeightmap(file, gridWidth, gridHeight);
-            List<TileWithgridHeight> listOfgridHeights = SortList(heightMap, gridWidth, gridHeight);
+            List<TileWithHeight> listOfgridHeights = SortList(heightMap, gridWidth, gridHeight);
             int numberOfMountains = GetAmount(file, "percentage.mountain.min", "percentage.mountain.max", gridWidth, gridHeight);
             int numberOfLakes = GetAmount(file, "percentage.lake.min", "percentage.lake.max", gridWidth, gridHeight);
             int numberOfHills = GetAmount(file, "percentage.hills.min", "percentage.hills.max", gridWidth, gridHeight);
 
             int currentHighestTile = 0;
             // Resets terrain
-            foreach(TileWithgridHeight twh in listOfgridHeights)
+            foreach(TileWithHeight twh in listOfgridHeights)
             {
                 Tile currentTile = this[twh.x, twh.y] as Tile;
                 currentTile.Terrain = Terrain.Plains;
@@ -499,7 +499,7 @@ namespace MaxOfEmpires
             int numberOfHumid = GetAmount(file, "percentage.humid.min", "percentage.humid.max", gridWidth, gridHeight);
 
 
-            List<TileWithgridHeight> listToBeSorted = SortList(gridSim, gridWidth, gridHeight);
+            List<TileWithHeight> listToBeSorted = SortList(gridSim, gridWidth, gridHeight);
             for (int i = 0; i < numberOfHumid; i++)
             {
                 int tileX = listToBeSorted[i].x;
@@ -512,17 +512,17 @@ namespace MaxOfEmpires
         }
 
         // Sorts a two dimensional array on double value and outputs it as a list of tiles with height
-        private List<TileWithgridHeight> SortList(double[,] gridSim, int gridWidth, int gridHeight)
+        private List<TileWithHeight> SortList(double[,] gridSim, int gridWidth, int gridHeight)
         {
-            List<TileWithgridHeight> listToBeSorted = new List<TileWithgridHeight>();
+            List<TileWithHeight> listToBeSorted = new List<TileWithHeight>();
             for (int x = 0; x < gridWidth; x++)
             {
                 for (int y = 0; y < gridHeight; y++)
                 {
-                    listToBeSorted.Add(new TileWithgridHeight(gridSim[x, y], x, y));
+                    listToBeSorted.Add(new TileWithHeight(gridSim[x, y], x, y));
                 }
             }
-            listToBeSorted = new List<TileWithgridHeight>(listToBeSorted.OrderBy(d => d.height));
+            listToBeSorted = new List<TileWithHeight>(listToBeSorted.OrderBy(d => d.height));
             return listToBeSorted;
         }
 
@@ -534,7 +534,7 @@ namespace MaxOfEmpires
             int numberOfCold = GetAmount(file, "percentage.cold.min", "percentage.cold.max", gridWidth, gridHeight );
             int numberOfHot = GetAmount(file, "percentage.mountain.min", "percentage.mountain.max", gridWidth, gridHeight);
 
-            List<TileWithgridHeight> sortedList = SortList(gridSim, gridWidth, gridHeight);
+            List<TileWithHeight> sortedList = SortList(gridSim, gridWidth, gridHeight);
             for (int i = 0; i < numberOfHot; i++)
             {
                 int tileX = sortedList[i].x;
