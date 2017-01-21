@@ -14,19 +14,37 @@ namespace MaxOfEmpires.Buildings
         private Player owner;
         private Point positionInGrid;
         public readonly string id;
+        public int turnsSeized;
+        protected int turnsBeforeRazeOnSeize;
 
         public Building(Point positionInGrid, Player owner, string id)
         {
             this.positionInGrid = positionInGrid;
             this.owner = owner;
             this.id = id;
+            turnsSeized = 0;
+            turnsBeforeRazeOnSeize = BuildingRegistry.GetRazeTime(id);
             LoadTexture();
+        }
+
+        protected void AddRecruitingButton(GuiList buildingActions, string unitToRecruit)
+        {
+            StringBuilder buttonText = new StringBuilder();
+            buttonText.Append(Translations.GetTranslation(unitToRecruit)).Append(" ("); // Soldier (
+            buttonText.Append(SoldierRegistry.GetSoldierCost(unitToRecruit)).Append("G): "); // Soldier ('cost'G)
+            buildingActions.addElement(ElementBuildButton.CreateBuildButton(buildingActions.Bounds.Location, buttonText.ToString(), () => TrySpawnUnit(unitToRecruit)));
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
         {
-            //            DrawingHelper.Instance.DrawRectangle(s, new Rectangle(Parent.DrawPosition.ToPoint(), new Point(32)), new Color(0, 0, 0, 0.4F));
             base.Draw(time, s);
+        }
+
+        public static void LoadFromConfig(Configuration buildingConfiguration)
+        {
+            Capital.LoadFromConfig(buildingConfiguration);
+            Town.LoadFromConfig(buildingConfiguration);
+            Mine.LoadFromConfig(buildingConfiguration);
         }
 
         private void LoadTexture()
@@ -45,12 +63,14 @@ namespace MaxOfEmpires.Buildings
         {
         }
 
-        protected void AddRecruitingButton(GuiList buildingActions, string unitToRecruit)
+        public virtual void RazeBuilding()
         {
-            StringBuilder buttonText = new StringBuilder();
-            buttonText.Append(Translations.GetTranslation(unitToRecruit)).Append(" ("); // Soldier (
-            buttonText.Append(SoldierRegistry.GetSoldierCost(unitToRecruit)).Append("G): "); // Soldier ('cost'G)
-            buildingActions.addElement(ElementBuildButton.CreateBuildButton(buildingActions.Bounds.Location, buttonText.ToString(), () => TrySpawnUnit(unitToRecruit)));
+            // Destroy the building
+            Tile t = (GameWorld as Grid)[PositionInGrid] as Tile;
+            t.Building = null;
+
+            // Also re-update the population because that's what should be done after a town is destroyed
+            Owner.CalculatePopulation();
         }
 
         protected void TrySpawnUnit(string soldierType)
@@ -86,6 +106,34 @@ namespace MaxOfEmpires.Buildings
             // Buy the soldier, as we placed it.
             owner.Buy(cost);
             owner.CalculatePopulation();
+        }
+
+        public override void TurnUpdate(uint turn, Player player)
+        {
+            // Check to see if an enemy ARMY is here
+            Tile t = (GameWorld as Grid)[PositionInGrid] as Tile;
+            if (!t.Occupied || !(t.Unit is Army))
+            {
+                // We're no longer being seized, I suppose :D
+                turnsSeized = 0;
+                return;
+            }
+
+            // We need the end of the other player's turn to increment the counter
+            if (player != Owner)
+            {
+                return;
+            }
+
+            // See if we're being destroyed by the enemy army :/
+            if (turnsSeized >= turnsBeforeRazeOnSeize)
+            {
+                RazeBuilding();
+                return;
+            }
+
+            // Omg no we're being seized D:
+            ++turnsSeized;
         }
 
         public Player Owner => owner;

@@ -368,7 +368,8 @@ namespace MaxOfEmpires
             set
             {
                 building = value;
-                value.Parent = this;
+                if (value != null)
+                    value.Parent = this;
             }
         }
 

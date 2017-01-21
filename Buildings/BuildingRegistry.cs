@@ -1,5 +1,6 @@
 ﻿using MaxOfEmpires.Files;
 using System.Collections.Generic;
+using System;
 
 namespace MaxOfEmpires.Buildings
 {
@@ -10,12 +11,14 @@ namespace MaxOfEmpires.Buildings
             public readonly int cost;
             public readonly string textureName;
             private List<string> trainees;
+            public readonly int turnsBeforeRazeOnSeize;
 
-            public BuildingInformation(int cost, string textureName, List<string> trainees)
+            public BuildingInformation(int cost, int turnsBeforeRazeOnSeize, string textureName, List<string> trainees)
             {
                 this.cost = cost;
                 this.textureName = textureName;
                 this.trainees = new List<string>(trainees);
+                this.turnsBeforeRazeOnSeize = turnsBeforeRazeOnSeize;
             }
 
             public IList<string> Trainees => trainees.AsReadOnly();
@@ -33,6 +36,15 @@ namespace MaxOfEmpires.Buildings
             if (buildingInfo.ContainsKey(buildingName))
             {
                 return buildingInfo[buildingName].cost;
+            }
+            throw new KeyNotFoundException("The building called '" + buildingName + "' does not exist.");
+        }
+
+        public static int GetRazeTime(string buildingName)
+        {
+            if (buildingInfo.ContainsKey(buildingName))
+            {
+                return buildingInfo[buildingName].turnsBeforeRazeOnSeize;
             }
             throw new KeyNotFoundException("The building called '" + buildingName + "' does not exist.");
         }
@@ -81,10 +93,11 @@ namespace MaxOfEmpires.Buildings
         private static BuildingInformation GetBuildingInformation(Configuration config)
         {
             int cost = config.GetProperty<int>("cost");
+            int turnsBeforeRazeOnSeize = config.GetProperty<int>("razeTime");
             string textureName = config.GetProperty<string>("texture.name");
             List<string> trainees = config.GetProperty<List<string>>("trainees");
 
-            return new BuildingInformation(cost, textureName, trainees);
+            return new BuildingInformation(cost, turnsBeforeRazeOnSeize, textureName, trainees);
         }
     }
 }

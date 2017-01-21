@@ -5,7 +5,7 @@ namespace MaxOfEmpires.Buildings
 {
     class Town : Building
     {
-        public static int moneyPerTurn;
+        public static int upkeep;
 
         public Town(Point positionInGrid, Player owner) : base(positionInGrid, owner, "building.town")
         {
@@ -16,13 +16,18 @@ namespace MaxOfEmpires.Buildings
             base.TurnUpdate(turn, player, t);
             if (player == Owner)
             {
-                player.EarnMoney(moneyPerTurn);
+                if (!player.CanAfford(upkeep))
+                {
+                    RazeBuilding();
+                    return;
+                }
+                player.Buy(upkeep);
             }
         }
 
         public static void LoadFromConfig(Configuration config)
         {
-            moneyPerTurn = config.GetProperty<int>("town.moneyPerTurn");
+            upkeep = config.GetProperty<int>("town.upkeep");
         }
     }
 }
