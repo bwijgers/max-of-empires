@@ -4,11 +4,11 @@ using MaxOfEmpires.GameStates.Overlays;
 
 namespace MaxOfEmpires.GameStates
 {
-    class MainMenuState : GameState
+    class SettingsMenuState : GameState
     {
-        private OverlayMainMenu overlay;
+        private OverlaySettingsMenu overlay;
 
-        public MainMenuState()
+        public SettingsMenuState()
         {
             ResetOverlay();
         }
@@ -25,7 +25,7 @@ namespace MaxOfEmpires.GameStates
 
         public override void ResetOverlay()
         {
-            overlay = new OverlayMainMenu();
+            overlay = new OverlaySettingsMenu();
         }
 
         public override void Update(GameTime time)

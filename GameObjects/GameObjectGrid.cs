@@ -137,6 +137,11 @@ namespace MaxOfEmpires.GameObjects
         public int Height => grid.GetLength(1);
 
         /// <summary>
+        /// The Width and Height of this grid.
+        /// </summary>
+        public Point Size => new Point(Width, Height);
+
+        /// <summary>
         /// The width of this grid, being the amount of elements in the x-direction.
         /// </summary>
         public int Width => grid.GetLength(0);

@@ -56,6 +56,10 @@ namespace MaxOfEmpires.GameStates
         {
         }
 
+        public virtual void ResetOverlay()
+        {
+        }
+
         public virtual void Update(GameTime time)
         {
             // If we're fading in... 

@@ -21,6 +21,17 @@ namespace MaxOfEmpires
         private static Random random = new Random((int)DateTime.Now.Ticks);
         private static bool running = true;
 
+        public static bool fullscreen;
+        public static InputHelper inputHelper;
+        public static Vector2 overlayPos;
+        public static Settings settings;
+        private static Vector2 windowSize = new Vector2(1280, 768);
+
+        /// <summary>
+        /// The size of the grid
+        /// </summary>
+        private static Vector2 gridSize = new Vector2(48, 48);
+        
         /// <summary>
         /// Quits the game. Effectively closes the game.
         /// </summary>
@@ -29,12 +40,28 @@ namespace MaxOfEmpires
             running = false;
         }
 
+        public static Vector2 GridSize => gridSize;
+        public static Vector2 OverlayPos => overlayPos;
         public static Random Random => random;
         public static Point ScreenSize => new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+
+        public static Point ScreenSize
+        {
+            get
+            {
+                return new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            }
+            set
+            {
+                windowSize = value.ToVector2();
+                graphics.PreferredBackBufferWidth = value.X;
+                graphics.PreferredBackBufferHeight = value.Y;
+                ApplyDisplaySettings();
+            }
+        }
         #endregion
 
         private SpriteBatch gameObjectSpriteBatch;
-        private InputHelper inputHelper;
         private Configuration mainConfiguration;
         private SpriteBatch overlaySpriteBatch;
 
@@ -42,6 +69,13 @@ namespace MaxOfEmpires
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            settings = new Settings();
+
+            graphics.PreferredBackBufferWidth = (int)windowSize.X;
+            graphics.PreferredBackBufferHeight = (int)windowSize.Y;
+
+            camera = new Camera();
         }
 
         /// <summary>
@@ -53,9 +87,12 @@ namespace MaxOfEmpires
         protected override void Initialize()
         {
             inputHelper = new InputHelper();
-
-            GraphicsDevice.Viewport = new Viewport(0, 0, 1280, 768);
             IsMouseVisible = true;
+
+            overlayPos = new Vector2(graphics.PreferredBackBufferHeight, 0);
+
+            //Initialize settings
+            settings.InitializeSettingsFromFile();
 
             base.Initialize();
         }
@@ -66,14 +103,6 @@ namespace MaxOfEmpires
         /// <param name="config">The configuration file and section to use for loading.</param>
         private void InitializeKeys(Configuration config)
         {
-            KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys)config.GetProperty<int>("unitTargetOverlay"));
-            KeyManager.Instance.RegisterKey("moveCameraUp", (Keys)config.GetProperty<int>("moveCameraUp"));
-            KeyManager.Instance.RegisterKey("moveCameraDown", (Keys)config.GetProperty<int>("moveCameraDown"));
-            KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft"));
-            KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight"));
-            KeyManager.Instance.RegisterKey("zoomCameraIn", (Keys)config.GetProperty<int>("moveCameraIn"));
-            KeyManager.Instance.RegisterKey("zoomCameraOut", (Keys)config.GetProperty<int>("moveCameraOut"));
-            KeyManager.Instance.RegisterKey("nextTurn", (Keys)config.GetProperty<int>("nextTurn"));
                 
         }
 
@@ -125,6 +154,7 @@ namespace MaxOfEmpires
             GameStateManager.AddState("economy", new EconomyState(blue, red));
             GameStateManager.AddState("battle", new BattleState(blue, red));
             GameStateManager.AddState("mainMenu", new MainMenuState());
+            GameStateManager.AddState("settingsMenu", new SettingsMenuState());
             GameStateManager.SwitchState("mainMenu", true);
         }
 
@@ -163,6 +193,13 @@ namespace MaxOfEmpires
             }
             //EINDE TIJDELIJKE CODE
 
+            //TIJDELIJKE CODE OMDAT IK GEEN IDEE HEB WAAR IK DIT ANDERS ZOU KUNNEN ZETTEN
+            if (inputHelper.KeyPressed(Keys.Escape))
+            {
+                ToggleFullScreen();
+            }
+            //EINDE TIJDELIJKE CODE
+
             base.Update(gameTime);
         }
 
@@ -173,9 +210,17 @@ namespace MaxOfEmpires
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
-            Matrix transform = Matrix.CreateScale(new Vector3(camera.Zoom, camera.Zoom, 1)); // Zoom default 1
+            Matrix zoom = Matrix.CreateScale(new Vector3(camera.Zoom, camera.Zoom, 1)); // Zoom default 1
 
-            overlaySpriteBatch.Begin();
+            overlaySpriteBatch.Begin(
+                SpriteSortMode.Deferred,
+                BlendState.NonPremultiplied,
+                null,
+                null,
+                null,
+                null,
+                SpriteScale
+                );
             gameObjectSpriteBatch.Begin( // SpriteBatch variable
                         SpriteSortMode.Deferred, // Sprite sort mode - not related
                         BlendState.NonPremultiplied, // BelndState - not related
@@ -183,7 +228,7 @@ namespace MaxOfEmpires
                         null,
                         null,
                         null,
-                        transform); // set camera tranformation
+                        zoom * SpriteScale); // set camera tranformation
 
             GameStateManager.Draw(gameTime, gameObjectSpriteBatch, overlaySpriteBatch);// Draw the current game state
 
@@ -191,6 +236,58 @@ namespace MaxOfEmpires
             overlaySpriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        /// <summary>
+        /// Initializes all keybinds, loaded from Keys.cfg
+        /// </summary>
+        /// <param name="config">The configuration file and section to use for loading.</param>
+        private void InitializeKeys(Configuration config)
+        {
+            KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys)config.GetProperty<int>("unitTargetOverlay"));
+            KeyManager.Instance.RegisterKey("moveCameraUp", (Keys)config.GetProperty<int>("moveCameraUp"));
+            KeyManager.Instance.RegisterKey("moveCameraDown", (Keys)config.GetProperty<int>("moveCameraDown"));
+            KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft"));
+            KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight"));
+            KeyManager.Instance.RegisterKey("zoomCameraIn", (Keys)config.GetProperty<int>("moveCameraIn"));
+            KeyManager.Instance.RegisterKey("zoomCameraOut", (Keys)config.GetProperty<int>("moveCameraOut"));
+            KeyManager.Instance.RegisterKey("nextTurn", (Keys)config.GetProperty<int>("nextTurn"));
+        }
+
+        private static void ToggleFullScreen()
+        {
+            fullscreen = !fullscreen;
+            ApplyDisplaySettings();
+        }
+
+        public static void ApplyDisplaySettings()
+        {
+            graphics.IsFullScreen = fullscreen;
+            graphics.ApplyChanges();
+
+            if (graphics.IsFullScreen)
+            {
+                inputHelper.DisplayScale = new Vector2((float)graphics.PreferredBackBufferWidth / GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, (float)graphics.PreferredBackBufferHeight / GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+            }
+            else
+            {
+                inputHelper.DisplayScale = new Vector2(graphics.PreferredBackBufferWidth / windowSize.X, graphics.PreferredBackBufferHeight / windowSize.Y);
+            }
+
+            overlayPos = new Vector2(ScreenSize.Y, 0);
+            GameStateManager.UpdateResolution();
+        }
+
+        /// <summary>
+        /// The fullscreen scaling matrix
+        /// </summary>
+        public Matrix SpriteScale
+        {
+            get
+            {
+                //                return Matrix.CreateScale(inputHelper.DisplayScale.X, inputHelper.DisplayScale.Y, 1);
+                return Matrix.CreateScale(1, 1, 1);
+            }
         }
     }
 }

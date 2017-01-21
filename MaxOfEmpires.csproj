@@ -37,6 +37,9 @@
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
     <Compile Include="BattleGrid.cs" />
@@ -65,11 +68,14 @@
     <Compile Include="GameStates\Overlays\OverlayEconomyState.cs" />
     <Compile Include="GameStates\Overlays\OverlayMainMenu.cs" />
     <Compile Include="Grid_Generate.cs" />
+    <Compile Include="GameStates\Overlays\OverlaySettingsState.cs" />
+    <Compile Include="GameStates\SettingsMenuState.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\GameObjectGrid.cs" />
     <Compile Include="GameObjects\GameObjectList.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="Settings\Settings.cs" />
     <Compile Include="Units\Army.cs" />
     <Compile Include="Units\AStarPathfinding.cs" />
     <Compile Include="Units\Builder.cs" />
@@ -166,6 +172,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Content\configs\terrain\forestComposition.cfg">
+    <None Include="Content\configs\Settings.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Content\Lang\en_US.lang" />

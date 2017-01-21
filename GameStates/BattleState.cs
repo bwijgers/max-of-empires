@@ -39,12 +39,8 @@ namespace MaxOfEmpires.GameStates
             battleGrid = new BattleGrid(15, 15, players);
             battleGrid.InitField();
 
-            // Initialize the field
-            battleGrid.InitField();
-
             // Initialize the overlay.
-            overlay = new Overlays.OverlayBattleState();
-            InitOverlay();
+            ResetOverlay();
 
             // Reset ourselves
             Reset();
@@ -108,6 +104,15 @@ namespace MaxOfEmpires.GameStates
         }
 
         /// <summary>
+        /// Initializes the overlay. Add all GuiElements here.
+        /// </summary>
+        private void InitOverlay()
+        {
+            // Add a click handler to the end turn button.
+            overlay.EndTurnHandler = () => { shouldTurnUpdate = true; };
+        }
+
+        /// <summary>
         /// Called when a player initiates a battle from the Economy state.
         /// </summary>
         /// <param name="attackingArmy">The army that attacked.</param>
@@ -140,6 +145,12 @@ namespace MaxOfEmpires.GameStates
                 currentPlayer = 0;
                 ++turnNum;
             }
+        }
+
+        public override void ResetOverlay()
+        {
+            overlay = new Overlays.OverlayBattleState();
+            InitOverlay();
         }
 
         /// <summary>
