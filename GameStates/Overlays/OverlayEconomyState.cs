@@ -81,6 +81,25 @@ namespace MaxOfEmpires.GameStates.Overlays
                 // Then checks if we can build here, and if the player can afford the building
                 if (!t.BuiltOn && currentBuilder.Owner.CanAfford(BuildingRegistry.GetCost(buildingName)))
                 {
+                    Tile tile = currentBuilder.Parent as Tile;
+                    if (buildingType.Equals(typeof(Mine)))
+                    {
+                        if (!(tile.Terrain == Terrain.Mountain || tile.Terrain == Terrain.DesertMountain || tile.Terrain == Terrain.TundraMountain))
+                        {
+                            return;
+                        }
+                    }
+                    else if (buildingType.Equals(typeof(Town)))
+                    {
+                        if (!(tile.Terrain == Terrain.Plains))
+                        {
+                            return;
+                        }
+                    }
+                    else if (tile.Terrain == Terrain.Lake)
+                    {
+                        return;
+                    }
                     // And remove the money if possible...
                     currentBuilder.Owner.Buy(BuildingRegistry.GetCost(buildingName));
 
