@@ -66,11 +66,20 @@ namespace MaxOfEmpires.GameStates
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
         {
-            // Handle input for the grid (things like moving and attacking units)
-            battleGrid.HandleInput(helper, manager);
+            // TODO make sure bounds stay correct based on how much is drawn and stuff
+            if (new Rectangle(480, 0, MaxOfEmpires.ScreenSize.X, MaxOfEmpires.ScreenSize.Y).Contains(helper.GetMousePosition(false)))
+            {
+                // Update the overlay
+                overlay.update(helper);
+            }
+            else
+            {
+                // Handle input for the grid (things like moving and attacking units)
+                battleGrid.HandleInput(helper, manager);
+            }
 
             // Get the selected Unit
-            Soldier u = (Soldier) battleGrid.SelectedTile?.Unit;
+            Soldier u = (Soldier)battleGrid.SelectedTile?.Unit;
 
             // Print the selected Unit's information, if it exists
             if (u != null)
@@ -84,12 +93,9 @@ namespace MaxOfEmpires.GameStates
                 Tile t = battleGrid.GetTileUnderMouse(helper);
                 if (t != null)
                 {
-                    overlay.PrintSoldierInfo((Soldier) t.Unit);
+                    overlay.PrintSoldierInfo((Soldier)t.Unit);
                 }
             }
-
-            // Update the overlay
-            overlay.update(helper);
         }
 
         /// <summary>

@@ -89,7 +89,6 @@ namespace MaxOfEmpires.GameStates.Overlays
                     grid.Build(currentBuilder, (Building)Activator.CreateInstance(buildingType, new object[] { currentBuilder.PositionInGrid, currentBuilder.Owner }));
 
                     currentBuilder.Owner.CalculatePopulation();
-
                 }
             };
         }

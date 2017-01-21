@@ -50,11 +50,19 @@ namespace MaxOfEmpires.GameStates
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
         {
-            // Handle input for the grid (things like moving and attacking units)
-            ecoGrid.HandleInput(helper, manager);
+            // Mouse over overlay
+            if (new Rectangle(480, 0, MaxOfEmpires.ScreenSize.X, MaxOfEmpires.ScreenSize.Y).Contains(helper.GetMousePosition(false)))
+            {
+                // Update the overlay
+                overlay.update(helper);
+            }
 
-            // Update the overlay
-            overlay.update(helper);
+            // Mouse over grid (we hope >_>)
+            else
+            {
+                // Handle input for the grid (things like moving and attacking units)
+                ecoGrid.HandleInput(helper, manager);
+            }
 
             // Get the Unit under the mouse...
             Unit unitUnderMouse = ecoGrid.GetTileUnderMouse(helper)?.Unit;
@@ -66,27 +74,24 @@ namespace MaxOfEmpires.GameStates
             PrintArmyInfo(null);
             PrintBuilderInfo(null);
 
-            // ... show the information of the currently selected Building...
-            PrintBuildingInfo(ecoGrid.SelectedTile?.Building);
-
             // ... and print their information if it's an Army...
             if (unitUnderMouse is Army)
             {
                 PrintArmyInfo((Army)unitUnderMouse);
-                return;
             }
             if (selectedUnit is Army)
             {
                 PrintArmyInfo((Army)selectedUnit);
-                return;
             }
 
             // ... or set the building information if it's a Builder... 
             if (selectedUnit is Builder && !ecoGrid.SelectedTile.BuiltOn)
             {
                 PrintBuilderInfo((Builder)selectedUnit);
-                return;
             }
+
+            // ... show the information of the currently selected Building...
+            PrintBuildingInfo(ecoGrid.SelectedTile?.Building);
 
             if (manager.KeyPressed("nextTurn", helper))
             {
@@ -132,8 +137,6 @@ namespace MaxOfEmpires.GameStates
 
         public override void Reset()
         {
-
-
             // Player 1 starts
             currentPlayer = 0;
 
