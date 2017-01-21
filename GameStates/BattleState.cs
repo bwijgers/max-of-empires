@@ -106,9 +106,10 @@ namespace MaxOfEmpires.GameStates
         /// </summary>
         /// <param name="attackingArmy">The army that attacked.</param>
         /// <param name="defendingArmy">The army that was attacked.</param>
-        public void OnInitiateBattle(Army attackingArmy, Army defendingArmy)
+        public void OnInitiateBattle(Army attackingArmy, Army defendingArmy, Tile attackingTile, Tile defendingTile)
         {
             battleGrid.InitField();
+            battleGrid.BattleGenerate(attackingTile.Terrain, attackingTile.hills, defendingTile.Terrain, defendingTile.hills,battleGrid.Width,battleGrid.Height);
             battleGrid.PopulateField(attackingArmy, defendingArmy);
         }
 

@@ -38,6 +38,8 @@ namespace MaxOfEmpires
             battlePosition = defender.PositionInGrid;
 
             // Remove BOTH armies from the grid; one will be replaced by what is remaining, the other will be annihilated
+            Tile attackingTile = this[attacker.PositionInGrid] as Tile;
+            Tile defendingTile = this[defender.PositionInGrid] as Tile;
             (this[attacker.PositionInGrid] as Tile).SetUnit(null);
             (this[defender.PositionInGrid] as Tile).SetUnit(null);
 
@@ -45,13 +47,13 @@ namespace MaxOfEmpires
             SelectTile(InvalidTile);
 
             // Tell the battle state that we want to initiate a battle
-            GameStateManager.OnInitiateBattle(attacker, defender);
+            GameStateManager.OnInitiateBattle(attacker, defender, attackingTile, defendingTile);
         }
 
         public override void InitField()
         {
             base.InitField();
-
+            BalancedEconomyGrid(Width, Height);
             // Generate 2 armies and place them on the field.
             (this[0, 0] as Tile).SetUnit(new Builder(0, 0, players[0]));
             (this[14, 14] as Tile).SetUnit(new Builder(0, 0, players[1]));

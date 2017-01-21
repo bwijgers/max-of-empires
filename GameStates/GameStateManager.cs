@@ -40,14 +40,14 @@ namespace MaxOfEmpires.GameStates
         /// </summary>
         /// <param name="attackingArmy">The army that initiated the attack.</param>
         /// <param name="defendingArmy">The army that was attacked.</param>
-        public static void OnInitiateBattle(Army attackingArmy, Army defendingArmy)
+        public static void OnInitiateBattle(Army attackingArmy, Army defendingArmy, Tile attackingTile, Tile defendingTile)
         {
             CurrentState.FadeOut = true;
             // Get the battle state
             BattleState state = (BattleState)GetState("battle");
 
             // Create the new battle grid
-            state.OnInitiateBattle(attackingArmy, defendingArmy);
+            state.OnInitiateBattle(attackingArmy, defendingArmy, attackingTile, defendingTile);
 
             // Switch to the battle state
             state.FadeIn = true;

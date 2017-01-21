@@ -178,20 +178,32 @@ namespace MaxOfEmpires
             attackingPlayer = attacker.Owner;
             defendingPlayer = defender.Owner;
 
-            // Initialize the attacker's field
+            // Initialize the defender's field
             int currentX = 0;
             int currentY = 0;
 
-            // Iterate over every type of Soldier in the attacking Army
-            foreach (string s in attacker.UnitsAndCounts.Keys)
+            // Iterate over every type of Soldier in the defending Army
+            foreach (string s in defender.UnitsAndCounts.Keys)
             {
                 // Get the amount of this kind of Soldier
-                int soldierCount = attacker.UnitsAndCounts[s];
+                int soldierCount = defender.UnitsAndCounts[s];
 
                 // Place them in a position based on how many soldiers we have passed so far.
                 for (; soldierCount > 0; --soldierCount)
                 {
-                    (this[currentX, currentY] as Tile).SetUnit(SoldierRegistry.GetSoldier(s, attacker.Owner));
+                    //only places soldier if terrain is passable
+                    Soldier soldier = SoldierRegistry.GetSoldier(s, defender.Owner);
+                    while (!(this[currentX, currentY] as Tile).Passable(soldier))
+                    {
+                        ++currentX;
+                        if (currentX >= Width)
+                        {
+                            currentX = 0;
+                            ++currentY;
+                        }
+                    }
+
+                    (this[currentX, currentY] as Tile).SetUnit(soldier);
                     ++currentX;
 
                     // Make sure we don't create a line of soldiers longer than the field.
@@ -203,17 +215,28 @@ namespace MaxOfEmpires
                 }
             }
 
-            // Do the same for the defending Army, except start bottom right and go left->up for each Soldier.
+            // Do the same for the attacking Army, except start bottom right and go left->up for each Soldier.
             currentX = Width - 1;
             currentY = Height - 1;
 
-            foreach (string s in defender.UnitsAndCounts.Keys)
+            foreach (string s in attacker.UnitsAndCounts.Keys)
             {
-                int soldierCount = defender.UnitsAndCounts[s];
+                int soldierCount = attacker.UnitsAndCounts[s];
 
                 for (; soldierCount > 0; --soldierCount)
                 {
-                    (this[currentX, currentY] as Tile).SetUnit(SoldierRegistry.GetSoldier(s, defender.Owner));
+                    //only places soldier if terrain is passable
+                    Soldier soldier = SoldierRegistry.GetSoldier(s, attacker.Owner);
+                    while (!(this[currentX, currentY] as Tile).Passable(soldier))
+                    {
+                        ++currentX;
+                        if (currentX >= Width)
+                        {
+                            currentX = 0;
+                            ++currentY;
+                        }
+                    }
+                    (this[currentX, currentY] as Tile).SetUnit(soldier);
                     --currentX;
 
                     if (currentX < 0)

@@ -63,7 +63,7 @@ namespace MaxOfEmpires.Units
 
         }
 
-        private Pathfinding() {}
+        private Pathfinding() { }
 
         /// <summary>
         /// Adds the paths to the tiles surrounding the specified tile to the list.
@@ -79,7 +79,7 @@ namespace MaxOfEmpires.Units
             surroundingPoints.Add(startPath.target + new Point(0, 1));
             surroundingPoints.Add(startPath.target + new Point(-1, 0));
             surroundingPoints.Add(startPath.target + new Point(0, -1));
-            
+
             Grid grid = movingUnit.GameWorld as Grid;
             foreach (Point p in surroundingPoints)
             {
@@ -99,7 +99,7 @@ namespace MaxOfEmpires.Units
                     int cost = tile.Cost(movingUnit) + startPath.cost;
                     PathToTile newPathToTile = new PathToTile(p, pathAsPoints, cost);
                     PathToTile shortestPathToTile = shortestPaths.Find(path => path.target.Equals(p));
-                    
+
                     // If the current found path is shorter than an existent path, overrides it.
                     if (shortestPathToTile != null)
                     {
@@ -154,7 +154,7 @@ namespace MaxOfEmpires.Units
 
                 foreach (PathToTile p in newNewPaths)
                 {
-                    AddSurroundingTiles(movingUnit, p,newPaths);
+                    AddSurroundingTiles(movingUnit, p, newPaths);
                     newPaths.Remove(p);
                 }
             }
@@ -177,7 +177,7 @@ namespace MaxOfEmpires.Units
         public static Point MoveTowardsTarget(Unit movingUnit)
         {
             // If the target tile is occupied, unset target. 
-            if(((movingUnit.GameWorld as Grid)[movingUnit.TargetPosition] as Tile).Occupied)
+            if (((movingUnit.GameWorld as Grid)[movingUnit.TargetPosition] as Tile).Occupied || !((movingUnit.GameWorld as Grid)[movingUnit.TargetPosition] as Tile).Passable(movingUnit))
             {
                 ClearTargetPosition(movingUnit);
                 return movingUnit.TargetPosition;

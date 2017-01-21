@@ -28,6 +28,8 @@ namespace MaxOfEmpires.Units
         /// </summary>
         protected int moveSpeed;
 
+        public string id;
+
         protected Player owner; // 2 is false, 1 is true
 
         /// <summary>
@@ -40,8 +42,9 @@ namespace MaxOfEmpires.Units
         /// </summary>
         private int x, y;
 
-        public Unit(int x, int y, Player owner) : base(false)
+        public Unit(int x, int y, Player owner, string id = "") : base(false)
         {
+            this.id = id;
             this.x = x;
             this.y = y;
             this.owner = owner;
@@ -75,7 +78,7 @@ namespace MaxOfEmpires.Units
         /// <param name="x">The x-coord of the position to move to.</param>
         /// <param name="y">The y-coord of the position to move to.</param>
         /// <returns>True if the Unit moved to the position, false otherwise.</returns>
-        public bool Move(int x, int y)
+        public virtual bool Move(int x, int y)
         {
             // If we already moved, we can't move anymore. Something like that
             if (HasMoved)
@@ -95,7 +98,7 @@ namespace MaxOfEmpires.Units
             return false;
         }
 
-        public bool Passable(Terrain terrain)
+        public virtual bool Passable(Terrain terrain)
         {
             return !(terrain == Terrain.Mountain || terrain == Terrain.Lake || terrain == Terrain.DesertMountain || terrain == Terrain.TundraMountain);
         }
