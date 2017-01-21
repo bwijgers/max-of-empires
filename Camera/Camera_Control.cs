@@ -27,7 +27,7 @@ namespace MaxOfEmpires
         /// <summary>
         /// The speed with which the camera moves
         /// </summary>
-        private float cameraMoveSpeed = 2.00f;
+        private float cameraMoveSpeed = 10.00f;
 
         /// <summary>
         /// A bool which, if true, will let the camera be controlled through both the mouse and the keyboard
@@ -127,7 +127,7 @@ namespace MaxOfEmpires
                 {
                     MoveCamera("out");
                 }
-
+            
             }
 
         }
@@ -138,7 +138,7 @@ namespace MaxOfEmpires
         /// <param name="direction">The direction to which the camera should move (up, down, left, right).</param>
         public void MoveCamera(string direction)
         {
-            double zoomCap = 35 / GameStateManager.GridSize.X;
+            double zoomCap = ((double)MaxOfEmpires.ScreenSize.Y/32)/ (GameStateManager.GridSize.X);
             switch (direction)
             {
                 // Moves the camera upwards
