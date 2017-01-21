@@ -91,7 +91,7 @@ namespace MaxOfEmpires.GameStates.Overlays
                     {
                         return;
                     }
-                    else if (tile.Terrain == Terrain.Lake || tile.Terrain == Terrain.Mountain || tile.Terrain == Terrain.DesertMountain || tile.Terrain == Terrain.TundraMountain)
+                    else if ((tile.Terrain == Terrain.Lake || tile.Terrain == Terrain.Mountain || tile.Terrain == Terrain.DesertMountain || tile.Terrain == Terrain.TundraMountain)&& !buildingType.Equals(typeof(Mine)))
                     {
                         return;
                     }
