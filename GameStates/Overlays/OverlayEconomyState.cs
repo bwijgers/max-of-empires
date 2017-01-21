@@ -89,7 +89,7 @@ namespace MaxOfEmpires.GameStates.Overlays
                 {
                     Tile tile = currentBuilder.Parent as Tile;
 
-                    if (tile.Terrain != Terrain.Mountain && tile.Terrain != Terrain.DesertMountain && tile.Terrain != Terrain.TundraMountain && buildingType.Equals(typeof(Mine)))
+                    if (!tile.Terrain.IsMountain && buildingType.Equals(typeof(Mine)))
                     {
                         return;
                     }

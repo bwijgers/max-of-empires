@@ -58,12 +58,10 @@ namespace MaxOfEmpires
         {
             base.InitField();
             BalancedEconomyGrid(Width, Height);
-            // Generate 2 armies and place them on the field.
-            (this[0, 0] as Tile).SetUnit(new Builder(0, 0, players[0]));
-            (this[14, 14] as Tile).SetUnit(new Builder(0, 0, players[1]));
-
-            // Clear the Armies' targets
-            ClearAllTargetPositions();
+            foreach (Player p in players)
+            {
+                p.CalculatePopulation();
+            }
         }
 
         public override void OnLeftClick(InputHelper helper)

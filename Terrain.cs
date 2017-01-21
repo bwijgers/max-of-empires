@@ -71,5 +71,13 @@ namespace MaxOfEmpires
                 cost = value;
             }
         }
+
+        public bool IsMountain
+        {
+            get
+            {
+                return terrainType == TerrainType.DESERTMOUNTAIN || terrainType == TerrainType.MOUNTAIN || terrainType == TerrainType.TUNDRAMOUNTAIN;
+            }
+        }
     }
 }

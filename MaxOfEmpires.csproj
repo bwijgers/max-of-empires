@@ -45,6 +45,7 @@
     <Compile Include="BattleGrid.cs" />
     <Compile Include="Buildings\Academy.cs" />
     <Compile Include="Buildings\BuildingRegistry.cs" />
+    <Compile Include="Buildings\Capital.cs" />
     <Compile Include="Buildings\Mine.cs" />
     <Compile Include="Buildings\Town.cs" />
     <Compile Include="Buildings\TrainingGrounds.cs" />

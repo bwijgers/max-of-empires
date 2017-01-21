@@ -56,6 +56,7 @@ namespace MaxOfEmpires
         // Double mirrors the grid to create a symmetrical field (with double width and height).
         public void BalancedEconomyGrid(int gridWidth, int gridHeight)
         {
+            // Generate the terrain
             int oriGridWidth = gridWidth/2;
             int oriGridHeight = gridHeight/2;
             EconomyGenerate(oriGridWidth, oriGridHeight);
@@ -79,7 +80,51 @@ namespace MaxOfEmpires
                     thisTile.Terrain = copyTile.Terrain;
                 }
             }
-            
+
+            // Hey let's place the Capital and the builders now
+            // TODO PLACE CAPITAL :D
+
+            // Generate 2 armies and place them on the field.
+            bool placedBuilder = false;
+            for (int y = 0; y < Height; ++y)
+            {
+                for (int x = 0; x < Width; ++x)
+                {
+                    Tile t = this[x, y] as Tile;
+                    if (!t.Terrain.IsMountain && t.Terrain.terrainType != Terrain.TerrainType.LAKE)
+                    {
+                        Builder b = new Builder(0, 0, players[0]);
+                        t.SetUnit(b);
+                        (this as EconomyGrid).Build(b, new Buildings.Capital(new Point(x, y), b.Owner));
+                        placedBuilder = true;
+                        break;
+                    }
+                }
+                if (placedBuilder)
+                    break;
+            }
+
+            placedBuilder = false;
+            for (int y = Height - 1; y >= 0; --y)
+            {
+                for (int x = Width - 1; x >= 0; --x)
+                {
+                    Tile t = this[x, y] as Tile;
+                    if (!t.Terrain.IsMountain && t.Terrain.terrainType != Terrain.TerrainType.LAKE)
+                    {
+                        Builder b = new Builder(0, 0, players[1]);
+                        t.SetUnit(b);
+                        (this as EconomyGrid).Build(b, new Buildings.Capital(new Point(x, y), b.Owner));
+                        placedBuilder = true;
+                        break;
+                    }
+                }
+                if (placedBuilder)
+                    break;
+            }
+
+            // Clear the Armies' targets
+            ClearAllTargetPositions();
         }
 
         // Converts min and max percentage into an actual amount
