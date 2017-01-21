@@ -82,19 +82,14 @@ namespace MaxOfEmpires.GameStates.Overlays
                 if (!t.BuiltOn && currentBuilder.Owner.CanAfford(BuildingRegistry.GetCost(buildingName)))
                 {
                     Tile tile = currentBuilder.Parent as Tile;
-                    if (buildingType.Equals(typeof(Mine)))
+
+                    if (tile.Terrain != Terrain.Mountain && tile.Terrain != Terrain.DesertMountain && tile.Terrain != Terrain.TundraMountain && buildingType.Equals(typeof(Mine)))
                     {
-                        if (!(tile.Terrain == Terrain.Mountain || tile.Terrain == Terrain.DesertMountain || tile.Terrain == Terrain.TundraMountain))
-                        {
-                            return;
-                        }
+                        return;
                     }
-                    else if (buildingType.Equals(typeof(Town)))
+                    else if (tile.Terrain != Terrain.Plains && buildingType.Equals(typeof(Town)))
                     {
-                        if (!(tile.Terrain == Terrain.Plains))
-                        {
-                            return;
-                        }
+                        return;
                     }
                     else if (tile.Terrain == Terrain.Lake)
                     {
