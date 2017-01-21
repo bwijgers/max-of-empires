@@ -34,7 +34,7 @@ namespace MaxOfEmpires.GameStates
         public BattleState()
         {
             // Initialize the battlefield.
-            battleGrid = new BattleGrid(MaxOfEmpires.GridSize.X, MaxOfEmpires.GridSize.Y);
+            battleGrid = new BattleGrid((int)MaxOfEmpires.GridSize.X, (int)MaxOfEmpires.GridSize.Y);
             battleGrid.InitField();
 
             // Initialize the overlay.

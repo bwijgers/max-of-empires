@@ -4,6 +4,8 @@ namespace MaxOfEmpires
 {
     public partial class Camera
     {
+        //Variables
+
         /// <summary>
         /// The Vector2 determining the position of the camera
         /// </summary>
@@ -17,7 +19,6 @@ namespace MaxOfEmpires
 
         // Functions
 
-
         /// <summary>
         /// initialises the camera at position 0, 0
         /// </summary>
@@ -25,6 +26,27 @@ namespace MaxOfEmpires
         {
             Position = new Vector2(0, 0);
             Zoom = 1.0f;
+            switch (MaxOfEmpires.settings.Resolution)
+            {
+                //800 x 480
+                case 1:
+                    {
+                        zoomMin = 15 / MaxOfEmpires.GridSize.X;
+                        break;
+                    }
+                //1280 x 768
+                case 2:
+                    {
+                        zoomMin = 24 / MaxOfEmpires.GridSize.X;
+                        break;
+                    }
+                //1920 x 1080
+                case 3:
+                    {
+                        zoomMin = 33.75f / MaxOfEmpires.GridSize.X;
+                        break;
+                    }
+            }
         }
 
         /// <summary>

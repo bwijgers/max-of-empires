@@ -22,16 +22,11 @@ namespace MaxOfEmpires
         private static Random random = new Random((int)DateTime.Now.Ticks);
         private static bool running = true;
         public static Vector2 overlayPos;
-
-		/// <summary>
-        /// The minimal size of the grid.
-        /// </summary>
-        public static Point minGridSize = new Point(24, 24);
-
+        
         /// <summary>
         /// The size of the grid
         /// </summary>
-        private static Point gridSize = new Point(48, 48);
+        private static Vector2 gridSize = new Vector2(48, 48);
         
         /// <summary>
         /// Quits the game. Effectively closes the game.
@@ -41,7 +36,7 @@ namespace MaxOfEmpires
             running = false;
         }
 
-        public static Point GridSize => gridSize;
+        public static Vector2 GridSize => gridSize;
         public static Vector2 OverlayPos => overlayPos;
         public static Random Random => random;
         public static Point ScreenSize => new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
@@ -56,11 +51,11 @@ namespace MaxOfEmpires
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 768;
-            overlayPos = new Vector2(graphics.PreferredBackBufferHeight, 0);
-
+            settings = new Settings();
             camera = new Camera();
+
+            //Initialize settings
+            settings.InitializeSettingsFromFile();   
         }
 
         /// <summary>
@@ -74,7 +69,8 @@ namespace MaxOfEmpires
             inputHelper = new InputHelper();
             IsMouseVisible = true;
 
-            
+            overlayPos = new Vector2(graphics.PreferredBackBufferHeight, 0);
+
             base.Initialize();
         }
 
@@ -106,9 +102,6 @@ namespace MaxOfEmpires
             // Initialize keys
             InitializeKeys(FileManager.LoadConfig("Keys").GetPropertySection("key"));
 
-            //Initialises settings
-            settings = new Settings();
-            settings.InitializeSettingsFromFile();
         }
 
         /// <summary>
@@ -172,9 +165,9 @@ namespace MaxOfEmpires
             //EINDE TIJDELIJKE CODE
 
             //TIJDELIJKE CODE OMDAT IK GEEN IDEE HEB WAAR IK DIT ANDERS ZOU KUNNEN ZETTEN
-            if (inputHelper.KeyPressed(Keys.F11))
+            if (inputHelper.KeyPressed(Keys.Escape))
             {
-                graphics.ToggleFullScreen();
+                Quit();
             }
             //EINDE TIJDELIJKE CODE
 

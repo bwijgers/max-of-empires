@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
+using Microsoft.Xna.Framework;
 
 namespace MaxOfEmpires
 {
@@ -15,6 +17,11 @@ namespace MaxOfEmpires
         private int prevCameraControl;
         private int prevResolution;
         private bool prevFullscreen;
+
+        public Settings()
+        {
+            LoadSettingsFromFile();
+        }
 
         public void InitializeSettingsFromFile()
         {
@@ -39,7 +46,7 @@ namespace MaxOfEmpires
         private void SaveSettingsToFile()
         {
             Configuration settingsFile = FileManager.LoadConfig("Settings");
-
+            
             //TODO: SAVE SETTINGS TO FILE
 
             //Camera settings
@@ -94,21 +101,33 @@ namespace MaxOfEmpires
                 case 1:
                     {
                         //resolution = 800 * 480
+                        MaxOfEmpires.graphics.PreferredBackBufferWidth = 800;
+                        MaxOfEmpires.graphics.PreferredBackBufferHeight = 480;
+                        MaxOfEmpires.graphics.ApplyChanges();
                         break;
                     }
                 case 2:
                     {
                         //resolution = 1280 * 768
+                        MaxOfEmpires.graphics.PreferredBackBufferWidth = 1280;
+                        MaxOfEmpires.graphics.PreferredBackBufferHeight = 768;
+                        MaxOfEmpires.graphics.ApplyChanges();
                         break;
                     }
                 case 3:
                     {
                         //resolution = 1920 * 1080
+                        MaxOfEmpires.graphics.PreferredBackBufferWidth = 1920;
+                        MaxOfEmpires.graphics.PreferredBackBufferHeight = 1080;
+                        MaxOfEmpires.graphics.ApplyChanges();
                         break;
                     }
                 default:
                     {
                         //resolution = 1280 * 768
+                        MaxOfEmpires.graphics.PreferredBackBufferWidth = 1280;
+                        MaxOfEmpires.graphics.PreferredBackBufferHeight = 768;
+                        MaxOfEmpires.graphics.ApplyChanges();
                         break;
                     }
             }
@@ -119,16 +138,22 @@ namespace MaxOfEmpires
                 case true:
                     {
                         //turn fullscreen on
+                        MaxOfEmpires.graphics.IsFullScreen = true;
+                        MaxOfEmpires.graphics.ApplyChanges();
                         break;
                     }
                 case false:
                     {
                         //turn fullscreen off
+                        MaxOfEmpires.graphics.IsFullScreen = false;
+                        MaxOfEmpires.graphics.ApplyChanges();
                         break;
                     }
                 default:
                     {
                         //turn fullscreen off
+                        MaxOfEmpires.graphics.IsFullScreen = false;
+                        MaxOfEmpires.graphics.ApplyChanges();
                         break;
                     }
             }

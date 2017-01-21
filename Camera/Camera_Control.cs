@@ -8,7 +8,7 @@ namespace MaxOfEmpires
 {
     public partial class Camera
     {
-
+        #region Variables
         /// <summary>
         /// The horizontal breakoff point for the mouse controlled camera
         /// </summary>
@@ -44,6 +44,17 @@ namespace MaxOfEmpires
         /// The speed with which the camera zooms
         /// </summary>
         private float zoomSpeed = 0.01f;
+
+        /// <summary>
+        /// The minimal value for the zoom
+        /// </summary>
+        private float zoomMin = 1.0f;
+
+        /// <summary>
+        /// The maximum value for the zoom
+        /// </summary>
+        private float zoomMax = 5.0f;
+        #endregion
 
         /// <summary>
         /// A function that checks if the mouse is in such a position that the camera should move.
@@ -165,7 +176,7 @@ namespace MaxOfEmpires
                 case "in":
                 case "In":
                     {
-                        Zoom = MathHelper.Clamp(Zoom + ZoomSpeed, 0.5f, 5.0f);
+                        Zoom = MathHelper.Clamp(Zoom + ZoomSpeed, zoomMin, zoomMax);
                         break;
                     }
 
@@ -173,18 +184,45 @@ namespace MaxOfEmpires
                 case "out":
                 case "Out":
                     {
-                        Zoom = MathHelper.Clamp(Zoom - ZoomSpeed, 0.5f, 5.0f);
+                        Zoom = MathHelper.Clamp(Zoom - ZoomSpeed, zoomMin, zoomMax);
                         break;
                     }
                 
 
             }
-            
-            // Calculations needed to cap the camera
-            float cameraGridCompFactorX = ((GameStateManager.GridSize.X - MaxOfEmpires.minGridSize.X) * 32);
-            float cameraGridCompFactorY = ((GameStateManager.GridSize.Y - MaxOfEmpires.minGridSize.Y) * 32);
-            float cameraGridCalc = MaxOfEmpires.graphics.PreferredBackBufferHeight - (MaxOfEmpires.graphics.PreferredBackBufferHeight / Zoom);
 
+            // Calculations needed to cap the camera
+            float cameraGridCompFactorX = 0;
+            float cameraGridCompFactorY = 0;
+            float cameraGridCalc = 0;
+            switch (MaxOfEmpires.settings.Resolution)
+            {
+                //800 x 480
+                case 1:
+                    {
+                        cameraGridCompFactorX = ((GameStateManager.GridSize.X - 15) * 32);
+                        cameraGridCompFactorY = ((GameStateManager.GridSize.Y - 15) * 32);
+                        cameraGridCalc = 480 - (480 / Zoom);
+                        break;
+                    }
+                //1280 x 768
+                case 2:
+                    {
+                        cameraGridCompFactorX = ((GameStateManager.GridSize.X - 24) * 32);
+                        cameraGridCompFactorY = ((GameStateManager.GridSize.Y - 24) * 32);
+                        cameraGridCalc = 768 - (768 / Zoom);
+                        break;
+                    }
+                //1920 x 1080
+                case 3:
+                    {
+                        cameraGridCompFactorX = ((GameStateManager.GridSize.X - 33.75f) * 32);
+                        cameraGridCompFactorY = ((GameStateManager.GridSize.Y - 33.75f) * 32);
+                        cameraGridCalc = 1080 - (1080 / Zoom);
+                        break;
+                    }
+            }
+            
             // Caps the camera so it wont move past the grid
             float x = MathHelper.Clamp(MaxOfEmpires.camera.Position.X, 0.0f, (int)(cameraGridCalc + cameraGridCompFactorX));
             float y = MathHelper.Clamp(MaxOfEmpires.camera.Position.Y, 0.0f, (int)(cameraGridCalc + cameraGridCompFactorY));
