@@ -14,6 +14,8 @@ namespace MaxOfEmpires.GameStates.Overlays
         private GuiLabel labelUnitHit;
         private GuiLabel labelUnitHp;
 
+        public Color playerColor;
+
         public OverlayBattleState()
         {
             // Add the end turn button
@@ -36,7 +38,7 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         public override void draw(SpriteBatch spriteBatch)
         {
-            DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle((int)MaxOfEmpires.OverlayPos.X, 0, MaxOfEmpires.ScreenSize.X, MaxOfEmpires.ScreenSize.Y), Color.DeepPink);
+            DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle((int)MaxOfEmpires.OverlayPos.X, 0, MaxOfEmpires.ScreenSize.X, MaxOfEmpires.ScreenSize.Y), playerColor);
             base.draw(spriteBatch);
         }
 

@@ -95,7 +95,7 @@ namespace MaxOfEmpires.GameStates
 
         private void InitOverlay()
         {
-            overlay.EndTurnHandler = () => shouldTurnUpdate = true;
+            overlay.EndTurnHandler = () => { shouldTurnUpdate = true; };
             overlay.InitBuildingList(ecoGrid);
 
             foreach (Player p in players)
@@ -154,6 +154,7 @@ namespace MaxOfEmpires.GameStates
         {
             overlay = new Overlays.OverlayEconomyState();
             InitOverlay();
+            UpdateGuiInformation();
         }
 
         /// <summary>
@@ -163,10 +164,7 @@ namespace MaxOfEmpires.GameStates
         {
             SelectNextPlayer();
             ecoGrid.TurnUpdate(turnNum, CurrentPlayer);
-
-            overlay.LabelCurrentPlayer.setLabelText("Current player: " + CurrentPlayer.Name);
-            UpdateMoneyDisplay(CurrentPlayer);
-            UpdatePopulationDisplay(CurrentPlayer);
+            UpdateGuiInformation();
         }
 
         public override void Update(GameTime time)
@@ -178,6 +176,14 @@ namespace MaxOfEmpires.GameStates
                 shouldTurnUpdate = false;
                 TurnUpdate();
             }
+        }
+
+        private void UpdateGuiInformation()
+        {
+            overlay.playerColor = CurrentPlayer.Color;
+            overlay.LabelCurrentPlayer.setLabelText("Current player: " + CurrentPlayer.Name);
+            UpdateMoneyDisplay(CurrentPlayer);
+            UpdatePopulationDisplay(CurrentPlayer);
         }
 
         private void UpdateMoneyDisplay(Player p)

@@ -131,8 +131,8 @@ namespace MaxOfEmpires
             LoadConfiguration();
 
             // Load players
-            Player blue = new Player("Blue", "Blue", mainConfiguration.GetProperty<int>("player.startingMoney"));
-            Player red = new Player("Red", "Red", mainConfiguration.GetProperty<int>("player.startingMoney"));
+            Player blue = new Player("Blue", "Blue", Color.Blue, mainConfiguration.GetProperty<int>("player.startingMoney"));
+            Player red = new Player("Red", "Red", Color.Red, mainConfiguration.GetProperty<int>("player.startingMoney"));
 
             // Adds battleState to the GamestateManager
             GameStateManager.AddState("economy", new EconomyState(blue, red));

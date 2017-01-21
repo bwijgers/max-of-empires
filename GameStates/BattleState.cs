@@ -135,6 +135,7 @@ namespace MaxOfEmpires.GameStates
         {
             overlay = new Overlays.OverlayBattleState();
             InitOverlay();
+            UpdateOverlayInformation();
         }
 
         /// <summary>
@@ -147,9 +148,7 @@ namespace MaxOfEmpires.GameStates
 
             // TurnUpdate the grid
             battleGrid.TurnUpdate(turnNum, CurrentPlayer);
-
-            // Show whose turn it is in the overlay
-            overlay.LabelCurrentPlayer.setLabelText("Current player: " + CurrentPlayer.Name);
+            UpdateOverlayInformation();
         }
 
         public override void Update(GameTime time)
@@ -166,6 +165,13 @@ namespace MaxOfEmpires.GameStates
                 shouldTurnUpdate = false;
                 TurnUpdate();
             }
+        }
+
+        private void UpdateOverlayInformation()
+        {
+            // Show whose turn it is in the overlay
+            overlay.LabelCurrentPlayer.setLabelText("Current player: " + CurrentPlayer.Name);
+            overlay.playerColor = CurrentPlayer.Color;
         }
         
         /// <summary>

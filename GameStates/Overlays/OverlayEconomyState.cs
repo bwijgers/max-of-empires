@@ -34,6 +34,9 @@ namespace MaxOfEmpires.GameStates.Overlays
         private GuiList listBuilderActions;
         private GuiList listBuildingActions;
 
+        // Overlay background color
+        public Color playerColor;
+
         public OverlayEconomyState()
         {
             // Add the end turn button
@@ -109,7 +112,7 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         public override void draw(SpriteBatch spriteBatch)
         {
-            DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle(MaxOfEmpires.overlayPos.ToPoint(), MaxOfEmpires.ScreenSize), Color.DeepPink);
+            DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle(MaxOfEmpires.overlayPos.ToPoint(), MaxOfEmpires.ScreenSize), playerColor);
             base.draw(spriteBatch);
         }
 

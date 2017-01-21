@@ -392,7 +392,7 @@ namespace MaxOfEmpires
                     starty++;
                 }
             }
-            Unit u = SoldierRegistry.GetSoldier("unit.swordsman", new Player("", "Blue", 1));
+            Unit u = SoldierRegistry.GetSoldier("unit.swordsman", new Player("", "Blue", Color.Blue, 1));
             u.Parent = this;
             u.MovesLeft = u.MoveSpeed = int.MaxValue;
             (this[startx, starty] as Tile).SetUnit(u);

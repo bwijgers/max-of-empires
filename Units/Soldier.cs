@@ -39,7 +39,7 @@ namespace MaxOfEmpires.Units
             // Load texture from config file
             string texName = config.GetProperty<string>("texture.name");
             //string texName = "swordsman";
-            return new Soldier(config.GetProperty<string>("name"), 0, 0, new Player("none", "blue", 100), texName, moveSpeed, stats, range);
+            return new Soldier(config.GetProperty<string>("name"), 0, 0, new Player("none", "blue", Color.Black, 100), texName, moveSpeed, stats, range);
         }
 
         /// <summary>

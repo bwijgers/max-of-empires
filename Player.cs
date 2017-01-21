@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace MaxOfEmpires
@@ -9,17 +10,19 @@ namespace MaxOfEmpires
         private int money;
         private string name;
         private string colorName;
+        private Color color;
 
         public EconomyGrid grid;
 
         private List<Action<Player>> updateMoneyHandlers;
         private List<Action<Player>> updatePopulationHandlers;
 
-        public Player(string name, string colorName, int startingMoney)
+        public Player(string name, string colorName, Color color, int startingMoney)
         {
             money = startingMoney;
             this.colorName = colorName;
             this.name = name;
+            this.color = color;
             updateMoneyHandlers = new List<Action<Player>>();
             updatePopulationHandlers = new List<Action<Player>>();
         }
@@ -105,6 +108,8 @@ namespace MaxOfEmpires
             });
             Population = pop;
         }
+
+        public Color Color => color;
 
         public int Population
         {
