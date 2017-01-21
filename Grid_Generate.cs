@@ -14,7 +14,7 @@ namespace MaxOfEmpires
     {
 
         // A point that radiates (sometimes negative) value to the surrounding tiles. used to create heightmap, and humiditymap.
-        private struct gridHeightpoint
+        private struct Heightpoint
         {
             public Vector2 position;
             public double height;
@@ -47,8 +47,8 @@ namespace MaxOfEmpires
             public int y;
         }
 
-        private gridHeightpoint[] lakeArray;
-        private gridHeightpoint[] mountainArray;
+        private Heightpoint[] lakeArray;
+        private Heightpoint[] mountainArray;
         private double[,] heightMap;
         private Terrain attackBonusTerrain;
         private Terrain defenseBonusTerrain;
@@ -56,14 +56,14 @@ namespace MaxOfEmpires
         // Double mirrors the grid to create a symmetrical field (with double width and height).
         public void BalancedEconomyGrid(int gridWidth, int gridHeight)
         {
-            int origridWidth = gridWidth/2;
-            int origridHeight = gridHeight/2;
-            EconomyGenerate(origridWidth, origridHeight);
-            for (int x = origridWidth; x < gridWidth; x++)
+            int oriGridWidth = gridWidth/2;
+            int oriGridHeight = gridHeight/2;
+            EconomyGenerate(oriGridWidth, oriGridHeight);
+            for (int x = oriGridWidth; x < gridWidth; x++)
             {
-                for(int y = 0; y< origridHeight; y++)
+                for(int y = 0; y< oriGridHeight; y++)
                 {
-                    Tile copyTile = this[2*origridWidth-x-1, y] as Tile;
+                    Tile copyTile = this[2*oriGridWidth-x-1, y] as Tile;
                     Tile thisTile = this[x, y] as Tile;
                     thisTile.hills = copyTile.hills;
                     thisTile.Terrain = copyTile.Terrain;
@@ -71,9 +71,9 @@ namespace MaxOfEmpires
             }
             for (int x = 0; x < Width; x++)
             {
-                for (int y = origridHeight; y < gridHeight; y++)
+                for (int y = oriGridHeight; y < gridHeight; y++)
                 {
-                    Tile copyTile = this[x, 2*origridHeight-y-1] as Tile;
+                    Tile copyTile = this[x, 2*oriGridHeight-y-1] as Tile;
                     Tile thisTile = this[x, y] as Tile;
                     thisTile.hills = copyTile.hills;
                     thisTile.Terrain = copyTile.Terrain;
@@ -133,10 +133,10 @@ namespace MaxOfEmpires
             {
                 weighValue[i] = 1-((i - defendingRows)/ (double)(gridHeight - 1 - defendingRows)); // Generates a weighvalue for all transitionrows
             }
-            bool validgridHeightMap = false;
-            while (!validgridHeightMap)
+            bool validHeightMap = false;
+            while (!validHeightMap)
             {
-                validgridHeightMap = GeneratePerlingridHeights(file, attackComposition, defendComposition, weighValue, gridWidth, gridHeight); // If not evertything is accessible, generates new heightmap
+                validHeightMap = GeneratePerlingridHeights(file, attackComposition, defendComposition, weighValue, gridWidth, gridHeight); // If not evertything is accessible, generates new heightmap
             }
             GeneratePerlinHumidity(file, attackComposition, defendComposition, weighValue, gridWidth, gridHeight);
             GeneratePerlinTemperature(file, attackComposition, defendComposition, weighValue, gridWidth, gridHeight);
@@ -299,12 +299,12 @@ namespace MaxOfEmpires
             {
                 terrainFinished = GenerateTerrain(file, gridWidth, gridHeight);
             }
-            gridHeightpoint[] humidity = SetHumidityPoints(file,mountainArray, lakeArray, gridWidth, gridHeight);
+            Heightpoint[] humidity = SetHumidityPoints(file,mountainArray, lakeArray, gridWidth, gridHeight);
             GenerateTemperature(file, gridWidth, gridHeight, 0.1, gridWidth, gridHeight);
         }
 
         // Creates a double grid with gridHeight values based on heightpoints in mountainArran and lakeArray
-        private double[,] GenerategridHeightmap(Configuration file, int gridWidth, int gridHeight)
+        private double[,] GenerateHeightmap(Configuration file, int gridWidth, int gridHeight)
         {
             heightMap = new double[gridWidth, gridHeight];
             // Lakes = hills = mountains = 0;
@@ -337,15 +337,15 @@ namespace MaxOfEmpires
         // Generates terrain based on height.
         private bool GenerateTerrain(Configuration file, int gridWidth, int gridHeight)
         {
-            heightMap = GenerategridHeightmap(file, gridWidth, gridHeight);
-            List<TileWithHeight> listOfgridHeights = SortList(heightMap, gridWidth, gridHeight);
+            heightMap = GenerateHeightmap(file, gridWidth, gridHeight);
+            List<TileWithHeight> listOfHeights = SortList(heightMap, gridWidth, gridHeight);
             int numberOfMountains = GetAmount(file, "percentage.mountain.min", "percentage.mountain.max", gridWidth, gridHeight);
             int numberOfLakes = GetAmount(file, "percentage.lake.min", "percentage.lake.max", gridWidth, gridHeight);
             int numberOfHills = GetAmount(file, "percentage.hills.min", "percentage.hills.max", gridWidth, gridHeight);
 
             int currentHighestTile = 0;
             // Resets terrain
-            foreach(TileWithHeight twh in listOfgridHeights)
+            foreach(TileWithHeight twh in listOfHeights)
             {
                 Tile currentTile = this[twh.x, twh.y] as Tile;
                 currentTile.Terrain = Terrain.Plains;
@@ -354,19 +354,19 @@ namespace MaxOfEmpires
             // Generates terrain based on heighest and lowest values in listOfgridHeight
             for (; currentHighestTile < numberOfMountains; currentHighestTile++)
             {
-                Tile currentTile = this[listOfgridHeights[currentHighestTile].x, listOfgridHeights[currentHighestTile].y] as Tile;
+                Tile currentTile = this[listOfHeights[currentHighestTile].x, listOfHeights[currentHighestTile].y] as Tile;
                 currentTile.Terrain = Terrain.Mountain;
                 currentTile.hills = false;
             }
             for (; currentHighestTile < numberOfHills+numberOfMountains; currentHighestTile++)
             {
-                Tile currentTile = this[listOfgridHeights[currentHighestTile].x, listOfgridHeights[currentHighestTile].y] as Tile;
+                Tile currentTile = this[listOfHeights[currentHighestTile].x, listOfHeights[currentHighestTile].y] as Tile;
                 currentTile.Terrain = Terrain.Plains;
                 currentTile.hills = true;
             }
-            for (int i = listOfgridHeights.Count-1; i >= listOfgridHeights.Count-numberOfMountains; i--)
+            for (int i = listOfHeights.Count-1; i >= listOfHeights.Count-numberOfMountains; i--)
             {
-                Tile currentTile = this[listOfgridHeights[i].x, listOfgridHeights[i].y] as Tile;
+                Tile currentTile = this[listOfHeights[i].x, listOfHeights[i].y] as Tile;
                 currentTile.Terrain = Terrain.Lake;
                 currentTile.hills = false;
             }
@@ -424,10 +424,10 @@ namespace MaxOfEmpires
         }
 
         // Creates a new array of random heightpoints
-        private gridHeightpoint[] ResetMountains(Configuration file, int gridWidth, int gridHeight)
+        private Heightpoint[] ResetMountains(Configuration file, int gridWidth, int gridHeight)
         {
             int mountains = file.GetProperty<int>("mountainPeaks");
-            gridHeightpoint[] returnlist = new gridHeightpoint[mountains];
+            Heightpoint[] returnlist = new Heightpoint[mountains];
             for (int i = 0; i < mountains; i++)
             {
                 returnlist[i].position.X =(float) MaxOfEmpires.Random.NextDouble() * gridWidth;
@@ -439,10 +439,10 @@ namespace MaxOfEmpires
         }
 
         // Creates a new arrai of random negative heightpoints
-        private gridHeightpoint[] ResetLakes(Configuration file, int gridWidth, int gridHeight)
+        private Heightpoint[] ResetLakes(Configuration file, int gridWidth, int gridHeight)
         {
             int lakes = file.GetProperty<int>("lakeBottoms");
-            gridHeightpoint[] returnlist = new gridHeightpoint[lakes];
+            Heightpoint[] returnlist = new Heightpoint[lakes];
             for (int i = 0; i < lakes; i++)
             {
                 returnlist[i].position.X =(float) MaxOfEmpires.Random.NextDouble() * gridWidth;
@@ -454,10 +454,10 @@ namespace MaxOfEmpires
         }
 
         // Creates humiditypoints based on mountains: lakes make their surroundings humid, mountains make their surroundings dry.
-        private gridHeightpoint[] SetHumidityPoints(Configuration file, gridHeightpoint[] mountainArray, gridHeightpoint[] lakeArray, int gridWidth, int gridHeight)
+        private Heightpoint[] SetHumidityPoints(Configuration file, Heightpoint[] mountainArray, Heightpoint[] lakeArray, int gridWidth, int gridHeight)
         {
             int extraHumidityPoints = file.GetProperty<int>("extraHumidityPoints");
-            gridHeightpoint[] HumidityPoints = new gridHeightpoint[extraHumidityPoints+mountainArray.Length+lakeArray.Length];
+            Heightpoint[] HumidityPoints = new Heightpoint[extraHumidityPoints+mountainArray.Length+lakeArray.Length];
 
             for(int i = 0; i < extraHumidityPoints; i++)
             {
@@ -471,7 +471,7 @@ namespace MaxOfEmpires
         }
 
         // Creates a double grid with humidity values
-        private void GenerateHumiditySim(Configuration file, gridHeightpoint[] humidityPoints, int gridWidth, int gridHeight)
+        private void GenerateHumiditySim(Configuration file, Heightpoint[] humidityPoints, int gridWidth, int gridHeight)
         {
             double[,] gridSim = new double[gridWidth,gridHeight];
             double humidityNoise = file.GetProperty<int>("humidityNoise")/100.0;
