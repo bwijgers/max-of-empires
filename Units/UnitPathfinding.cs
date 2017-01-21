@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MaxOfEmpires.Units
 {
-    class Pathfinding
+    partial class Pathfinding
     {
         private static List<PathToTile> shortestPaths;
 
@@ -249,8 +249,8 @@ namespace MaxOfEmpires.Units
         /// <returns></returns>
         public static PathToTile ShortestPath(Unit movingUnit, Point p)
         {
-            GeneratePaths(movingUnit, movingUnit.PositionInGrid);
-            return shortestPaths.Find(path => path.target.Equals(p));
+            //GeneratePaths(movingUnit, movingUnit.PositionInGrid);
+            return AStar(movingUnit, movingUnit.PositionInGrid, p);
         }
     }
 }

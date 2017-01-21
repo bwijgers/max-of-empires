@@ -71,6 +71,7 @@
     <Compile Include="GameObjects\GameObjectList.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Units\Army.cs" />
+    <Compile Include="Units\AStarPathfinding.cs" />
     <Compile Include="Units\Builder.cs" />
     <Compile Include="Perlin.cs" />
     <Compile Include="Units\Range.cs" />
