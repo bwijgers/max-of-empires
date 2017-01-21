@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MaxOfEmpires.GameStates;
+using Microsoft.Xna.Framework;
 
 namespace MaxOfEmpires
 {
@@ -31,19 +32,19 @@ namespace MaxOfEmpires
                 //800 x 480
                 case 1:
                     {
-                        zoomMin = 15 / MaxOfEmpires.GridSize.X;
+                        zoomMin = 15 / GameStateManager.GridSize.X;
                         break;
                     }
                 //1280 x 768
                 case 2:
                     {
-                        zoomMin = 24 / MaxOfEmpires.GridSize.X;
+                        zoomMin = 24 / GameStateManager.GridSize.X;
                         break;
                     }
                 //1920 x 1080
                 case 3:
                     {
-                        zoomMin = 33.75f / MaxOfEmpires.GridSize.X;
+                        zoomMin = 33.75f / GameStateManager.GridSize.X;
                         break;
                     }
             }

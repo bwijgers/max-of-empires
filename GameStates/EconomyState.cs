@@ -30,7 +30,6 @@ namespace MaxOfEmpires.GameStates
             // Initialize the field
             ecoGrid.InitField();
 
-
             ResetOverlay();
             Reset();
         }
@@ -46,7 +45,7 @@ namespace MaxOfEmpires.GameStates
         public override void HandleInput(InputHelper helper, KeyManager manager)
         {
             // Mouse over overlay
-            if (new Rectangle(480, 0, MaxOfEmpires.ScreenSize.X, MaxOfEmpires.ScreenSize.Y).Contains(helper.GetMousePosition(false)))
+            if (new Rectangle(MaxOfEmpires.overlayPos.ToPoint(), MaxOfEmpires.ScreenSize).Contains(helper.GetMousePosition(false)))
             {
                 // Update the overlay
                 overlay.update(helper);
@@ -154,7 +153,7 @@ namespace MaxOfEmpires.GameStates
         public override void ResetOverlay()
         {
             overlay = new Overlays.OverlayEconomyState();
-            InitOverlay()
+            InitOverlay();
         }
 
         /// <summary>

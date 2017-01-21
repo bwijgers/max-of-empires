@@ -53,17 +53,10 @@ namespace MaxOfEmpires.GameStates
             base.Draw(time, gameObjectS, overlayS);
         }
 
-        public override Vector2 GetCurrentGridSize()
-        {
-            int x = battleGrid.Width;
-            int y = battleGrid.Height;
-            return new Vector2(x, y);
-        }
-
         public override void HandleInput(InputHelper helper, KeyManager manager)
         {
             // TODO make sure bounds stay correct based on how much is drawn and stuff
-            if (new Rectangle(480, 0, MaxOfEmpires.ScreenSize.X, MaxOfEmpires.ScreenSize.Y).Contains(helper.GetMousePosition(false)))
+            if (new Rectangle(MaxOfEmpires.overlayPos.ToPoint(), MaxOfEmpires.ScreenSize).Contains(helper.GetMousePosition(false)))
             {
                 // Update the overlay
                 overlay.update(helper);
@@ -92,15 +85,6 @@ namespace MaxOfEmpires.GameStates
                     overlay.PrintSoldierInfo((Soldier)t.Unit);
                 }
             }
-        }
-
-        /// <summary>
-        /// Initializes the overlay. Add all GuiElements here.
-        /// </summary>
-        private void InitOverlay()
-        {
-            // Add a click handler to the end turn button.
-            overlay.EndTurnHandler = () => { shouldTurnUpdate = true; };
         }
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace MaxOfEmpires
     public class MaxOfEmpires : Game
     {
         #region statics
-        public static Camera camera = new Camera();
+        public static Camera camera;
         private static GraphicsDeviceManager graphics;
         private static Random random = new Random((int)DateTime.Now.Ticks);
         private static bool running = true;
@@ -28,11 +28,6 @@ namespace MaxOfEmpires
         private static Vector2 windowSize = new Vector2(1280, 768);
 
         /// <summary>
-        /// The size of the grid
-        /// </summary>
-        private static Vector2 gridSize = new Vector2(48, 48);
-        
-        /// <summary>
         /// Quits the game. Effectively closes the game.
         /// </summary>
         public static void Quit()
@@ -40,10 +35,8 @@ namespace MaxOfEmpires
             running = false;
         }
 
-        public static Vector2 GridSize => gridSize;
         public static Vector2 OverlayPos => overlayPos;
         public static Random Random => random;
-        public static Point ScreenSize => new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
         public static Point ScreenSize
         {
@@ -74,8 +67,6 @@ namespace MaxOfEmpires
 
             graphics.PreferredBackBufferWidth = (int)windowSize.X;
             graphics.PreferredBackBufferHeight = (int)windowSize.Y;
-
-            camera = new Camera();
         }
 
         /// <summary>
@@ -91,19 +82,12 @@ namespace MaxOfEmpires
 
             overlayPos = new Vector2(graphics.PreferredBackBufferHeight, 0);
 
+            camera = new Camera();
+
             //Initialize settings
             settings.InitializeSettingsFromFile();
 
             base.Initialize();
-        }
-
-        /// <summary>
-        /// Initializes all keybinds, loaded from Keys.cfg
-        /// </summary>
-        /// <param name="config">The configuration file and section to use for loading.</param>
-        private void InitializeKeys(Configuration config)
-        {
-                
         }
 
         protected void LoadConfiguration()
@@ -275,6 +259,8 @@ namespace MaxOfEmpires
             }
 
             overlayPos = new Vector2(ScreenSize.Y, 0);
+
+            camera = new Camera();
             GameStateManager.UpdateResolution();
         }
 

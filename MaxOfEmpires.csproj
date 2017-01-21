@@ -171,7 +171,7 @@
     <None Include="Content\configs\terrain\forestCompositionWH.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Content\configs\terrain\forestComposition.cfg">
+    <None Include="Content\configs\terrain\forestComposition.cfg" />
     <None Include="Content\configs\Settings.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -142,54 +142,6 @@ namespace MaxOfEmpires
         }
 
         /// <summary>
-        /// Executed when the player left-clicks on the grid.
-        /// </summary>
-        /// <param name="helper">The InputHelper used for mouse input.</param>
-        public override void OnLeftClick(InputHelper helper)
-        {
-            // Get the current Tile under the mouse
-            Tile clickedTile = GetTileUnderMouse(helper, true);
-
-            // Do nothing if there is no clicked tile.
-            if (clickedTile == null)
-                return;
-
-            // If the player had a tile selected and it contains a Unit...
-            if (SelectedTile != null && SelectedTile.Occupied)
-            {
-                // ... move the Unit there, if the square is not occupied and the unit is capable, then unselect the tile.
-                SelectedTile.Unit.TargetPosition = clickedTile.GridPos;
-                Point movePos = Pathfinding.MoveTowardsTarget(SelectedTile.Unit);
-
-                if (CheckMoveUnit(movePos, SelectedTile.Unit) || CheckAttackSoldier(clickedTile.GridPos, (Soldier)SelectedTile.Unit))
-                {
-                    SelectTile(InvalidTile);
-                    return;
-                }
-            }
-
-            // Check if the player clicked a tile with a Unit on it, and select it if it's there. 
-            else if (clickedTile.Occupied && clickedTile.Unit.Owner == currentPlayer && clickedTile.Unit.HasAction)
-            {
-                // If the Unit can walk, show where it is allowed to walk. 
-                if (!clickedTile.Unit.HasMoved)
-                {
-                    Point[] walkablePositions = Pathfinding.ReachableTiles(clickedTile.Unit);
-                    SetUnitWalkingOverlay(walkablePositions);
-                }
-
-                // This unit can be selected. Show the player it is selected too
-                SelectTile(clickedTile.GridPos);
-
-                // Add an overlay for enemy units that can be attacked
-                if (!(clickedTile.Unit as Soldier).HasAttacked)
-                {
-                    SetUnitAttackingOverlay((Soldier)clickedTile.Unit);
-                }
-            }
-        }
-
-        /// <summary>
         /// Called when a player wins a battle (because all enemies died).
         /// </summary>
         /// <param name="winningPlayer">The player that won the battle.</param>

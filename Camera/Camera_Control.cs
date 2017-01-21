@@ -103,7 +103,7 @@ namespace MaxOfEmpires
                     MoveCamera("up");
                 }
 
-                if (inputHelper.GetMousePosition(false).Y > CameraBreakoffY - CameraMouseMargin && inputHelper.GetMousePosition(false).Y<= CameraBreakoffY)
+                if (inputHelper.GetMousePosition(false).Y > CameraBreakoffY - CameraMouseMargin && inputHelper.GetMousePosition(false).Y <= CameraBreakoffY)
                 {
                     MoveCamera("down");
                 }
@@ -138,7 +138,7 @@ namespace MaxOfEmpires
         /// <param name="direction">The direction to which the camera should move (up, down, left, right).</param>
         public void MoveCamera(string direction)
         {
-            double zoomCap = 15 / GameStateManager.GridSize.X;
+            double zoomCap = 35 / GameStateManager.GridSize.X;
             switch (direction)
             {
                 // Moves the camera upwards

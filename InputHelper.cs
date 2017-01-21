@@ -49,29 +49,6 @@ namespace MaxOfEmpires
             return currentKeyboard.IsKeyDown(k);
         }
 
-        public Vector2 GetMousePosition(bool basedOnCamera)
-        {
-            if (!basedOnCamera)
-            {
-                return currentMouse.Position.ToVector2();
-            }
-
-            else
-            {
-                return currentMouse.Position.ToVector2() / MaxOfEmpires.camera.Zoom;
-            }
-        }
-
-        /// <summary>
-        /// Checks whether a key on the keyboard is currently held down.
-        /// </summary>
-        /// <param name="k">The key to check.</param>
-        /// <returns>True if the key is currently down, false otherwise.</returns>
-        public bool IsKeyDown(Keys k)
-        {
-            return currentKeyboard.IsKeyDown(k);
-        }
-
         /// <summary>
         /// Checks whether a key on the keyboard was pressed during the last update.
         /// </summary>
