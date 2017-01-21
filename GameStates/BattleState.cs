@@ -38,8 +38,7 @@ namespace MaxOfEmpires.GameStates
             battleGrid.InitField();
 
             // Initialize the overlay.
-            overlay = new Overlays.OverlayBattleState();
-            InitOverlay();
+            ResetOverlay();
 
             // Reset ourselves
             Reset();
@@ -50,13 +49,6 @@ namespace MaxOfEmpires.GameStates
             battleGrid.Draw(time, gameObjectS);
             overlay.draw(overlayS);
             base.Draw(time, gameObjectS, overlayS);
-        }
-
-        public override Vector2 GetCurrentGridSize()
-        {
-            int x = battleGrid.Width;
-            int y = battleGrid.Height;
-            return new Vector2(x, y);
         }
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
@@ -118,6 +110,12 @@ namespace MaxOfEmpires.GameStates
             // Start turn
             TurnUpdate();
             TurnUpdate();
+        }
+
+        public override void ResetOverlay()
+        {
+            overlay = new Overlays.OverlayBattleState();
+            InitOverlay();
         }
 
         /// <summary>

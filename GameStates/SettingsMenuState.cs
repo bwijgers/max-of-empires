@@ -10,7 +10,7 @@ namespace MaxOfEmpires.GameStates
 
         public SettingsMenuState()
         {
-            overlay = new OverlaySettingsMenu();
+            ResetOverlay();
         }
 
         public override void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS)
@@ -18,14 +18,14 @@ namespace MaxOfEmpires.GameStates
             overlay.draw(overlayS);
         }
 
-        public override Vector2 GetCurrentGridSize()
-        {
-            return new Vector2(0, 0);
-        }
-
         public override void HandleInput(InputHelper helper, KeyManager manager)
         {
             overlay.update(helper);
+        }
+
+        public override void ResetOverlay()
+        {
+            overlay = new OverlaySettingsMenu();
         }
 
         public override void Update(GameTime time)

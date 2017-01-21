@@ -13,6 +13,7 @@ namespace MaxOfEmpires
         private Dictionary<Keys, char> alphabetKeys;
         private KeyboardState currentKeyboard, previousKeyboard;
         private MouseState currentMouse, previousMouse;
+        private Vector2 displayScale;
 
         /// <summary>
         /// Creates a new input helper.
@@ -22,18 +23,19 @@ namespace MaxOfEmpires
             alphabetKeys = new Dictionary<Keys, char>();
             currentKeyboard = previousKeyboard = Keyboard.GetState();
             currentMouse = previousMouse = Mouse.GetState();
+            displayScale = Vector2.One;
         }
 
         public Vector2 GetMousePosition(bool basedOnCamera)
         {
             if (!basedOnCamera)
             {
-                return currentMouse.Position.ToVector2();
+                return currentMouse.Position.ToVector2() * displayScale;
             }
 
             else
             {
-                return currentMouse.Position.ToVector2() / MaxOfEmpires.camera.Zoom;
+                return currentMouse.Position.ToVector2() / MaxOfEmpires.camera.Zoom * displayScale;
             }
         }
 
@@ -71,6 +73,18 @@ namespace MaxOfEmpires
             // Update keyboard input
             previousKeyboard = currentKeyboard;
             currentKeyboard = Keyboard.GetState();
+        }
+
+        public Vector2 DisplayScale
+        {
+            get
+            {
+                return displayScale;
+            }
+            set
+            {
+                displayScale = value;
+            }
         }
 
         public bool MouseLeftButtonPressed => currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released;

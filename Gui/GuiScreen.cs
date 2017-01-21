@@ -62,6 +62,9 @@ namespace Ebilkill.Gui
         {
             if (inputHelper.MouseLeftButtonPressed)
             {
+                // Output a message showing where we clicked :)
+                Console.WriteLine("Mouse position on click: " + inputHelper.GetMousePosition(false));
+
                 // Set no element active if none has been pressed
                 activeElement = -1;
 

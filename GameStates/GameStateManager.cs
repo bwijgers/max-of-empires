@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MaxOfEmpires.Units;
 
 namespace MaxOfEmpires.GameStates
@@ -96,6 +92,19 @@ namespace MaxOfEmpires.GameStates
                 {
                     CurrentState.Reset();
                 }
+
+                // Get the grid size, if it exists
+                if (CurrentState != null)
+                {
+                    if (CurrentState is EconomyState)
+                    {
+                        gridSize = (CurrentState as EconomyState).EconomyGrid.Size.ToVector2();
+                    }
+                    else if (CurrentState is BattleState)
+                    {
+                        gridSize = (CurrentState as BattleState).BattleGrid.Size.ToVector2();
+                    }
+                }
                 return;
             }
             throw new KeyNotFoundException("GameState with name '" + name + "' does not exist.");
@@ -104,11 +113,16 @@ namespace MaxOfEmpires.GameStates
         public static void Update(GameTime time)
         {
             CurrentState?.Update(time);
-            if (CurrentState != null)
+        }
+
+        public static void UpdateResolution()
+        {
+            foreach (GameState state in stateDict.Values)
             {
-                gridSize = CurrentState.GetCurrentGridSize();
+                state.ResetOverlay();
             }
         }
+
         private static GameState CurrentState => currentState;
         public static Vector2 GridSize => gridSize;
     }

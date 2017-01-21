@@ -21,8 +21,7 @@ namespace MaxOfEmpires.GameStates
         {
             ecoGrid = new EconomyGrid((int)MaxOfEmpires.GridSize.X, (int)MaxOfEmpires.GridSize.Y);
 
-            overlay = new Overlays.OverlayEconomyState();
-            InitOverlay();
+            ResetOverlay();
             Reset();
         }
 
@@ -32,11 +31,6 @@ namespace MaxOfEmpires.GameStates
             ecoGrid.Draw(time, gameObjectS);
             overlay.draw(overlayS);
             base.Draw(time, gameObjectS, overlayS);
-        }
-
-        public override Vector2 GetCurrentGridSize()
-        {
-            return new Vector2(ecoGrid.Width, ecoGrid.Height);
         }
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
@@ -95,6 +89,12 @@ namespace MaxOfEmpires.GameStates
             TurnUpdate();
         }
 
+        public override void ResetOverlay()
+        {
+            overlay = new Overlays.OverlayEconomyState();
+            InitOverlay();
+        }
+
         /// <summary>
         /// Called when the turn is updated. Sets the current player to the other player and then calls Grid.TurnUpdate.
         /// </summary>
@@ -118,5 +118,7 @@ namespace MaxOfEmpires.GameStates
                 TurnUpdate();
             }
         }
+
+        public EconomyGrid EconomyGrid => ecoGrid;
     }
 }

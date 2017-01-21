@@ -12,12 +12,12 @@ namespace MaxOfEmpires
         /// <summary>
         /// The horizontal breakoff point for the mouse controlled camera
         /// </summary>
-        private int cameraBreakoffX = (MaxOfEmpires.graphics.PreferredBackBufferWidth - MaxOfEmpires.graphics.PreferredBackBufferHeight);
+        private int cameraBreakoffX = (MaxOfEmpires.ScreenSize.X - MaxOfEmpires.ScreenSize.Y);
 
         /// <summary>
         /// The vertical breakoff point for the mouse controlled camera
         /// </summary>
-        private int cameraBreakoffY = MaxOfEmpires.graphics.PreferredBackBufferHeight;
+        private int cameraBreakoffY = MaxOfEmpires.ScreenSize.Y;
 
         /// <summary>
         /// The margin in pixels from the breakoff points with which the mouse will move the camera

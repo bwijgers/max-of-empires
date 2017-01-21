@@ -95,68 +95,48 @@ namespace MaxOfEmpires
                     }
             }
 
-            //Apply the resolution settings
-            switch(Resolution)
-            {
-                case 1:
-                    {
-                        //resolution = 800 * 480
-                        MaxOfEmpires.graphics.PreferredBackBufferWidth = 800;
-                        MaxOfEmpires.graphics.PreferredBackBufferHeight = 480;
-                        MaxOfEmpires.graphics.ApplyChanges();
-                        break;
-                    }
-                case 2:
-                    {
-                        //resolution = 1280 * 768
-                        MaxOfEmpires.graphics.PreferredBackBufferWidth = 1280;
-                        MaxOfEmpires.graphics.PreferredBackBufferHeight = 768;
-                        MaxOfEmpires.graphics.ApplyChanges();
-                        break;
-                    }
-                case 3:
-                    {
-                        //resolution = 1920 * 1080
-                        MaxOfEmpires.graphics.PreferredBackBufferWidth = 1920;
-                        MaxOfEmpires.graphics.PreferredBackBufferHeight = 1080;
-                        MaxOfEmpires.graphics.ApplyChanges();
-                        break;
-                    }
-                default:
-                    {
-                        //resolution = 1280 * 768
-                        MaxOfEmpires.graphics.PreferredBackBufferWidth = 1280;
-                        MaxOfEmpires.graphics.PreferredBackBufferHeight = 768;
-                        MaxOfEmpires.graphics.ApplyChanges();
-                        break;
-                    }
-            }
-
             //Apply the fullscreen settings
             switch(Fullscreen)
             {
                 case true:
                     {
                         //turn fullscreen on
-                        MaxOfEmpires.graphics.IsFullScreen = true;
-                        MaxOfEmpires.graphics.ApplyChanges();
+                        MaxOfEmpires.fullscreen = true;
                         break;
                     }
                 case false:
-                    {
-                        //turn fullscreen off
-                        MaxOfEmpires.graphics.IsFullScreen = false;
-                        MaxOfEmpires.graphics.ApplyChanges();
-                        break;
-                    }
                 default:
                     {
                         //turn fullscreen off
-                        MaxOfEmpires.graphics.IsFullScreen = false;
-                        MaxOfEmpires.graphics.ApplyChanges();
+                        MaxOfEmpires.fullscreen  = false;
                         break;
                     }
             }
+
+            //Apply the resolution settings
+            switch (Resolution)
+            {
+                case 1:
+                    {
+                        //resolution = 800 * 480
+                        MaxOfEmpires.ScreenSize = new Point(800, 480);
+                        break;
+                    }
+                case 3:
+                    {
+                        //resolution = 1920 * 1080
+                        MaxOfEmpires.ScreenSize = new Point(1920, 1080);
+                        break;
+                    }
+                case 2:
+                default:
+                    {
+                        //resolution = 1280 * 768
+                        MaxOfEmpires.ScreenSize = new Point(1280, 768);
+                        break;
+                    }
+            }
+
         }
        
         public void ResetSettings()

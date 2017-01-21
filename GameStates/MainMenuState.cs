@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MaxOfEmpires.GameStates.Overlays;
 
@@ -15,7 +10,7 @@ namespace MaxOfEmpires.GameStates
 
         public MainMenuState()
         {
-            overlay = new OverlayMainMenu();
+            ResetOverlay();
         }
 
         public override void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS)
@@ -23,14 +18,14 @@ namespace MaxOfEmpires.GameStates
             overlay.draw(overlayS);
         }
 
-        public override Vector2 GetCurrentGridSize()
-        {
-            return new Vector2(0, 0);
-        }
-
         public override void HandleInput(InputHelper helper, KeyManager manager)
         {
             overlay.update(helper);
+        }
+
+        public override void ResetOverlay()
+        {
+            overlay = new OverlayMainMenu();
         }
 
         public override void Update(GameTime time)

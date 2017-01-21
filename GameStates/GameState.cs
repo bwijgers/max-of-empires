@@ -34,8 +34,6 @@ namespace MaxOfEmpires.GameStates
                 DrawingHelper.Instance.DrawRectangle(overlayS, new Rectangle(Point.Zero, MaxOfEmpires.ScreenSize), new Color(0, 0, 0, (float)fadeAmount));
         }
 
-        public abstract Vector2 GetCurrentGridSize();
-
         public virtual void HandleInput(InputHelper helper, KeyManager manager)
         {
         }
@@ -53,6 +51,10 @@ namespace MaxOfEmpires.GameStates
         }
 
         public virtual void Reset()
+        {
+        }
+
+        public virtual void ResetOverlay()
         {
         }
 
