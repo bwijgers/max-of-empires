@@ -60,13 +60,13 @@ namespace MaxOfEmpires.GameStates.Overlays
 
             // Add labels for unit stats
             listArmySoldiers = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Location.X, labelPlayerPopulation.Bounds.Bottom + 5), 5, new List<GuiElement>(), 300);
-            listArmySoldiers.addElement(GuiLabel.createNewLabel(Vector2.Zero, "1", "font")); // Add this so that the size is calculated correctly
+            listArmySoldiers.addElement(ElementArmySelection.CreateBuildButton(Point.Zero, "1", null, null)); // Add this so that the size is calculated correctly
             addElement(listArmySoldiers);
 
             buildingInfoPosition = new Point(buttonEndTurn.Bounds.Left, listArmySoldiers.Bounds.Bottom + listArmySoldiers.MaxHeight + 5);
 
             // Remove this label so that it doesn't display bullshit :)
-            listArmySoldiers.removeLabel(0);
+            listArmySoldiers.removeElement(0);
         }
 
         private void AddBuilderButton(EconomyGrid grid, GuiList listBuilderActions, string buildingName, Type buildingType)
@@ -170,11 +170,11 @@ namespace MaxOfEmpires.GameStates.Overlays
                 sb.Append(a.SelectedUnits[soldierType]+"/");
                 sb.Append(a.UnitsAndCounts[soldierType]);
 
-
                 // Add this label to the list
-                listArmySoldiers.addElement(GuiLabel.createNewLabel(new Vector2(), sb.ToString(), "font"));
-                listArmySoldiers.addElement(ElementBuildButton.CreateBuildButton(Point.Zero,"", LowerSelected(soldierType, a)," -"));
-                listArmySoldiers.addElement(ElementBuildButton.CreateBuildButton(Point.Zero, "", AddSelected(soldierType, a),"+"));
+                listArmySoldiers.addElement(ElementArmySelection.CreateBuildButton(Point.Zero, sb.ToString(), AddSelected(soldierType, a), LowerSelected(soldierType, a)));
+//                listArmySoldiers.addElement(GuiLabel.createNewLabel(new Vector2(), sb.ToString(), "font"));
+//                listArmySoldiers.addElement(ElementBuildButton.CreateBuildButton(Point.Zero,"", LowerSelected(soldierType, a)," -"));
+//                listArmySoldiers.addElement(ElementBuildButton.CreateBuildButton(Point.Zero, "", AddSelected(soldierType, a),"+"));
             }
         }
 

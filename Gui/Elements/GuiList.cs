@@ -205,7 +205,7 @@ namespace Ebilkill.Gui.Elements
             calculateElementPositions();
         }
 
-        public void removeLabel(int index)
+        public void removeElement(int index)
         {
             // Only remove the label if it's in a valid position
             if (index > 0 && index < allElements.Count)
@@ -218,7 +218,7 @@ namespace Ebilkill.Gui.Elements
         public void removeLabel(GuiLabel label)
         {
             int index = allElements.FindIndex(gl => label.Equals(gl));
-            removeLabel(index);
+            removeElement(index);
         }
 
         public List<GuiElement> AllLabels => allElements;

@@ -34,7 +34,7 @@ namespace MaxOfEmpires.Units
         /// </summary>
         private Dictionary<string, int> unitsAndCounts; // It's a UAC, guys :o
 
-        private Dictionary<string, int> selectedUnits; // It's a UAC, guys :o
+        private Dictionary<string, int> selectedUnits;
 
         /// <summary>
         /// Creates a new empty Army.
@@ -179,17 +179,20 @@ namespace MaxOfEmpires.Units
                 retVal.selectedUnits[s] += unitsAndCounts[s];
                 this.unitsAndCounts[s] -= unitsAndCounts[s];
             }
-            foreach(string s in this.unitsAndCounts.Keys)
-            {
-                selectedUnits[s] = this.unitsAndCounts[s];
-            }
+
+            retVal.MovesLeft = MovesLeft;
+            retVal.MoveSpeed = MoveSpeed;
+            retVal.Parent = Parent;
+
             UpdateArmySprite();
             retVal.UpdateArmySprite();
+
             return retVal;
         }
 
         public override void TurnUpdate(uint turn, Player player)
         {
+            SelectAllUnits();
             this.moveSpeed = GetSlowestUnit().MoveSpeed;
             base.TurnUpdate(turn, player);
         }
@@ -210,6 +213,8 @@ namespace MaxOfEmpires.Units
         {
             // Set the drawing texture to the Unit that is most prevalent in this stack
             int maxUnits = 0;
+            Dictionary<string, int> newUAC = new Dictionary<string, int>();
+            Dictionary<string, int> newSelected = new Dictionary<string, int>();
             foreach (string soldierType in unitsAndCounts.Keys)
             {
                 if (unitsAndCounts[soldierType] > maxUnits)
@@ -218,20 +223,36 @@ namespace MaxOfEmpires.Units
                     DrawingTexture = soldier.DrawingTexture;
                     maxUnits = unitsAndCounts[soldierType];
                 }
+
+                if (unitsAndCounts[soldierType] != 0)
+                {
+                    newUAC[soldierType] = unitsAndCounts[soldierType];
+                    newSelected[soldierType] = newUAC[soldierType];
+                }
+            }
+
+            unitsAndCounts = newUAC;
+            selectedUnits = newSelected;
+        }
+
+        public void SelectAllUnits()
+        {
+            foreach (string soldierType in unitsAndCounts.Keys)
+            {
+                selectedUnits[soldierType] = unitsAndCounts[soldierType];
             }
         }
 
-        private bool HaveISelectedAllUnits()
+        private bool AreAllUnitsSelected()
         {
-            bool retVal = true;
-            foreach(string name in unitsAndCounts.Keys)
+            foreach (string name in unitsAndCounts.Keys)
             {
-                if(selectedUnits[name] != unitsAndCounts[name])
+                if (selectedUnits[name] != unitsAndCounts[name])
                 {
-                    retVal = false;
+                    return false;
                 }
             }
-            return retVal; 
+            return true; 
 
         }
 
@@ -244,7 +265,7 @@ namespace MaxOfEmpires.Units
         /// The Soldiers and the amount of each Soldier in this Army.
         /// </summary>
         /// 
-        public bool AllUnitsSelected => HaveISelectedAllUnits();
+        public bool AllUnitsSelected => AreAllUnitsSelected();
 
         public Dictionary<string, int> UnitsAndCounts => unitsAndCounts;
 

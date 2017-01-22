@@ -63,6 +63,7 @@
     <Compile Include="Buildings\Building.cs" />
     <Compile Include="GameStates\EconomyState.cs" />
     <Compile Include="GameStates\MainMenuState.cs" />
+    <Compile Include="GameStates\Overlays\ElementArmySelection.cs" />
     <Compile Include="GameStates\Overlays\ElementBuildButton.cs" />
     <Compile Include="GameStates\Overlays\OverlayBattleState.cs" />
     <Compile Include="GameStates\Overlays\OverlayEconomyState.cs" />

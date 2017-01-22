@@ -102,7 +102,7 @@ namespace MaxOfEmpires
         private void OnMoveUnit(Tile selectedTile, Tile clickedTile)
         {
             bool mainUnit = true;
-            if(selectedTile.Unit is Army && !(selectedTile.Unit as Army).AllUnitsSelected)
+            if (selectedTile.Unit is Army && !(selectedTile.Unit as Army).AllUnitsSelected)
             {
                 mainUnit = false;
             }
