@@ -24,6 +24,9 @@ namespace MaxOfEmpires.GameStates.Overlays
         private Builder currentBuilder;
         private Building currentBuilding;
 
+        private Army currentArmy;
+        private bool refreshArmyInfo;
+
         // Labels
         private GuiLabel labelCurrentPlayer;
         private GuiLabel labelPlayerMoney;
@@ -112,6 +115,11 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         public override void draw(SpriteBatch spriteBatch)
         {
+            //if (refreshArmyInfo)
+            //{
+            //    PrintArmyInfo(currentArmy);
+            //    refreshArmyInfo = false;
+            //}
             DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle(MaxOfEmpires.overlayPos.ToPoint(), MaxOfEmpires.ScreenSize), playerColor);
             base.draw(spriteBatch);
         }
@@ -142,6 +150,7 @@ namespace MaxOfEmpires.GameStates.Overlays
         /// <param name="a">The Army of which the information should be printed.</param>
         public void PrintArmyInfo(Army a)
         {
+            currentArmy = a;
             // No Army? Make the info disappear :o
             if (a == null)
             {
@@ -158,12 +167,38 @@ namespace MaxOfEmpires.GameStates.Overlays
                 StringBuilder sb = new StringBuilder();
                 sb.Append(Translations.GetTranslation(soldierType));
                 sb.Append(": ");
+                sb.Append(a.SelectedUnits[soldierType]+"/");
                 sb.Append(a.UnitsAndCounts[soldierType]);
+
 
                 // Add this label to the list
                 listArmySoldiers.addElement(GuiLabel.createNewLabel(new Vector2(), sb.ToString(), "font"));
+                listArmySoldiers.addElement(ElementBuildButton.CreateBuildButton(Point.Zero,"", LowerSelected(soldierType, a)," -"));
+                listArmySoldiers.addElement(ElementBuildButton.CreateBuildButton(Point.Zero, "", AddSelected(soldierType, a),"+"));
             }
         }
+
+        public GuiButton.OnClickHandler LowerSelected(string s, Army a)
+        {
+            // Return an on click handler
+            return () => {
+                a.LowerSelected(s);
+                refreshArmyInfo = true;
+            };
+        }
+
+
+
+        public GuiButton.OnClickHandler AddSelected(string s, Army a)
+        {
+            // Return an on click handler
+            return () => {
+                a.AddSelected(s);
+                refreshArmyInfo = true;
+            };
+        }
+
+
 
         public void PrintBuilderInfo(Builder builder)
         {

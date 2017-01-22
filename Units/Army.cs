@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Ebilkill.Gui.Elements;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -27,10 +28,13 @@ namespace MaxOfEmpires.Units
             return retVal;
         }
 
+
         /// <summary>
         /// The Soldiers and the amount of each Soldier in this Army.
         /// </summary>
         private Dictionary<string, int> unitsAndCounts; // It's a UAC, guys :o
+
+        private Dictionary<string, int> selectedUnits; // It's a UAC, guys :o
 
         /// <summary>
         /// Creates a new empty Army.
@@ -41,6 +45,7 @@ namespace MaxOfEmpires.Units
         public Army(int x, int y, Player owner) : base(x, y, owner)
         {
             unitsAndCounts = new Dictionary<string, int>();
+            selectedUnits = new Dictionary<string, int>();
         }
 
         /// <summary>
@@ -55,6 +60,7 @@ namespace MaxOfEmpires.Units
             foreach (string unitName in currentSoldiers.Keys)
             {
                 unitsAndCounts[unitName] = currentSoldiers[unitName];
+                selectedUnits[unitName] = currentSoldiers[unitName];
             }
         }
 
@@ -63,8 +69,10 @@ namespace MaxOfEmpires.Units
             if (!unitsAndCounts.ContainsKey(s.Name))
             {
                 unitsAndCounts[s.Name] = 0;
+                selectedUnits[s.Name] = 0;
             }
             ++unitsAndCounts[s.Name];
+            ++selectedUnits[s.Name];
 
             UpdateArmySprite();
         }
@@ -119,8 +127,10 @@ namespace MaxOfEmpires.Units
                 if (!unitsAndCounts.ContainsKey(s))
                 {
                     unitsAndCounts[s] = 0;
+                    selectedUnits[s] = 0;
                 }
                 unitsAndCounts[s] += other.unitsAndCounts[s];
+                selectedUnits[s] += other.unitsAndCounts[s];
             }
 
             // Armies can move as far as the slowest Soldier, eh? 
@@ -129,6 +139,18 @@ namespace MaxOfEmpires.Units
 
             // Update the sprite
             UpdateArmySprite();
+        }
+
+        public void LowerSelected(string s)
+        {
+            if (selectedUnits[s] > 0)
+                selectedUnits[s]--;
+        }
+
+        public void AddSelected(string s)
+        {
+            if (selectedUnits[s] < unitsAndCounts[s])
+                selectedUnits[s]++;
         }
 
         public Army SplitArmy(Dictionary<string, int> unitsAndCounts)
@@ -148,7 +170,13 @@ namespace MaxOfEmpires.Units
             Army retVal = new Army(PositionInGrid.X, PositionInGrid.Y, owner);
             foreach (string s in unitsAndCounts.Keys)
             {
+                if (!retVal.unitsAndCounts.ContainsKey(s))
+                {
+                    retVal.unitsAndCounts[s] = 0;
+                    retVal.selectedUnits[s] = 0;
+                }
                 retVal.unitsAndCounts[s] += unitsAndCounts[s];
+                retVal.selectedUnits[s] += unitsAndCounts[s];
                 this.unitsAndCounts[s] -= unitsAndCounts[s];
             }
 
@@ -188,6 +216,20 @@ namespace MaxOfEmpires.Units
             }
         }
 
+        private bool HaveISelectedAllUnits()
+        {
+            bool retVal = true;
+            foreach(string name in unitsAndCounts.Keys)
+            {
+                if(selectedUnits[name] != unitsAndCounts[name])
+                {
+                    retVal = false;
+                }
+            }
+            return retVal; 
+
+        }
+
         /// <summary>
         /// The Tile this Army currently stands on.
         /// </summary>
@@ -196,6 +238,11 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The Soldiers and the amount of each Soldier in this Army.
         /// </summary>
+        /// 
+        public bool AllUnitsSelected => HaveISelectedAllUnits();
+
         public Dictionary<string, int> UnitsAndCounts => unitsAndCounts;
+
+        public Dictionary<string, int> SelectedUnits => selectedUnits;
     }
 }

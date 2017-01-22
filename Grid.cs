@@ -45,7 +45,15 @@ namespace MaxOfEmpires
             Tile targetTile = this[newPos] as Tile;
 
             // If the Unit can move to its target, move it and tell the caller that we moved.
-            if (targetTile != null && !targetTile.Occupied && unit.Move(newPos.X, newPos.Y))
+            if(unit is Army && !(unit as Army).AllUnitsSelected)
+            {
+                if (targetTile != null && !targetTile.Occupied && unit.Move(newPos.X, newPos.Y))
+                {
+                    OnUnitStartMoving((unit as Army).SplitArmy((unit as Army).SelectedUnits), newPos);
+                    return true;
+                }
+            }
+            else if (targetTile != null && !targetTile.Occupied && unit.Move(newPos.X, newPos.Y))
             {
                 OnUnitStartMoving(unit, newPos);
                 return true;
