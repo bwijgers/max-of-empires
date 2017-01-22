@@ -32,7 +32,7 @@ namespace MaxOfEmpires
         /// </summary>
         /// <param name="attacker">The Army that initiated the attack.</param>
         /// <param name="defender">The Army that is being attacked.</param>
-        private void InitBattle(Army attacker, Army defender)
+        private void InitBattle(Army attacker, Army defender, bool split = false)
         {
             // Save the square on which the battle is occuring (the defender's square)
             battlePosition = defender.PositionInGrid;
@@ -40,7 +40,8 @@ namespace MaxOfEmpires
             // Remove BOTH armies from the grid; one will be replaced by what is remaining, the other will be annihilated
             Tile attackingTile = this[attacker.PositionInGrid] as Tile;
             Tile defendingTile = this[defender.PositionInGrid] as Tile;
-            (this[attacker.PositionInGrid] as Tile).SetUnit(null);
+            if(!split)
+                (this[attacker.PositionInGrid] as Tile).SetUnit(null);
             (this[defender.PositionInGrid] as Tile).SetUnit(null);
 
             // Unselect the current tile as we move to another state
@@ -123,7 +124,7 @@ namespace MaxOfEmpires
                     }
                     else
                     {
-                        (clickedTile.Unit as Army).SplitArmy((clickedTile.Unit as Army).SelectedUnits).MergeArmy((selectedTile.Unit as Army));
+                        (clickedTile.Unit as Army).MergeArmy((selectedTile.Unit as Army).SplitArmy((selectedTile.Unit as Army).SelectedUnits));
                     }
                     SelectTile(InvalidTile);
                     return;
@@ -143,7 +144,7 @@ namespace MaxOfEmpires
                     }
                     else
                     {
-                        Army splitArmy = (clickedTile.Unit as Army).SplitArmy((clickedTile.Unit as Army).SelectedUnits);
+                        Army splitArmy = (selectedTile.Unit as Army).SplitArmy((selectedTile.Unit as Army).SelectedUnits);
                         splitArmy.MovesLeft -= 1;
                         clickedTile.SetUnit(null); // TODO: Test if this line can be removed
                         clickedTile.SetUnit(splitArmy);
@@ -160,7 +161,7 @@ namespace MaxOfEmpires
                 }
                 else
                 {
-                    InitBattle((clickedTile.Unit as Army).SplitArmy((clickedTile.Unit as Army).SelectedUnits), (Army)enemy);
+                    InitBattle((selectedTile.Unit as Army).SplitArmy((selectedTile.Unit as Army).SelectedUnits), (Army)enemy);
                 }
                 return;
             }

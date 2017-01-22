@@ -168,9 +168,8 @@ namespace MaxOfEmpires.Units
 
             // Return the requested army if we do, and subtract the units from this army
             Army retVal = new Army(PositionInGrid.X, PositionInGrid.Y, owner);
-            foreach (KeyValuePair<string,int> pair in unitsAndCounts)
+            foreach (string s in unitsAndCounts.Keys)
             {
-                string s = pair.Key;
                 if (!retVal.unitsAndCounts.ContainsKey(s))
                 {
                     retVal.unitsAndCounts[s] = 0;
@@ -179,7 +178,10 @@ namespace MaxOfEmpires.Units
                 retVal.unitsAndCounts[s] += unitsAndCounts[s];
                 retVal.selectedUnits[s] += unitsAndCounts[s];
                 this.unitsAndCounts[s] -= unitsAndCounts[s];
-                this.selectedUnits[s] = 0;
+            }
+            foreach(string s in this.unitsAndCounts.Keys)
+            {
+                selectedUnits[s] = this.unitsAndCounts[s];
             }
             UpdateArmySprite();
             retVal.UpdateArmySprite();
