@@ -56,6 +56,8 @@ namespace MaxOfEmpires
                 if (targetTile != null && !targetTile.Occupied && partial.Move(newPos.X, newPos.Y))
                 {
                     OnUnitStartMoving(partial, newPos, false);
+                    Pathfinding.ClearTargetPosition(unit);
+                    Pathfinding.ClearTargetPosition(partial);
                     return true;
                 }
                 else
