@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
@@ -55,6 +56,31 @@ namespace MaxOfEmpires.Units
         /// <see cref="Units.Stats"/>
         private Stats stats;
 
+        /// <summary>
+        /// Float values used as a timer during the attack animation, an below that two bools used for timing the attack animation.
+        /// </summary>
+
+        public float attackAnimationTimer;
+        public float attackAnimationFrames = 1f;
+
+        /// <summary>
+        /// The following vectors are used to create the attack animation and to determine which walking animation should be played during it.
+        /// </summary>
+
+        private Vector2 normalizedAttackDirection;
+        private Vector2 walkUpDirection = new Vector2(0, -1);
+        private Vector2 walkRightDirection = new Vector2(1, 0);
+        private Vector2 walkDownDirection = new Vector2(0, 1);
+        private Vector2 walkLeftDirection = new Vector2(-1, 0);
+        private Vector2 walkDirectionZero = new Vector2(0, 0);
+
+        public bool duringAttack = false;
+        bool attacked = false;
+        Soldier attackTarget;
+        
+        
+
+
         private string texName;
 
         private Soldier(string name, int x, int y, bool owner, string resName, int moveSpeed, Stats stats, Range range) : base(x, y, owner)
@@ -98,18 +124,8 @@ namespace MaxOfEmpires.Units
             }
 
             Soldier enemy = u as Soldier;
+            // Calls a certain method, which sets the damage calculation in action
             OnSoldierStartAttack(enemy);
-
-            // Don't do anything else if the enemy is dead. 
-            if (enemy.IsDead)
-                return;
-
-            // Enemy can retaliate. Right?
-            if (enemy.IsInRange(PositionInGrid))
-            {
-                // Okay, retaliate. 
-                enemy.OnSoldierStartAttack(this);
-            }
 
             // Unit has attacked
             hasAttacked = true;
@@ -234,10 +250,52 @@ namespace MaxOfEmpires.Units
 
         public void OnSoldierStartAttack(Soldier enemy)
         {
-            // TODO: Call animation code here
+            attackTarget = enemy;
 
-            // This should be called at the right time during the animation
-            DealDamage(enemy);
+            Vector2 tPos = enemy.DrawPosition;
+            Vector2 cPos = DrawPosition;
+
+            Vector2 attackDirection = tPos-cPos;
+            Vector2.Normalize(ref attackDirection, out normalizedAttackDirection);
+
+            //TO DO: Adding the walking animations to the attack directions and un-commenting this.
+            /*
+            if(normalizedAttackDirection == walkUpDirection)
+                //Play walking up animation.
+            else if(normalizedAttackDirection == walkDownDirection)
+                //Play walking down animation
+            else if(normalizedAttackDirection == walkRightDirection || normalizedAttackDirection.X > walkDirectionZero.X)
+                //Play walking right animation.
+            else if(normalizedAttackDirection == walkLeftDirection || normalizedAttackDirection.X < walkDirectionZero.X)
+                //Play walking left animation.
+            */
+ 
+            position = position + (normalizedAttackDirection * 10);
+            attackAnimationTimer = 0f;
+            attacked = true;
+            duringAttack = true;
+        }
+
+
+        public void UpdateAttack()
+        { // Written by: TheMez
+            // This method starts whenever the 'attacked' bool is set to true.
+            if (attackAnimationTimer > attackAnimationFrames)
+            {
+                position = position - (normalizedAttackDirection * 10);
+                DealDamage(attackTarget);
+                attacked = false;
+                duringAttack = false;
+
+                if (attackTarget.IsDead)
+                {
+                    (GameWorld as BattleGrid).OnKillSoldier(attackTarget);
+                }
+                else if (!attackTarget.HasAttacked && attackTarget.IsInRange(PositionInGrid))
+                {
+                    attackTarget.OnSoldierStartAttack(this);
+                }
+            }
         }
 
         public override void TurnUpdate(uint turn, bool player)
@@ -252,6 +310,14 @@ namespace MaxOfEmpires.Units
             {
                 return base.HasAction || !HasAttacked;
             }
+        }
+
+        public override void Update(GameTime time)
+        {
+            base.Update(time);
+            attackAnimationTimer += (float)time.ElapsedGameTime.TotalSeconds;
+            if (attacked) UpdateAttack();
+
         }
 
         /// <summary>

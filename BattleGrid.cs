@@ -13,6 +13,7 @@ namespace MaxOfEmpires
 {
     class BattleGrid : Grid
     {
+        
         public BattleGrid(int width, int height, string id = "") : base(width, height, id) // TODO: make this load from procedural generation.
         {
         }
@@ -48,14 +49,7 @@ namespace MaxOfEmpires
 
             // After a battle, check if there are dead Units, and remove these if they are dead
             Soldier defender = toAttack.Unit as Soldier;
-            if (defender.IsDead)
-            {
-                OnKillSoldier(defender);
-            }
-            if (attackingUnit.IsDead)
-            {
-                OnKillSoldier(attackingUnit);
-            }
+
 
             return true;
         }
@@ -84,7 +78,7 @@ namespace MaxOfEmpires
         /// Called when a Soldier dies in battle.
         /// </summary>
         /// <param name="deadSoldier">The Soldier that died.</param>
-        private void OnKillSoldier(Soldier deadSoldier)
+        public void OnKillSoldier(Soldier deadSoldier)
         {
             // Remove this Soldier as it is dead
             (this[deadSoldier.PositionInGrid] as Tile).SetUnit(null);
@@ -116,6 +110,21 @@ namespace MaxOfEmpires
         /// <param name="helper">The InputHelper used for mouse input.</param>
         public override void OnLeftClick(InputHelper helper)
         {
+            bool animationBusy = false;
+            ForEach((obj, x, y) => {
+                Tile t = obj as Tile;
+
+                if (t.Occupied && (t.Unit as Soldier).duringAttack)
+                {
+                    animationBusy = true;
+                    return;
+                }
+            });
+            if (animationBusy)
+            {
+                return;
+            }
+
             // Get the current Tile under the mouse
             Tile clickedTile = GetTileUnderMouse(helper, true);
 
