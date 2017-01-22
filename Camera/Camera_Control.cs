@@ -27,7 +27,7 @@ namespace MaxOfEmpires
         /// <summary>
         /// The speed with which the camera moves
         /// </summary>
-        private float cameraMoveSpeed = 2.00f;
+        private float cameraMoveSpeed = 10.00f;
 
         /// <summary>
         /// An int determining if the camera should be controlled through the mouse

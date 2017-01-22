@@ -89,8 +89,8 @@ namespace MaxOfEmpires
 
         public bool MouseLeftButtonPressed => currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released;
         public bool MouseRightButtonPressed => currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released;
-        public bool MouseScrollDown => currentMouse.ScrollWheelValue > previousMouse.ScrollWheelValue;
-        public bool MouseScrollUp => currentMouse.ScrollWheelValue < previousMouse.ScrollWheelValue;
+        public bool MouseScrollDown => currentMouse.ScrollWheelValue < previousMouse.ScrollWheelValue;
+        public bool MouseScrollUp => currentMouse.ScrollWheelValue > previousMouse.ScrollWheelValue;
 
         public Dictionary<Keys, char> TextKeys => alphabetKeys;
     }

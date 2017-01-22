@@ -142,12 +142,16 @@ namespace MaxOfEmpires.GameStates
 
         private void SelectNextPlayer()
         {
+            CurrentPlayer.CameraPos = MaxOfEmpires.camera.Position;
+            CurrentPlayer.ZoomValue = MaxOfEmpires.camera.Zoom;
             ++currentPlayer;
             if (currentPlayer >= players.Count)
             {
                 currentPlayer = 0;
                 ++turnNum;
             }
+            MaxOfEmpires.camera.Position = CurrentPlayer.CameraPos;
+            MaxOfEmpires.camera.Zoom = CurrentPlayer.ZoomValue;
         }
 
         public override void ResetOverlay()

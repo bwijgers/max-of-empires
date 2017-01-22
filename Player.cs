@@ -11,6 +11,8 @@ namespace MaxOfEmpires
         private string name;
         private string colorName;
         private Color color;
+        private Vector2 cameraPos;
+        private float zoomValue = 1.0f;
 
         public EconomyGrid grid;
 
@@ -52,6 +54,12 @@ namespace MaxOfEmpires
         {
             if (action != null && action.GetInvocationList().Length > 0)
                 updatePopulationHandlers.Add(action);
+        }
+
+        public void ResetCamera()
+        {
+            CameraPos = new Vector2(0, 0);
+            ZoomValue = 1.0f;
         }
 
         private void UpdateMoney()
@@ -125,5 +133,27 @@ namespace MaxOfEmpires
         }
 
         public string Name => name;
+        public Vector2 CameraPos
+        {
+            get
+            {
+                return cameraPos;
+            }
+            set
+            {
+                cameraPos = value;
+            }
+        }
+        public float ZoomValue
+        {
+            get
+            {
+                return zoomValue;
+            }
+            set
+            {
+                zoomValue = value;
+            }
+        }
     }
 }

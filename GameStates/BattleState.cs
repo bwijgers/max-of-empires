@@ -106,6 +106,8 @@ namespace MaxOfEmpires.GameStates
             battleGrid.InitField();
             battleGrid.BattleGenerate(attackingTile.Terrain, attackingTile.hills, defendingTile.Terrain, defendingTile.hills,battleGrid.Width,battleGrid.Height);
             battleGrid.PopulateField(attackingArmy, defendingArmy);
+            players[0].ResetCamera();
+            players[1].ResetCamera();
         }
 
         public override void Reset()
@@ -123,12 +125,16 @@ namespace MaxOfEmpires.GameStates
 
         private void SelectNextPlayer()
         {
+            CurrentPlayer.CameraPos = MaxOfEmpires.camera.Position;
+            CurrentPlayer.ZoomValue = MaxOfEmpires.camera.Zoom;
             ++currentPlayer;
             if (currentPlayer >= players.Count)
             {
                 currentPlayer = 0;
                 ++turnNum;
             }
+            MaxOfEmpires.camera.Position = CurrentPlayer.CameraPos;
+            MaxOfEmpires.camera.Zoom = CurrentPlayer.ZoomValue;
         }
 
         public override void ResetOverlay()
