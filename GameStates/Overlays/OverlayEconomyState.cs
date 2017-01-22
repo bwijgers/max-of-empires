@@ -24,6 +24,9 @@ namespace MaxOfEmpires.GameStates.Overlays
         private Builder currentBuilder;
         private Building currentBuilding;
 
+        private Army currentArmy;
+        private bool refreshArmyInfo;
+
         // Labels
         private GuiLabel labelCurrentPlayer;
         private GuiLabel labelPlayerMoney;
@@ -57,13 +60,13 @@ namespace MaxOfEmpires.GameStates.Overlays
 
             // Add labels for unit stats
             listArmySoldiers = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Location.X, labelPlayerPopulation.Bounds.Bottom + 5), 5, new List<GuiElement>(), 300);
-            listArmySoldiers.addElement(GuiLabel.createNewLabel(Vector2.Zero, "1", "font")); // Add this so that the size is calculated correctly
+            listArmySoldiers.addElement(ElementArmySelection.CreateBuildButton(Point.Zero, "1", null, null)); // Add this so that the size is calculated correctly
             addElement(listArmySoldiers);
 
             buildingInfoPosition = new Point(buttonEndTurn.Bounds.Left, listArmySoldiers.Bounds.Bottom + listArmySoldiers.MaxHeight + 5);
 
             // Remove this label so that it doesn't display bullshit :)
-            listArmySoldiers.removeLabel(0);
+            listArmySoldiers.removeElement(0);
         }
 
         private void AddBuilderButton(EconomyGrid grid, GuiList listBuilderActions, string buildingName, Type buildingType)
@@ -112,6 +115,11 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         public override void draw(SpriteBatch spriteBatch)
         {
+            //if (refreshArmyInfo)
+            //{
+            //    PrintArmyInfo(currentArmy);
+            //    refreshArmyInfo = false;
+            //}
             DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle(MaxOfEmpires.overlayPos.ToPoint(), MaxOfEmpires.ScreenSize), playerColor);
             base.draw(spriteBatch);
         }
@@ -142,6 +150,7 @@ namespace MaxOfEmpires.GameStates.Overlays
         /// <param name="a">The Army of which the information should be printed.</param>
         public void PrintArmyInfo(Army a)
         {
+            currentArmy = a;
             // No Army? Make the info disappear :o
             if (a == null)
             {
@@ -158,12 +167,38 @@ namespace MaxOfEmpires.GameStates.Overlays
                 StringBuilder sb = new StringBuilder();
                 sb.Append(Translations.GetTranslation(soldierType));
                 sb.Append(": ");
+                sb.Append(a.SelectedUnits[soldierType]+"/");
                 sb.Append(a.UnitsAndCounts[soldierType]);
 
                 // Add this label to the list
-                listArmySoldiers.addElement(GuiLabel.createNewLabel(new Vector2(), sb.ToString(), "font"));
+                listArmySoldiers.addElement(ElementArmySelection.CreateBuildButton(Point.Zero, sb.ToString(), AddSelected(soldierType, a), LowerSelected(soldierType, a)));
+//                listArmySoldiers.addElement(GuiLabel.createNewLabel(new Vector2(), sb.ToString(), "font"));
+//                listArmySoldiers.addElement(ElementBuildButton.CreateBuildButton(Point.Zero,"", LowerSelected(soldierType, a)," -"));
+//                listArmySoldiers.addElement(ElementBuildButton.CreateBuildButton(Point.Zero, "", AddSelected(soldierType, a),"+"));
             }
         }
+
+        public GuiButton.OnClickHandler LowerSelected(string s, Army a)
+        {
+            // Return an on click handler
+            return () => {
+                a.LowerSelected(s);
+                refreshArmyInfo = true;
+            };
+        }
+
+
+
+        public GuiButton.OnClickHandler AddSelected(string s, Army a)
+        {
+            // Return an on click handler
+            return () => {
+                a.AddSelected(s);
+                refreshArmyInfo = true;
+            };
+        }
+
+
 
         public void PrintBuilderInfo(Builder builder)
         {

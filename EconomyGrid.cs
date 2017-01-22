@@ -32,7 +32,7 @@ namespace MaxOfEmpires
         /// </summary>
         /// <param name="attacker">The Army that initiated the attack.</param>
         /// <param name="defender">The Army that is being attacked.</param>
-        private void InitBattle(Army attacker, Army defender)
+        private void InitBattle(Army attacker, Army defender, bool split = false)
         {
             // Save the square on which the battle is occuring (the defender's square)
             battlePosition = defender.PositionInGrid;
@@ -40,7 +40,8 @@ namespace MaxOfEmpires
             // Remove BOTH armies from the grid; one will be replaced by what is remaining, the other will be annihilated
             Tile attackingTile = this[attacker.PositionInGrid] as Tile;
             Tile defendingTile = this[defender.PositionInGrid] as Tile;
-            (this[attacker.PositionInGrid] as Tile).SetUnit(null);
+            if(!split)
+                (this[attacker.PositionInGrid] as Tile).SetUnit(null);
             (this[defender.PositionInGrid] as Tile).SetUnit(null);
 
             // Unselect the current tile as we move to another state
@@ -100,6 +101,11 @@ namespace MaxOfEmpires
 
         private void OnMoveUnit(Tile selectedTile, Tile clickedTile)
         {
+            bool mainUnit = true;
+            if (selectedTile.Unit is Army && !(selectedTile.Unit as Army).AllUnitsSelected)
+            {
+                mainUnit = false;
+            }
             // Check if we're attacking another player's army
             if (selectedTile.Unit is Army && IsAdjacent(clickedTile.PositionInGrid, selectedTile.PositionInGrid) && clickedTile.Occupied)
             {
@@ -111,26 +117,52 @@ namespace MaxOfEmpires
                         return;
 
                     // Hey, let's merge the armies :)
-                    (clickedTile.Unit as Army).MergeArmy((selectedTile.Unit as Army));
-                    selectedTile.SetUnit(null);
+                    if (mainUnit)
+                    {
+                        (clickedTile.Unit as Army).MergeArmy((selectedTile.Unit as Army));
+                        selectedTile.SetUnit(null);
+                    }
+                    else
+                    {
+                        (clickedTile.Unit as Army).MergeArmy((selectedTile.Unit as Army).SplitArmy((selectedTile.Unit as Army).SelectedUnits));
+                    }
                     SelectTile(InvalidTile);
                     return;
+
                 }
 
                 // If it's an enemy Builder, kill it and overwrite it
                 Unit enemy = clickedTile.Unit;
                 if (enemy is Builder)
                 {
-                    selectedTile.Unit.MovesLeft -= 1;
-                    clickedTile.SetUnit(null); // TODO: Test if this line can be removed
-                    clickedTile.SetUnit(selectedTile.Unit);
-                    selectedTile.SetUnit(null);
+                    if (mainUnit)
+                    {
+                        selectedTile.Unit.MovesLeft -= 1;
+                        clickedTile.SetUnit(null); // TODO: Test if this line can be removed
+                        clickedTile.SetUnit(selectedTile.Unit);
+                        selectedTile.SetUnit(null);
+                    }
+                    else
+                    {
+                        Army splitArmy = (selectedTile.Unit as Army).SplitArmy((selectedTile.Unit as Army).SelectedUnits);
+                        splitArmy.MovesLeft -= 1;
+                        clickedTile.SetUnit(null); // TODO: Test if this line can be removed
+                        clickedTile.SetUnit(splitArmy);
+                    }
                     SelectTile(InvalidTile);
                     return;
                 }
 
+
                 // Initiate a battle between armies
-                InitBattle((Army)selectedTile.Unit, (Army)enemy);
+                if (mainUnit)
+                {
+                    InitBattle((Army)selectedTile.Unit, (Army)enemy);
+                }
+                else
+                {
+                    InitBattle((selectedTile.Unit as Army).SplitArmy((selectedTile.Unit as Army).SelectedUnits), (Army)enemy);
+                }
                 return;
             }
 

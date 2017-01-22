@@ -50,7 +50,27 @@ namespace MaxOfEmpires
             Tile targetTile = this[newPos] as Tile;
 
             // If the Unit can move to its target, move it and tell the caller that we moved.
-            if (targetTile != null && !targetTile.Occupied && unit.Move(newPos.X, newPos.Y))
+            if(unit is Army && !(unit as Army).AllUnitsSelected)
+            {
+                Army partial = (unit as Army).SplitArmy((unit as Army).SelectedUnits);
+                if (partial == null)
+                {
+                    return false;
+                }
+
+                if (targetTile != null && !targetTile.Occupied && partial.Move(newPos.X, newPos.Y))
+                {
+                    OnUnitStartMoving(partial, newPos, false);
+                    Pathfinding.ClearTargetPosition(unit);
+                    Pathfinding.ClearTargetPosition(partial);
+                    return true;
+                }
+                else
+                {
+                    (unit as Army).MergeArmy(partial);
+                }
+            }
+            else if (targetTile != null && !targetTile.Occupied && unit.Move(newPos.X, newPos.Y))
             {
                 OnUnitStartMoving(unit, newPos);
                 return true;
@@ -216,7 +236,7 @@ namespace MaxOfEmpires
         {
         }
 
-        public void OnUnitFinishMoving(Unit u, Point targetPos)
+        public void OnUnitFinishMoving(Unit u, Point targetPos, bool remove)
         {
             // TODO: Call this when the animation is done
 
@@ -226,16 +246,17 @@ namespace MaxOfEmpires
 
             // Move the Unit from its tile to the target tile
             targetTile.SetUnit(u);
-            originTile.SetUnit(null);
+            if (remove)
+                originTile.SetUnit(null);
 
             u.ShouldAnimate = u.HasAction;
         }
 
-        public void OnUnitStartMoving(Unit u, Point targetPos)
+        public void OnUnitStartMoving(Unit u, Point targetPos, bool remove = true)
         {
             // Can make Unit movement animated by not calling this instantly (or from update or something, idk)
             // TODO: Start animating here
-            OnUnitFinishMoving(u, targetPos);
+            OnUnitFinishMoving(u, targetPos, remove);
         }
 
         /// <summary>
