@@ -147,7 +147,7 @@ namespace MaxOfEmpires
 
                     //{
                             Point p = (obj as Tile).PositionInGrid;
-                        if ((int)helper.GetMousePosition(true).X / 32 == p.X && (int)helper.GetMousePosition(true).Y / 32 == p.Y && p != selectedTile)
+                        if ((int)(helper.GetMousePosition(true).X+MaxOfEmpires.camera.Position.X) / 32 == p.X && (int)(helper.GetMousePosition(true).Y + MaxOfEmpires.camera.Position.Y) / 32 == p.Y && p != selectedTile)
                         {
                             if (mousePoint != p)
                             {
