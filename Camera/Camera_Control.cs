@@ -153,7 +153,7 @@ namespace MaxOfEmpires
         /// <param name="direction">The direction to which the camera should move (up, down, left, right).</param>
         public void MoveCamera(string direction)
         {
-            double zoomCap = ((double)MaxOfEmpires.ScreenSize.Y/32)/ (GameStateManager.GridSize.X);
+            double zoomCap = ((double)MaxOfEmpires.ScreenSize.Y/32)/ (Math.Max(1, GameStateManager.GridSize.X));
             switch (direction)
             {
                 // Moves the camera upwards

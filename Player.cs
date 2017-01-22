@@ -11,7 +11,8 @@ namespace MaxOfEmpires
         private string name;
         private string colorName;
         private Color color;
-        private Vector2 cameraPos;
+        private Vector2 ecoCamPos;
+        private Vector2 battleCamPos;
         private float zoomValue = 1.0f;
 
         public EconomyGrid grid;
@@ -32,6 +33,31 @@ namespace MaxOfEmpires
         public void Buy(int cost)
         {
             Money -= cost;
+        }
+
+        public void CalculatePopulation()
+        {
+            int pop = 0;
+            grid.ForEach(obj => {
+                Tile t = obj as Tile;
+                if (t.BuiltOn && t.Building.Owner == this)
+                {
+                    if (t.Building.id.Equals("building.capital"))
+                    {
+                        pop += 10;
+                    }
+
+                    else if (t.Building.id.Equals("building.town"))
+                    {
+                        pop += 5;
+                    }
+                }
+                if ((t.Unit as Units.Army) != null && t.Unit.Owner == this)
+                {
+                    pop -= (t.Unit as Units.Army).GetTotalUnitCount();
+                }
+            });
+            Population = pop;
         }
 
         public bool CanAfford(int cost)
@@ -58,7 +84,8 @@ namespace MaxOfEmpires
 
         public void ResetCamera()
         {
-            CameraPos = new Vector2(0, 0);
+            EcoCameraPosition = new Vector2(0, 0);
+            BattleCameraPosition = new Vector2(0, 0);
             ZoomValue = 1.0f;
         }
 
@@ -93,30 +120,6 @@ namespace MaxOfEmpires
             }
         }
 
-        public void CalculatePopulation()
-        {
-            int pop = 0;
-            grid.ForEach(obj => {
-            Tile t = obj as Tile;
-                if (t.BuiltOn && t.Building.Owner == this) {
-                    if (t.Building.id.Equals("building.capital"))
-                    {
-                        pop += 10;
-                    }
-
-                    else if (t.Building.id.Equals("building.town"))
-                    {
-                        pop += 5;
-                    }
-                }
-                if ((t.Unit as Units.Army) != null && t.Unit.Owner == this)
-                {
-                    pop -= (t.Unit as Units.Army).GetTotalUnitCount();
-                }
-            });
-            Population = pop;
-        }
-
         public Color Color => color;
 
         public int Population
@@ -133,17 +136,31 @@ namespace MaxOfEmpires
         }
 
         public string Name => name;
-        public Vector2 CameraPos
+
+        public Vector2 BattleCameraPosition
         {
             get
             {
-                return cameraPos;
+                return battleCamPos;
             }
             set
             {
-                cameraPos = value;
+                battleCamPos = value;
             }
         }
+
+        public Vector2 EcoCameraPosition
+        {
+            get
+            {
+                return ecoCamPos;
+            }
+            set
+            {
+                ecoCamPos = value;
+            }
+        }
+
         public float ZoomValue
         {
             get

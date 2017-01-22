@@ -36,7 +36,7 @@ namespace MaxOfEmpires.GameStates
             currentPlayer = 0;
 
             // Initialize the battlefield.
-            battleGrid = new BattleGrid(48, 48, players);
+            battleGrid = new BattleGrid(35, 35, players);
             battleGrid.InitField();
 
             // Initialize the overlay.
@@ -106,15 +106,13 @@ namespace MaxOfEmpires.GameStates
             battleGrid.InitField();
             battleGrid.BattleGenerate(attackingTile.Terrain, attackingTile.hills, defendingTile.Terrain, defendingTile.hills,battleGrid.Width,battleGrid.Height);
             battleGrid.PopulateField(attackingArmy, defendingArmy);
-            players[0].ResetCamera();
-            players[1].ResetCamera();
+            attackingArmy.Owner.BattleCameraPosition = Vector2.Zero;
+            defendingArmy.Owner.BattleCameraPosition = Vector2.Zero;
+            currentPlayer = players.IndexOf(defendingArmy.Owner);
         }
 
         public override void Reset()
         {
-            // Player 1 starts.
-            currentPlayer = 0;
-
             // Turn number starts at 1.
             turnNum = 0;
 
@@ -125,7 +123,7 @@ namespace MaxOfEmpires.GameStates
 
         private void SelectNextPlayer()
         {
-            CurrentPlayer.CameraPos = MaxOfEmpires.camera.Position;
+            CurrentPlayer.BattleCameraPosition = MaxOfEmpires.camera.Position;
             CurrentPlayer.ZoomValue = MaxOfEmpires.camera.Zoom;
             ++currentPlayer;
             if (currentPlayer >= players.Count)
@@ -133,7 +131,7 @@ namespace MaxOfEmpires.GameStates
                 currentPlayer = 0;
                 ++turnNum;
             }
-            MaxOfEmpires.camera.Position = CurrentPlayer.CameraPos;
+            MaxOfEmpires.camera.Position = CurrentPlayer.BattleCameraPosition;
             MaxOfEmpires.camera.Zoom = CurrentPlayer.ZoomValue;
         }
 

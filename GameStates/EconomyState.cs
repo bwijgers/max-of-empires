@@ -27,11 +27,7 @@ namespace MaxOfEmpires.GameStates
 
             ecoGrid = new EconomyGrid(50, 50, players);
 
-            // Initialize the field
-            ecoGrid.InitField();
-
             ResetOverlay();
-            Reset();
         }
 
         public override void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS)
@@ -131,6 +127,9 @@ namespace MaxOfEmpires.GameStates
 
         public override void Reset()
         {
+            // Initialize the field
+            ecoGrid.InitField();
+
             // Player 1 starts
             currentPlayer = 0;
 
@@ -142,7 +141,7 @@ namespace MaxOfEmpires.GameStates
 
         private void SelectNextPlayer()
         {
-            CurrentPlayer.CameraPos = MaxOfEmpires.camera.Position;
+            CurrentPlayer.EcoCameraPosition = MaxOfEmpires.camera.Position;
             CurrentPlayer.ZoomValue = MaxOfEmpires.camera.Zoom;
             ++currentPlayer;
             if (currentPlayer >= players.Count)
@@ -150,7 +149,7 @@ namespace MaxOfEmpires.GameStates
                 currentPlayer = 0;
                 ++turnNum;
             }
-            MaxOfEmpires.camera.Position = CurrentPlayer.CameraPos;
+            MaxOfEmpires.camera.Position = CurrentPlayer.EcoCameraPosition;
             MaxOfEmpires.camera.Zoom = CurrentPlayer.ZoomValue;
         }
 
