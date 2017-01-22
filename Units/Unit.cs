@@ -97,7 +97,7 @@ namespace MaxOfEmpires.Units
             return !(terrain == Terrain.Mountain || terrain == Terrain.Lake || terrain == Terrain.DesertMountain || terrain == Terrain.TundraMountain);
         }
 
-        public override void TurnUpdate(uint turn, Player player)
+        public override void TurnUpdate(uint turn, Player player, GameTime t)
         {
             if (owner == player)
             {

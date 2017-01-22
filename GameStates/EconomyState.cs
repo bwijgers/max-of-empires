@@ -135,8 +135,8 @@ namespace MaxOfEmpires.GameStates
 
             // Turn number starts at 1, so 0 and double TurnUpdate
             turnNum = 0;
-            TurnUpdate();
-            TurnUpdate();
+            TurnUpdate(null);
+            TurnUpdate(null);
         }
 
         private void SelectNextPlayer()
@@ -163,10 +163,10 @@ namespace MaxOfEmpires.GameStates
         /// <summary>
         /// Called when the turn is updated. Sets the current player to the other player and then calls Grid.TurnUpdate.
         /// </summary>
-        public void TurnUpdate()
+        public void TurnUpdate(GameTime t)
         {
             SelectNextPlayer();
-            ecoGrid.TurnUpdate(turnNum, CurrentPlayer);
+            ecoGrid.TurnUpdate(turnNum, CurrentPlayer, t);
             UpdateGuiInformation();
         }
 
@@ -177,7 +177,7 @@ namespace MaxOfEmpires.GameStates
             if (shouldTurnUpdate)
             {
                 shouldTurnUpdate = false;
-                TurnUpdate();
+                TurnUpdate(time);
             }
         }
 

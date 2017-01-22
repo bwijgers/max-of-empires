@@ -88,10 +88,10 @@ namespace MaxOfEmpires.GameObjects
         }
 
         /// <see cref="GameObject.TurnUpdate(uint, bool)"/>
-        public override void TurnUpdate(uint turn, Player player)
+        public override void TurnUpdate(uint turn, Player player, GameTime t)
         {
             // Just TurnUpdate everything in the grid
-            ForEach(child => child?.TurnUpdate(turn, player));
+            ForEach(child => child?.TurnUpdate(turn, player,t));
         }
 
         public override void Update(GameTime time)

@@ -339,15 +339,15 @@ namespace MaxOfEmpires
             }
         }
 
-        public override void TurnUpdate(uint turn, Player player)
+        public override void TurnUpdate(uint turn, Player player, GameTime t)
         {
             // Update the Unit at this position if it exists.
             if (Occupied)
-                Unit.TurnUpdate(turn, player);
+                Unit.TurnUpdate(turn, player, t);
 
             // Update the Building at this position if it exists.
             if (BuiltOn)
-                Building.TurnUpdate(turn, player);
+                Building.TurnUpdate(turn, player, t);
         }
 
         public override void Update(GameTime time)

@@ -61,7 +61,7 @@ namespace MaxOfEmpires.GameObjects
         /// </summary>
         /// <param name="turn">The current turn.</param>
         /// <param name="player">The player whose turn it is.</param>
-        public virtual void TurnUpdate(uint turn, Player player)
+        public virtual void TurnUpdate(uint turn, Player player, GameTime t)
         {
         }
 

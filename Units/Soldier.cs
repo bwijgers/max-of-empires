@@ -291,6 +291,7 @@ namespace MaxOfEmpires.Units
 
         public void OnDeath()
         {
+            owner.AddUnitLostToStats(id);
             animateDeath = true;
         }
 
@@ -306,9 +307,9 @@ namespace MaxOfEmpires.Units
             DealDamage(enemy, retaliate);
         }
 
-        public override void TurnUpdate(uint turn, Player player)
+        public override void TurnUpdate(uint turn, Player player, GameTime t)
         {
-            base.TurnUpdate(turn, player);
+            base.TurnUpdate(turn, player, t);
             hasAttacked = false;
         }
 
