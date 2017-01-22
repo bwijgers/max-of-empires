@@ -112,7 +112,7 @@ namespace MaxOfEmpires.Buildings
         {
             // Check to see if an enemy ARMY is here
             Tile t = (GameWorld as Grid)[PositionInGrid] as Tile;
-            if (!t.Occupied || !(t.Unit is Army))
+            if (!t.Occupied || t.Unit.Owner == owner || !(t.Unit is Army))
             {
                 // We're no longer being seized, I suppose :D
                 turnsSeized = 0;

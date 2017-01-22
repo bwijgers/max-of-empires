@@ -69,6 +69,7 @@
     <Compile Include="GameStates\Overlays\OverlayBattleState.cs" />
     <Compile Include="GameStates\Overlays\OverlayEconomyState.cs" />
     <Compile Include="GameStates\Overlays\OverlayMainMenu.cs" />
+    <Compile Include="GameStates\PlayerWinState.cs" />
     <Compile Include="Grid_Generate.cs" />
     <Compile Include="GameStates\Overlays\OverlaySettingsState.cs" />
     <Compile Include="GameStates\SettingsMenuState.cs" />

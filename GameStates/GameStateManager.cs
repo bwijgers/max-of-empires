@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using MaxOfEmpires.Units;
+using System;
 
 namespace MaxOfEmpires.GameStates
 {
@@ -28,6 +29,19 @@ namespace MaxOfEmpires.GameStates
                 return stateDict[name];
             }
             throw new KeyNotFoundException("GameState with name '" + name + "' does not exist.");
+        }
+
+        public static void OnPlayerWinGame(Player owner)
+        {
+            CurrentState.FadeOut = true;
+
+            // Get the win state
+            PlayerWinState state = (PlayerWinState)GetState("playerWin");
+            state.OnPlayerWinGame(owner);
+
+            // Switch to the win state
+            state.FadeIn = true;
+            SwitchState("playerWin", false);
         }
 
         public static void HandleInput(InputHelper helper, KeyManager keys)

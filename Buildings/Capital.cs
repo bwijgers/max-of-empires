@@ -1,5 +1,6 @@
 ﻿using Ebilkill.Gui.Elements;
 using MaxOfEmpires.Files;
+using MaxOfEmpires.GameStates;
 using MaxOfEmpires.GameStates.Overlays;
 using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
@@ -21,6 +22,11 @@ namespace MaxOfEmpires.Buildings
             {
                 player.EarnMoney(moneyPerTurn);
             }
+        }
+
+        public override void RazeBuilding()
+        {
+            GameStateManager.OnPlayerWinGame(Owner);
         }
 
         public static void LoadFromConfig(Configuration config)
