@@ -69,7 +69,7 @@ namespace MaxOfEmpires.Units
         /// Adds the paths to the tiles surrounding the specified tile to the list.
         /// </summary>
         /// <param name="startPath">PathToTile to the tile from which you want the neighboring tiles.</param>
-        private static void AddSurroundingTiles(Unit movingUnit, PathToTile startPath, List<PathToTile> newPaths, int movement)
+        private static void AddSurroundingTiles(Unit movingUnit, PathToTile startPath, List<PathToTile> newPaths, int movement, int x, int y)
         {
             List<PathToTile> returnList = new List<PathToTile>();
 
@@ -83,7 +83,7 @@ namespace MaxOfEmpires.Units
             Grid grid = movingUnit.GameWorld as Grid;
             foreach (Point p in surroundingPoints)
             {
-                if (!grid.IsInGrid(p))
+                if (!grid.IsInGrid(p)||p.X>=x||p.Y>=y)
                 {
                     continue;
                 }
@@ -142,7 +142,7 @@ namespace MaxOfEmpires.Units
         /// Generates the list of shortest paths.
         /// </summary>
         /// <param name="startPosition">Position from which all paths are created.</param>
-        public static void GeneratePaths(Unit movingUnit, Point startPosition, int movement)
+        public static void GeneratePaths(Unit movingUnit, Point startPosition, int movement, int x, int y)
         {
             List<PathToTile> newPaths;
             PathToTile startPath = new PathToTile(startPosition, new Point[0], 0);
@@ -156,7 +156,7 @@ namespace MaxOfEmpires.Units
 
                 foreach (PathToTile p in newNewPaths)
                 {
-                    AddSurroundingTiles(movingUnit, p, newPaths, movement);
+                    AddSurroundingTiles(movingUnit, p, newPaths, movement,x,y);
                     newPaths.Remove(p);
                 }
             }
@@ -231,9 +231,9 @@ namespace MaxOfEmpires.Units
         /// Gets the position of all the Tiles this Unit can reach with the moves left this turn.
         /// </summary>
         /// <returns>All reachable Tiles this turn/</returns>
-        public static Point[] ReachableTiles(Unit movingUnit)
+        public static Point[] ReachableTiles(Unit movingUnit, int x, int y)
         {
-            GeneratePaths(movingUnit, movingUnit.PositionInGrid, movingUnit.MovesLeft);
+            GeneratePaths(movingUnit, movingUnit.PositionInGrid, movingUnit.MovesLeft,x,y);
             List<PathToTile> reachablePaths = shortestPaths.FindAll(path => path.cost <= movingUnit.MovesLeft);
             Point[] retVal = new Point[reachablePaths.Count];
             for (int i = 0; i < reachablePaths.Count; i++)
