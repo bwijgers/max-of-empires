@@ -13,6 +13,8 @@ namespace MaxOfEmpires
             public List<TimeSpan> duration;
             public List<Dictionary<string, int>> units;
             public List<Dictionary<string, int>> buildings;
+            public List<Dictionary<string, int>> lostUnits;
+            public List<Dictionary<string, int>> lostBuildings;
             public int battlesWon;
             public int battlesLost;
 
@@ -23,6 +25,8 @@ namespace MaxOfEmpires
                 duration = new List<TimeSpan>();
                 units = new List<Dictionary<string, int>>();
                 buildings = new List<Dictionary<string, int>>();
+                lostUnits = new List<Dictionary<string, int>>();
+                lostBuildings = new List<Dictionary<string, int>>();
                 battlesWon = 0;
                 battlesLost = 0;
             }
@@ -52,6 +56,24 @@ namespace MaxOfEmpires
         }
 
         public void AddBuildingToStats(string id)
+        {
+            if (!stats.buildings[stats.money.Count - 1].ContainsKey(id))
+            {
+                stats.buildings[stats.money.Count - 1][id] = 0;
+            }
+            stats.buildings[stats.money.Count - 1][id]++;
+        }
+
+        public void AddUnitLostToStats(string id)
+        {
+            if (!stats.buildings[stats.money.Count - 1].ContainsKey(id))
+            {
+                stats.buildings[stats.money.Count - 1][id] = 0;
+            }
+            stats.buildings[stats.money.Count - 1][id]++;
+        }
+
+        public void AddBuildingLostToStats(string id)
         {
             if (!stats.buildings[stats.money.Count - 1].ContainsKey(id))
             {

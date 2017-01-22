@@ -187,27 +187,30 @@ namespace MaxOfEmpires
             {
                 if (p!= currentPlayer)
                 {
-                    p.stats.money.Add(p.Money);
-                    p.stats.population.Add(p.Population);
-                    p.stats.buildings.Add(new Dictionary<string, int>());
-                    p.stats.units.Add(new Dictionary<string, int>());
                     if (t != null)
                     {
+                        p.stats.money.Add(p.Money);
+                        p.stats.population.Add(p.Population);
+                        p.stats.buildings.Add(new Dictionary<string, int>());
+                        p.stats.units.Add(new Dictionary<string, int>());
+                        p.stats.lostUnits.Add(new Dictionary<string, int>());
+                        p.stats.lostBuildings.Add(new Dictionary<string, int>());
+
                         if (onTurnStart == null)
                             p.stats.duration.Add(t.TotalGameTime);
                         else
                             p.stats.duration.Add(t.TotalGameTime - onTurnStart);
                         onTurnStart = t.TotalGameTime;
-                    }
-                    ForEach(obj => {
-                        Tile tile = (obj as Tile);
-                        if (tile.BuiltOn && tile.Building.Owner == p)
-                            p.AddBuildingToStats(tile.Building.id);
-                        if(tile.Occupied && tile.Unit.Owner == p && tile.Unit is Army)
-                            p.AddUnits((tile.Unit as Army).UnitsAndCounts);
+                    
+                        ForEach(obj => {
+                            Tile tile = (obj as Tile);
+                            if (tile.BuiltOn && tile.Building.Owner == p)
+                                p.AddBuildingToStats(tile.Building.id);
+                            if(tile.Occupied && tile.Unit.Owner == p && tile.Unit is Army)
+                                p.AddUnits((tile.Unit as Army).UnitsAndCounts);
 
                         });
-
+                    }
                 }
             }
         }

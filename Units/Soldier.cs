@@ -291,6 +291,7 @@ namespace MaxOfEmpires.Units
 
         public void OnDeath()
         {
+            owner.AddUnitLostToStats(id);
             animateDeath = true;
         }
 
