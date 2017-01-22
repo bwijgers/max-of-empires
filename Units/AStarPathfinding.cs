@@ -40,6 +40,11 @@ namespace MaxOfEmpires.Units
                 {
                     return ReconstructPath(movingUnit, cameFrom, probablyClosest, grid);
                 }
+                else if (probablyClosest.Equals(new Point(-1, -1)))
+                {
+                    // Couldn't find a valid path
+                    return null;
+                }
 
                 // We've evaluated this point now
                 openSet.Remove(probablyClosest);
@@ -56,10 +61,14 @@ namespace MaxOfEmpires.Units
                     // Distance from start to current neighbor
                     if (!distanceToTile.ContainsKey(probablyClosest))
                     {
-                        distanceToTile[probablyClosest] = int.MaxValue;
+                        //distanceToTile[probablyClosest] = int.MaxValue;
                     }
 
                     int distanceToTileCandidate = distanceToTile[probablyClosest] + (grid[neighbor] as Tile).Cost(movingUnit);
+                    if (distanceToTileCandidate < 0)
+                    {
+                        distanceToTileCandidate = int.MaxValue;
+                    }
                     if (!openSet.Contains(neighbor))
                     {
                         openSet.Add(neighbor);
@@ -73,6 +82,8 @@ namespace MaxOfEmpires.Units
                     cameFrom[neighbor] = probablyClosest;
                     distanceToTile[neighbor] = distanceToTileCandidate;
                     distanceToTarget[neighbor] = distanceToTile[neighbor] + DistanceTo(neighbor, targetPoint);
+                    if (distanceToTarget[neighbor] < 0)
+                        distanceToTarget[neighbor] = int.MaxValue;
                 }
             }
 
@@ -127,7 +138,7 @@ namespace MaxOfEmpires.Units
 #if DEBUG
             if (closestPoint.Equals(new Point(-1, -1)))
             {
-                throw new Exception("Hey we didn't find anything that's close mate.");
+//                throw new Exception("Hey we didn't find anything that's close mate.");
             }
 #endif
             // Return the point that we think is closest

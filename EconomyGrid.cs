@@ -138,7 +138,7 @@ namespace MaxOfEmpires
             selectedTile.Unit.TargetPosition = clickedTile.PositionInGrid;
             Point movePos = Pathfinding.MoveTowardsTarget(selectedTile.Unit);
 
-            if (CheckMoveUnit(movePos, selectedTile.Unit))
+            if (movePos.Equals(selectedTile.Unit.PositionInGrid) || CheckMoveUnit(movePos, selectedTile.Unit))
             {
                 SelectTile(InvalidTile);
                 return;

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
 using MaxOfEmpires.Files;
 using MaxOfEmpires.GameObjects;
-using System.Collections.Generic;
+using System;
 
 namespace MaxOfEmpires.Units
 {
@@ -50,6 +50,9 @@ namespace MaxOfEmpires.Units
             return prototype;
         }
 
+        private bool animateDeath;
+        private double animateDeathCounter;
+
         /// <summary>
         /// The name of this type of Soldier.
         /// </summary>
@@ -81,6 +84,7 @@ namespace MaxOfEmpires.Units
             Stats = stats;
             texName = resName;
             this.moveSpeed = moveSpeed;
+            animateDeath = false;
         }
 
         /// <summary>
@@ -90,7 +94,7 @@ namespace MaxOfEmpires.Units
         /// <param name="owner">The owner of the copy of this Unit.</param>
         public Soldier(Soldier original, Player owner) : this(new string(original.name.ToCharArray()), original.PositionInGrid.X, original.PositionInGrid.Y, owner, original.texName, original.moveSpeed, original.stats.Copy(), original.range.Copy())
         {
-            this.specials = original.specials;
+            specials = original.specials;
         }
 
         /// <summary>
@@ -125,7 +129,7 @@ namespace MaxOfEmpires.Units
             else
             {
                 hasAttacked = true;
-                HasMoved = Special_IsRider;
+                HasMoved = !Special_IsRider;
             }
 
             // Don't do anything else if the enemy is dead. 
@@ -283,7 +287,11 @@ namespace MaxOfEmpires.Units
 
             // Load the Unit's texture based on the name supplied and the player controlling the unit.
             DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(texName.ToString());
+        }
 
+        public void OnDeath()
+        {
+            animateDeath = true;
         }
 
         public void OnSoldierStartAttack(Soldier enemy, bool retaliate)
@@ -304,11 +312,25 @@ namespace MaxOfEmpires.Units
             hasAttacked = false;
         }
 
+        public override void Update(GameTime time)
+        {
+            base.Update(time);
+            if (IsDead)
+            {
+                animateDeathCounter += time.ElapsedGameTime.TotalSeconds / 2.0D;
+                DrawColor = new Color(DrawColor, (float)(Math.Cos(animateDeathCounter / 2.0D * Math.PI)));
+                if (DrawColor.A <= 10)
+                {
+                    ((GameWorld as Grid)[PositionInGrid] as Tile).SetUnit(null);
+                }
+            }
+        }
+
         public override bool HasAction
         {
             get
             {
-                return base.HasAction || !HasAttacked;
+                return (!HasAttacked && !IsDead) || base.HasAction;
             }
         }
 
@@ -320,7 +342,7 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// Whether this Soldier is dead.
         /// </summary>
-        public bool IsDead => stats.hp <= 0;
+        public bool IsDead => animateDeath || stats.hp <= 0;
 
         /// <summary>
         /// The name of this type of Soldier.

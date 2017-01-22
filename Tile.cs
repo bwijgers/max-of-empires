@@ -65,7 +65,11 @@ namespace MaxOfEmpires
         /// <returns>The movement cost on this Tile for the specified Unit.</returns>
         public int Cost(Unit unit)
         {
-            if(unit.id == "builder")
+            if (!Passable(unit))
+            {
+                return int.MaxValue;
+            }
+            if (unit.id == "builder")
             {
                 return 1;
             }
@@ -192,7 +196,26 @@ namespace MaxOfEmpires
         /// <returns>True if the Unit can pass through this Tile, false otherwise.</returns>
         public bool Passable(Unit unit)
         {
-            return (!Occupied || Unit == null || Unit.Owner == unit.Owner) && unit.Passable(terrain);
+            // Enemy unit here
+            if (Occupied && this.unit.Owner != unit.Owner)
+            {
+                if (this.unit is Soldier)
+                {
+                    // Enemy soldier here
+                    if (!(this.unit as Soldier).IsDead)
+                    {
+                        // Alive? Can't pass
+                        return false;
+                    }
+                    // Dead? Depends on terrain
+                }
+                else
+                {
+                    // Enemy unit that is not soldier, definitely alive
+                    return false;
+                }
+            }
+            return unit.Passable(terrain);
         }
 
         /// <summary>

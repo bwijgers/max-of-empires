@@ -187,7 +187,15 @@ namespace MaxOfEmpires.Units
 
             if (movingUnit.PositionInGrid != movingUnit.TargetPosition)
             {
-                Point[] Path = ShortestPath(movingUnit, movingUnit.TargetPosition).path;
+                Point[] Path = ShortestPath(movingUnit, movingUnit.TargetPosition)?.path;
+
+                if (Path == null)
+                {
+                    // No valid path found
+                    ClearTargetPosition(movingUnit);
+                    return movingUnit.TargetPosition;
+                }
+
                 int i = 0;
                 bool foundPath = false;
                 Point reachableTarget = movingUnit.PositionInGrid;

@@ -61,7 +61,7 @@ namespace MaxOfEmpires.Units
         public override void Draw(GameTime time, SpriteBatch s)
         {
             // Draw the Unit based on whether it still has moves left; gray if there are no moves left.
-            DrawColor = HasMoved ? Color.Gray : Color.White;
+            DrawColor = HasMoved ? new Color(Color.Gray, DrawColor.A / 255F) : new Color(Color.White, DrawColor.A / 255F);
             base.Draw(time, s);
         }
 

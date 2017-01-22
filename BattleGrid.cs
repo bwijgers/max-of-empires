@@ -70,7 +70,7 @@ namespace MaxOfEmpires
         private void OnKillSoldier(Soldier deadSoldier)
         {
             // Remove this Soldier as it is dead
-            (this[deadSoldier.PositionInGrid] as Tile).SetUnit(null);
+            deadSoldier.OnDeath();
 
             // If there are no Soldiers left on this side, the enemy won D:
             bool foundAlly = false;
@@ -80,7 +80,7 @@ namespace MaxOfEmpires
                 Tile t = obj as Tile;
 
                 // If there is an ally, update this condition
-                if (t.Occupied && t.Unit.Owner == deadSoldier.Owner)
+                if (t.Occupied && t.Unit.Owner == deadSoldier.Owner && !(t.Unit as Soldier).IsDead)
                 {
                     foundAlly = true;
                 }
@@ -113,7 +113,7 @@ namespace MaxOfEmpires
                 SelectedTile.Unit.TargetPosition = clickedTile.PositionInGrid;
                 Point movePos = Pathfinding.MoveTowardsTarget(SelectedTile.Unit);
 
-                if (CheckMoveUnit(movePos, SelectedTile.Unit) || CheckAttackSoldier(clickedTile.PositionInGrid, (Soldier)SelectedTile.Unit))
+                if (CheckMoveUnit(movePos, SelectedTile.Unit) || CheckAttackSoldier(clickedTile.PositionInGrid, (Soldier)SelectedTile.Unit) || movePos.Equals(SelectedTile.Unit.PositionInGrid))
                 {
                     SelectTile(InvalidTile);
                     return;
