@@ -81,7 +81,7 @@ namespace MaxOfEmpires
             else if (clickedTile.Occupied && clickedTile.Unit.Owner == currentPlayer && !clickedTile.Unit.HasMoved)
             {
                 // If the Unit can walk, show where it is allowed to walk. 
-                Point[] walkablePositions = Pathfinding.ReachableTiles(clickedTile.Unit,Width,Height);
+                walkablePositions = Pathfinding.ReachableTiles(clickedTile.Unit,Width,Height);
                 SetUnitWalkingOverlay(walkablePositions);
                 if (clickedTile.Unit is Army)
                     SetArmyAttackingOverlay((Army)clickedTile.Unit);

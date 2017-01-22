@@ -14,6 +14,7 @@ namespace MaxOfEmpires
     {
         protected Player currentPlayer;
         public List<Player> players;
+        protected Point[] walkablePositions;
 
         /// <summary>
         /// The coords of the currently selected Tile within the grid.
@@ -24,6 +25,10 @@ namespace MaxOfEmpires
         /// The current Unit targets that are displayed.
         /// </summary>
         private GameObjectList unitTargets;
+
+        private Point mousePoint;
+
+        private Point[] path;
 
         public Grid(int width, int height, List<Player> players, string id = "") : base(width, height, id) 
         {
@@ -132,6 +137,46 @@ namespace MaxOfEmpires
             {
                 CreateUnitTargetOverlays();
             }
+
+            if (SelectedTile != null)
+            {
+                if (SelectedTile.Occupied)
+                {
+                    //foreach (Point p in walkablePositions)
+                    ForEach(obj => {
+
+                    //{
+                            Point p = (obj as Tile).PositionInGrid;
+                        if ((int)(helper.GetMousePosition(true).X+MaxOfEmpires.camera.Position.X) / 32 == p.X && (int)(helper.GetMousePosition(true).Y + MaxOfEmpires.camera.Position.Y) / 32 == p.Y && p != selectedTile)
+                        {
+                            if (mousePoint != p)
+                            {
+                                mousePoint = p;
+                                Point[] pathWithoutOriginalTile = Pathfinding.GetPath(SelectedTile.Unit, p);
+                                path = new Point[pathWithoutOriginalTile.Length + 1];
+                                path[0] = selectedTile;
+                                pathWithoutOriginalTile.CopyTo(path, 1);
+                            }
+                            DisplayPath(path);
+                            return;
+                        }
+                        //}
+
+                    });
+                }
+            }
+        }
+
+        private void DisplayPath(Point[] path)
+        {
+
+            (this[path[0]] as Tile).DrawArrow(path[1] - path[0], Point.Zero);
+
+            for (int i = 1; i < path.Length - 1; i++)
+            {
+                (this[path[i]] as Tile).DrawArrow(path[i + 1] - path[i], path[i - 1] - path[i]);
+            }
+            (this[path[path.Length-1]] as Tile).DrawArrow(Point.Zero, path[path.Length-2]-path[path.Length-1]);
         }
 
         /// <summary>

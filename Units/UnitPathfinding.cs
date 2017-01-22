@@ -100,7 +100,7 @@ namespace MaxOfEmpires.Units
                     PathToTile newPathToTile = new PathToTile(p, pathAsPoints, cost);
                     PathToTile shortestPathToTile = shortestPaths.Find(path => path.target.Equals(p));
 
-                    if (movement > cost)
+                    if (movement >= cost)
                     {
                         // If the current found path is shorter than an existent path, overrides it.
                         if (shortestPathToTile != null)

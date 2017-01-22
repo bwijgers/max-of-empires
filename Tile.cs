@@ -36,11 +36,15 @@ namespace MaxOfEmpires
 
         public bool hills;
 
-        public bool Mountain;
+        public bool drawArrowNextTime;
 
         private Texture2D terrainTexture;
 
+        private Texture2D arrowTexture;
+
         private Rectangle terrainSource; //TODO vervang door stuff
+
+        private Rectangle arrowSource;
 
         /// <summary>
         /// Creates a new Tile at a specified position with a specified Terrain.
@@ -56,6 +60,7 @@ namespace MaxOfEmpires
             position = new Vector2(x * 32, y * 32);
             overlayAttack = overlayWalk = false;
             terrainTexture = AssetManager.Instance.getAsset<Texture2D>("FE-Sprites/Terrain@5x4");
+            arrowTexture = AssetManager.Instance.getAsset<Texture2D>("FE-Sprites/Arrow@7x2");
         }
 
         /// <summary>
@@ -93,6 +98,12 @@ namespace MaxOfEmpires
             building?.Draw(time, s);
 
             // Draw a walking overlay if it should be drawn
+            if (drawArrowNextTime)
+            {
+                ArrowDraw(s);
+                drawArrowNextTime = false;
+            }
+
             if (overlayWalk)
             {
                 DrawingHelper.Instance.DrawRectangle(s, Bounds, new Color(0x00, 0x00, 0xFF, 0x88));
@@ -110,6 +121,90 @@ namespace MaxOfEmpires
             unit?.Draw(time, s);
         }
         
+        public void DrawArrow(Point relativeNext, Point relativePrevious)
+        {
+            drawArrowNextTime = true;
+            if(relativePrevious == Point.Zero)
+            {
+                if (relativeNext.X == 1)
+                {
+                    SelectArrowSprite(1, 1);
+                }
+                else if (relativeNext.X == -1)
+                {
+                    SelectArrowSprite(2, 2);
+                }
+                else if (relativeNext.Y == 1)
+                {
+                    SelectArrowSprite(2, 1);
+                }
+                else
+                {
+                    SelectArrowSprite(1, 2);
+                }
+            }
+            else if (relativeNext == Point.Zero)
+            {
+                if (relativePrevious.X == 1)
+                {
+                    SelectArrowSprite(7, 2);
+                }
+                else if (relativePrevious.X == -1)
+                {
+                    SelectArrowSprite(6, 1);
+                }
+                else if (relativePrevious.Y == 1)
+                {
+                    SelectArrowSprite(6, 2);
+                }
+                else
+                {
+                    SelectArrowSprite(7, 1);
+                }
+            }
+            else if (relativeNext.X + relativePrevious.X == 0 && relativeNext.Y + relativePrevious.Y == 0)
+            {
+                if(relativeNext.X == 0)
+                {
+                    SelectArrowSprite(3, 1);
+                }
+                else
+                {
+                    SelectArrowSprite(3, 2);
+                }
+            }
+            else
+            {
+                Point totalPoint = relativeNext + relativePrevious;
+                if (totalPoint.X == totalPoint.Y)
+                {
+                    if(totalPoint.X == 1)
+                    {
+                        SelectArrowSprite(4, 1);
+                    }
+                    else
+                    {
+                        SelectArrowSprite(5, 2);
+                    }
+                }
+                else{
+                    if(totalPoint.X == 1)
+                    {
+                        SelectArrowSprite(4, 2);
+                    }
+                    else
+                    {
+                        SelectArrowSprite(5, 1);
+                    }
+                }
+            }
+        }
+
+        private void SelectArrowSprite(int x, int y)
+        {
+            arrowSource = new Rectangle((x - 1) * 32, (y - 1) * 32, 32, 32);
+        }
+
         private void TerrainSpriteSelect()
         {
             if(terrain == Terrain.Plains&&!hills)
@@ -187,6 +282,11 @@ namespace MaxOfEmpires
         private void TerrainDraw(SpriteBatch s)
         {
             s.Draw(terrainTexture, DrawPosition, terrainSource, Color.White);
+        }
+
+        private void ArrowDraw(SpriteBatch s)
+        {
+            s.Draw(arrowTexture, DrawPosition, arrowSource, Color.White);
         }
 
         /// <summary>

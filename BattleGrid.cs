@@ -126,7 +126,7 @@ namespace MaxOfEmpires
                 // If the Unit can walk, show where it is allowed to walk. 
                 if (!clickedTile.Unit.HasMoved)
                 {
-                    Point[] walkablePositions = Pathfinding.ReachableTiles(clickedTile.Unit,Width,Height);
+                    walkablePositions = Pathfinding.ReachableTiles(clickedTile.Unit,Width,Height);
                     SetUnitWalkingOverlay(walkablePositions);
                 }
 
