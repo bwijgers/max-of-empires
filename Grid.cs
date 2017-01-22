@@ -24,7 +24,11 @@ namespace MaxOfEmpires
         /// </summary>
         private GameObjectList unitTargets;
 
-        public Grid(int width, int height, string id = "") : base(width, height, id) 
+        private Unit walkingUnit;
+
+        private Point targetPosition;
+
+        public Grid(int width, int height, string id = "") : base(width, height, id)
         {
             selectedTile = InvalidTile;
             currentPlayer = true;
@@ -129,7 +133,7 @@ namespace MaxOfEmpires
             }
 
             // Check if the overlays should be rendered.
-            if(keyManager.KeyPressed("unitTargetOverlay", helper))
+            if (keyManager.KeyPressed("unitTargetOverlay", helper))
             {
                 CreateUnitTargetOverlays();
             }
@@ -163,6 +167,9 @@ namespace MaxOfEmpires
         public void OnUnitFinishMoving(Unit u, Point targetPos)
         {
             // TODO: Call this when the animation is done
+            
+            walkingUnit.DrawPosition = Vector2.Zero;
+            walkingUnit = null;
 
             // Get the tiles to move the Units from/to
             Tile targetTile = this[targetPos] as Tile;
@@ -173,11 +180,19 @@ namespace MaxOfEmpires
             originTile.SetUnit(null);
         }
 
+        /// <summary>
+        /// As soon as you press the button for moving to a target position, this method will be called
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="targetPos">The target position to move to in grid coordinates</param>
         public void OnUnitStartMoving(Unit u, Point targetPos)
         {
             // Can make Unit movement animated by not calling this instantly (or from update or something, idk)
             // TODO: Start animating here
-            OnUnitFinishMoving(u, targetPos);
+            //u.DrawPosition = new Vector2(-50, -50);
+            targetPosition = targetPos;
+            walkingUnit = u;
+            walkingUnit.Vectors.Add(new Vector2(targetPos.X,targetPos.Y));
         }
 
         /// <summary>
@@ -306,10 +321,10 @@ namespace MaxOfEmpires
             // Makes the units go towards their target
             ForEach((obj, x, y) => {
                 Tile tile = obj as Tile;
-                if(tile.Occupied)
+                if (tile.Occupied)
                 {
                     Unit unit = tile.Unit;
-                    if(unit.Owner != player) // End of turn for the player whose turn it is NOT right now.
+                    if (unit.Owner != player) // End of turn for the player whose turn it is NOT right now.
                     {
                         Point movePos = Pathfinding.MoveTowardsTarget(unit);
                         CheckMoveUnit(movePos, unit);
@@ -334,6 +349,56 @@ namespace MaxOfEmpires
                     unitTargets.RemoveChild(obj);
                 }
             });
+            if (walkingUnit != null)
+            {
+                if (walkingUnit.Vectors.Count != 0)
+                {
+                    if (!walkingUnit.Moved)
+                    {
+                        Walk(walkingUnit.Vectors[0]);
+                    }
+                }
+                if (walkingUnit.Moved)
+                {
+                    OnUnitFinishMoving(walkingUnit, targetPosition);
+                }
+            }
+        }
+
+        public void Walk(Vector2 tarPosCoor)
+        {
+            Vector2 unitPos = walkingUnit.DrawPosition - new Vector2(walkingUnit.PositionInGrid.X * 32, walkingUnit.PositionInGrid.Y * 32);
+            Vector2 velocity = Vector2.Zero;
+            Vector2 tarPos = 32 * (new Vector2(tarPosCoor.X-1,tarPosCoor.Y-1));
+            if (tarPos.X > unitPos.X)
+            {
+                velocity = new Vector2(1, 0);
+                //PopSprites = PopSpritesFront;
+            }
+            else if (tarPos.X < unitPos.X)
+            {
+                velocity = new Vector2(-1, 0);
+                //PopSprites = PopSpritesFront;
+            }
+            else if (tarPos.Y > unitPos.Y)
+            {
+                velocity = new Vector2(0, 1);
+                //PopSprites = PopSpritesFront;
+            }
+            else if (tarPos.Y < unitPos.Y)
+            {
+                velocity = new Vector2(0, -1);
+                //PopSprites = PopSpritesBack;
+            }
+            else
+            {
+                velocity = Vector2.Zero;
+                walkingUnit.Vectors.RemoveAt(0);
+                walkingUnit.Moved = true;
+                //PopSprites = PopSpritesFront;
+            }
+
+            walkingUnit.DrawPosition = walkingUnit.DrawPosition + velocity - new Vector2(walkingUnit.PositionInGrid.X*32, walkingUnit.PositionInGrid.Y*32);
         }
 
         /// <summary>

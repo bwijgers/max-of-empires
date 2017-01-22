@@ -30,7 +30,7 @@ namespace MaxOfEmpires
 
         public void Draw(Point drawPosition, SpriteBatch s)
         {
-            s.Draw(tex, new Rectangle(drawPosition.X, drawPosition.Y, tex.Width, tex.Height), Color.White);
+            //s.Draw(tex, new Rectangle(drawPosition.X, drawPosition.Y, tex.Width, tex.Height), Color.White);
         }
     }
 }

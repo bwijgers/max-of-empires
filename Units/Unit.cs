@@ -40,12 +40,19 @@ namespace MaxOfEmpires.Units
         /// </summary>
         private int x, y;
 
+        private List<Vector2> vectors;
+
+        private bool moved;
+
         public Unit(int x, int y, bool owner)
         {
             this.x = x;
             this.y = y;
             this.owner = owner;
             target = new Point(x, y);
+
+            vectors = new List<Vector2>();
+            moved = false;
         }
 
         /// <summary>
@@ -185,6 +192,30 @@ namespace MaxOfEmpires.Units
                 {
                     target = value;
                 }
+            }
+        }
+
+        public List<Vector2> Vectors
+        {
+            get
+            {
+                return vectors;
+            }
+            set
+            {
+                vectors = value;
+            }
+        }
+
+        public bool Moved
+        {
+            get
+            {
+                return moved;
+            }
+            set
+            {
+                moved = value;
             }
         }
     }
