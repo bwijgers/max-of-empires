@@ -42,7 +42,7 @@ namespace MaxOfEmpires
             }
 
             // We can actually attack this? Nice :D
-            attackingUnit.Attack(toAttack);
+            attackingUnit.Attack(toAttack, false);
 
             // After a battle, check if there are dead Units, and remove these if they are dead
             Soldier defender = toAttack.Unit as Soldier;

@@ -141,13 +141,21 @@ namespace Ebilkill.Gui.Elements
             calculateElementPositions();
         }
 
-        private void scroll(bool up)
+        private void scroll(bool up, bool allTheWay = false)
         {
             int move = up ? -1 : 1;
 
             if (currentTop + move < 0 || currentTop + move + displayableItemsCount > allElements.Count)
             {
                 return;
+            }
+
+            if (allTheWay)
+            {
+                while (currentTop + move < 0 || currentTop + move + displayableItemsCount > allElements.Count)
+                {
+                    currentTop += move;
+                }
             }
 
             currentTop += move;
@@ -190,6 +198,14 @@ namespace Ebilkill.Gui.Elements
                 {
                     element.onClick(e);
                 }
+            }
+        }
+
+        public override void onVisibilityChange(bool newVisibility)
+        {
+            if (newVisibility)
+            {
+                scroll(true, true);
             }
         }
 

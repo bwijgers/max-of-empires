@@ -1,13 +1,7 @@
-﻿using Ebilkill.Gui;
-using MaxOfEmpires.Files;
-using MaxOfEmpires.GameObjects;
+﻿using MaxOfEmpires.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MaxOfEmpires.Units
 {
@@ -120,7 +114,18 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// Whether this Unit can still move this turn.
         /// </summary>
-        public bool HasMoved => MovesLeft <= 0;
+        public bool HasMoved
+        {
+            get
+            {
+                return MovesLeft <= 0;
+            }
+            set
+            {
+                if (value)
+                    movesLeft = 0;
+            }
+        }
 
         /// <summary>
         /// The amount of tiles this Unit can still run this turn.

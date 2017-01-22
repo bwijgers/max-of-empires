@@ -8,7 +8,7 @@ namespace MaxOfEmpires.Units
         private static Dictionary<string, Soldier> unitsByName = new Dictionary<string, Soldier>();
         private static Dictionary<string, int> unitCostsByName = new Dictionary<string, int>();
         private static List<Soldier> allSoldiers = new List<Soldier>();
-        private static string[] soldierNames = new string[] { "swordsman", "archer", "axeman", "horse", "heavy", "mage" };
+        private static string[] soldierNames = new string[] { "spearman", "swordsman", "archer", "axeman", "horse", "heavy", "mage", "assassin" };
 
         /// <summary>
         /// Gets a Unit by its name, with a specified owner. Position will be (0,0) until set in the Grid at a specified position.

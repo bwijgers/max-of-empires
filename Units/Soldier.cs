@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
 using MaxOfEmpires.Files;
 using MaxOfEmpires.GameObjects;
+using System.Collections.Generic;
 
 namespace MaxOfEmpires.Units
 {
@@ -39,7 +40,14 @@ namespace MaxOfEmpires.Units
             // Load texture from config file
             string texName = config.GetProperty<string>("texture.name");
             //string texName = "swordsman";
-            return new Soldier(config.GetProperty<string>("name"), 0, 0, new Player("none", "blue", Color.Black, 100), texName, moveSpeed, stats, range);
+
+            // Load all specials of the Unit from config
+            int specialsList = config.GetProperty<int>("specialties");
+
+            Soldier prototype = new Soldier(config.GetProperty<string>("name"), 0, 0, new Player("none", "blue", Color.Black, 100), texName, moveSpeed, stats, range);
+            prototype.Specials = specialsList;
+
+            return prototype;
         }
 
         /// <summary>
@@ -51,6 +59,11 @@ namespace MaxOfEmpires.Units
         /// The range in which this Unit can attack.
         /// </summary>
         private Range range;
+
+        /// <summary>
+        /// Specials. Don't change this. Used in bool properties.
+        /// </summary>
+        private int specials;
 
         /// <summary>
         /// This Unit's stats. 
@@ -77,15 +90,14 @@ namespace MaxOfEmpires.Units
         /// <param name="owner">The owner of the copy of this Unit.</param>
         public Soldier(Soldier original, Player owner) : this(new string(original.name.ToCharArray()), original.PositionInGrid.X, original.PositionInGrid.Y, owner, original.texName, original.moveSpeed, original.stats.Copy(), original.range.Copy())
         {
-            // Make sure the texture is loaded, or the game will crash.
-            LoadTexture();
+            this.specials = original.specials;
         }
 
         /// <summary>
         /// Attacks a Unit at the specified position. Assumes the enemy is in range.
         /// </summary>
         /// <param name="attackPos">The tile to attack.</param>
-        public void Attack(Tile attackPos)
+        public void Attack(Tile attackPos, bool retaliate)
         {
             // Check if the attacking tile actually has a Unit to attack. 
             if (!attackPos.Occupied)
@@ -100,11 +112,21 @@ namespace MaxOfEmpires.Units
                 return; // SHOULD NEVER HAPPEN
             }
 
-            // Unit has attacked
-            hasAttacked = true;
-
             Soldier enemy = u as Soldier;
-            OnSoldierStartAttack(enemy);
+            OnSoldierStartAttack(enemy, retaliate);
+
+            // Unit has attacked
+            if (enemy.IsDead && Special_Assassin)
+            {
+                // Nothing is true, everything is permitted
+                movesLeft = MoveSpeed;
+                hasAttacked = false;
+            }
+            else
+            {
+                hasAttacked = true;
+                HasMoved = Special_IsRider;
+            }
 
             // Don't do anything else if the enemy is dead. 
             if (enemy.IsDead)
@@ -114,7 +136,7 @@ namespace MaxOfEmpires.Units
             if (enemy.IsInRange(PositionInGrid))
             {
                 // Okay, retaliate. 
-                enemy.OnSoldierStartAttack(this);
+                enemy.OnSoldierStartAttack(this, true);
             }
         }
 
@@ -128,6 +150,9 @@ namespace MaxOfEmpires.Units
             // Create a new Unit instance
             Soldier copy = new Soldier(this, owner);
 
+            // Make sure the texture is loaded, or the game will crash.
+            copy.LoadTexture();
+
             // Return the Unit copy
             return copy;
         }
@@ -136,7 +161,7 @@ namespace MaxOfEmpires.Units
         /// Deals damage to an enemy Unit, based on attack and defence. Calculates miss as well.
         /// </summary>
         /// <param name="enemy">The enemy to deal damage to.</param>
-        private void DealDamage(Soldier enemy)
+        private void DealDamage(Soldier enemy, bool retaliate)
         {
             // Check if we hit at all
             int hitChance = stats.hit - enemy.stats.dodge;
@@ -150,8 +175,33 @@ namespace MaxOfEmpires.Units
             }
 
             // We hit :D Damage the enemy
-            int damageToDeal = stats.att - enemy.stats.def;
+            // Check to see if we might be able to deal MOAR damage :))))
+            int attack = stats.att;
 
+            // Are we strong against this kind of enemy?
+            if (enemy.Special_IsRider && Special_HorseBuster)
+            {
+                attack += stats.att * 2;
+            }
+
+            // Are we good retaliators who retaliate? 
+            if (retaliate && Special_Tank)
+            {
+                attack += stats.att;
+            }
+
+            // Are we fighting a tank and are we tankbusters?
+            if (Special_TankBuster && enemy.Special_Tank)
+            {
+                attack += (int)(stats.att * 0.5F);
+            }
+
+            int damageToDeal = attack;
+            if (!Special_MagicFighter)
+            {
+                damageToDeal -= enemy.stats.def;
+            }
+            
             // If there is no damage to deal, don't actually *heal* the enemy Unit.
             if (damageToDeal > 0)
             {
@@ -236,12 +286,16 @@ namespace MaxOfEmpires.Units
 
         }
 
-        public void OnSoldierStartAttack(Soldier enemy)
+        public void OnSoldierStartAttack(Soldier enemy, bool retaliate)
         {
+            // Magic fighters can't retaliate D:
+            if (Special_MagicFighter && retaliate)
+                return;
+
             // TODO: Call animation code here
 
             // This should be called at the right time during the animation
-            DealDamage(enemy);
+            DealDamage(enemy, retaliate);
         }
 
         public override void TurnUpdate(uint turn, Player player)
@@ -259,12 +313,12 @@ namespace MaxOfEmpires.Units
         }
 
         /// <summary>
-        /// Whether this Unit has attacked this turn.
+        /// Whether this Soldier has attacked this turn.
         /// </summary>
         public bool HasAttacked => hasAttacked;
 
         /// <summary>
-        /// Whether this Unit is dead.
+        /// Whether this Soldier is dead.
         /// </summary>
         public bool IsDead => stats.hp <= 0;
 
@@ -277,6 +331,28 @@ namespace MaxOfEmpires.Units
         /// The range at which this Soldier can attack.
         /// </summary>
         public Range Range => range;
+
+        /// <summary>
+        /// Whether this Soldier is a rider.
+        /// </summary>
+        public bool Special_HorseBuster => (specials & 1) == 1;
+        public bool Special_IsRider => (specials & 2) == 2;
+        public bool Special_MagicFighter => (specials & 4) == 4;
+        public bool Special_Tank => (specials & 8) == 8;
+        public bool Special_TankBuster => (specials & 16) == 16;
+        public bool Special_Assassin => (specials & 32) == 32;
+
+        private int Specials
+        {
+            get
+            {
+                return specials;
+            }
+            set
+            {
+                specials = value;
+            }
+        }
 
         /// <summary>
         /// The Stats of this Soldier. 

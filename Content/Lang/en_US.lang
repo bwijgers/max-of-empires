@@ -1,13 +1,16 @@
-﻿# Buildings
+# Buildings
 building.town=Town
+building.capital=Capital
 building.mine=Mine
 building.trainingGrounds=Training Grounds
 building.academy=Academy
 
-# Units
-unit.archer=Archer
+# Soldiers
+unit.spearman=Spearman
 unit.swordsman=Swordsman
-unit.axeman=Axeman
-unit.heavy=Heavy Infantry
+unit.archer=Archer
 unit.horse=Horseman
+unit.heavy=Heavy Infantry
+unit.axeman=Axeman
 unit.mage=Mage
+unit.assassin=Assassin
