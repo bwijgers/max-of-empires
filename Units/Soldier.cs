@@ -75,12 +75,9 @@ namespace MaxOfEmpires.Units
         private Vector2 walkDirectionZero = new Vector2(0, 0);
 
         public bool duringAttack = false;
-        bool attacked = false;
-        Soldier attackTarget;
+        private bool attacked = false;
+        private Soldier attackTarget;
         
-        
-
-
         private string texName;
 
         private Soldier(string name, int x, int y, bool owner, string resName, int moveSpeed, Stats stats, Range range) : base(x, y, owner)
@@ -124,6 +121,7 @@ namespace MaxOfEmpires.Units
             }
 
             Soldier enemy = u as Soldier;
+
             // Calls a certain method, which sets the damage calculation in action
             OnSoldierStartAttack(enemy);
 
@@ -258,7 +256,7 @@ namespace MaxOfEmpires.Units
             Vector2 attackDirection = tPos-cPos;
             Vector2.Normalize(ref attackDirection, out normalizedAttackDirection);
 
-            //TO DO: Adding the walking animations to the attack directions and un-commenting this.
+            // TODO: Adding the walking animations to the attack directions and un-commenting this.
             /*
             if(normalizedAttackDirection == walkUpDirection)
                 //Play walking up animation.
@@ -316,8 +314,8 @@ namespace MaxOfEmpires.Units
         {
             base.Update(time);
             attackAnimationTimer += (float)time.ElapsedGameTime.TotalSeconds;
-            if (attacked) UpdateAttack();
-
+            if (attacked)
+                UpdateAttack();
         }
 
         /// <summary>
