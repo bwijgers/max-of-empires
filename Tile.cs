@@ -207,70 +207,10 @@ namespace MaxOfEmpires
 
         private void TerrainSpriteSelect()
         {
-            if(terrain == Terrain.Plains&&!hills)
-            {
-                SelectSprite(3, 1);
-            }
-            else if (terrain == Terrain.Plains && hills)
-            {
-                SelectSprite(2, 1);
-            }
-            else if (terrain == Terrain.Forest && hills)
-            {
-                SelectSprite(4, 1);
-            }
-            else if (terrain == Terrain.Forest && !hills)
-            {
-                SelectSprite(5, 1);
-            }
-            else if (terrain == Terrain.Desert && !hills)
-            {
-                SelectSprite(3, 3);
-            }
-            else if (terrain == Terrain.Desert && hills)
-            {
-                SelectSprite(2, 3);
-            }
-            else if (terrain == Terrain.Tundra && !hills)
-            {
-                SelectSprite(3, 2);
-            }
-            else if (terrain == Terrain.Tundra && hills)
-            {
-                SelectSprite(2, 2);
-            }
-            else if (terrain == Terrain.Swamp && !hills)
-            {
-                SelectSprite(5, 2);
-            }
-            else if (terrain == Terrain.Swamp && hills)
-            {
-                SelectSprite(4, 2);
-            }
-            else if (terrain == Terrain.Jungle && !hills)
-            {
-                SelectSprite(5, 3);
-            }
-            else if (terrain == Terrain.Jungle && hills)
-            {
-                SelectSprite(4, 3);
-            }
-            else if (terrain == Terrain.Lake)
-            {
-                SelectSprite(1, 4);
-            }
-            else if (terrain == Terrain.Mountain)
-            {
-                SelectSprite(1, 1);
-            }
-            else if (terrain == Terrain.TundraMountain)
-            {
-                SelectSprite(1, 2);
-            }
-            else if (terrain == Terrain.DesertMountain)
-            {
-                SelectSprite(1, 3);
-            }
+            if (!hills)
+                SelectSprite(terrain.placeInSprite.X, terrain.placeInSprite.Y);
+            else
+                SelectSprite(terrain.placeInSprite.X-1, terrain.placeInSprite.Y);
 
         }
 
