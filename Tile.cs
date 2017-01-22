@@ -4,6 +4,7 @@ using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
+using MaxOfEmpires.Files;
 
 namespace MaxOfEmpires
 {
@@ -312,6 +313,24 @@ namespace MaxOfEmpires
             }
         }
 
+        int CalculateDodgeBonus(Terrain.TerrainType type, bool containsHills)
+        {
+            Configuration file = FileManager.LoadConfig("configs/terrain/terrainBonusses");
+            int bonus = file.GetProperty<int>(type.ToString().ToLower()+".dodge");
+            if(hills)
+                bonus+= file.GetProperty<int>("hills.dodge");
+            return bonus;
+        }
+
+        int CalculateDefenseBonus(Terrain.TerrainType type, bool containsHIlls)
+        {
+            Configuration file = FileManager.LoadConfig("configs/terrain/terrainBonusses");
+            int bonus = file.GetProperty<int>(type.ToString().ToLower() + ".defense");
+            if (hills)
+                bonus += file.GetProperty<int>("hills.defense");
+            return bonus;
+        }
+
         /// <summary>
         /// Whether there is a Building on this Tile.
         /// </summary>
@@ -326,6 +345,10 @@ namespace MaxOfEmpires
         /// Whether there is a Unit on this Tile.
         /// </summary>
         public bool Occupied => Unit != null;
+
+        public int DefenseBonus => CalculateDefenseBonus(terrain.terrainType, hills);
+
+        public int DodgeBonus => CalculateDodgeBonus(terrain.terrainType, hills);
 
         /// <summary>
         /// True when the attacking overlay on this tile should be shown, false otherwise.

@@ -168,7 +168,7 @@ namespace MaxOfEmpires.Units
         private void DealDamage(Soldier enemy, bool retaliate)
         {
             // Check if we hit at all
-            int hitChance = stats.hit - enemy.stats.dodge;
+            int hitChance = stats.hit - enemy.stats.dodge+(enemy.Parent as Tile).DodgeBonus;
             if (hitChance < 100)
             {
                 double randDouble = MaxOfEmpires.Random.NextDouble();
@@ -203,7 +203,7 @@ namespace MaxOfEmpires.Units
             int damageToDeal = attack;
             if (!Special_MagicFighter)
             {
-                damageToDeal -= enemy.stats.def;
+                damageToDeal -= enemy.stats.def + (enemy.Parent as Tile).DefenseBonus;
             }
             
             // If there is no damage to deal, don't actually *heal* the enemy Unit.
