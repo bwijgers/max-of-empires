@@ -18,7 +18,7 @@ namespace MaxOfEmpires.Buildings
             {
                 if (!player.CanAfford(upkeep))
                 {
-                    RazeBuilding();
+                    RazeBuilding(null);
                     return;
                 }
                 player.Buy(upkeep);

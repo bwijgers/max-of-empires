@@ -31,19 +31,6 @@ namespace MaxOfEmpires.GameStates
             throw new KeyNotFoundException("GameState with name '" + name + "' does not exist.");
         }
 
-        public static void OnPlayerWinGame(Player owner)
-        {
-            CurrentState.FadeOut = true;
-
-            // Get the win state
-            PlayerWinState state = (PlayerWinState)GetState("playerWin");
-            state.OnPlayerWinGame(owner);
-
-            // Switch to the win state
-            state.FadeIn = true;
-            SwitchState("playerWin", false);
-        }
-
         public static void HandleInput(InputHelper helper, KeyManager keys)
         {
             CurrentState?.HandleInput(helper, keys);
@@ -79,6 +66,27 @@ namespace MaxOfEmpires.GameStates
             state.OnPlayerWinBattle(remainingArmy);
             state.FadeIn = true;
             SwitchState("economy", false);
+        }
+
+        public static void OnPlayerWinGame(Player owner)
+        {
+            CurrentState.FadeOut = true;
+
+            // Get the win state
+            PlayerWinState state = (PlayerWinState)GetState("playerWin");
+            state.OnPlayerWinGame(owner);
+
+            // Switch to the win state
+            state.FadeIn = true;
+            SwitchState("playerWin", false);
+        }
+
+        public static void OnRequestStatistics()
+        {
+            CurrentState.FadeOut = true;
+
+            GetState("mainMenu").FadeIn = true;
+            SwitchState("mainMenu", false);
         }
 
         /// <summary>

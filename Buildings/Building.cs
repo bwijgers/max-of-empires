@@ -63,11 +63,13 @@ namespace MaxOfEmpires.Buildings
         {
         }
 
-        public virtual void RazeBuilding()
+        public virtual void RazeBuilding(Unit destroyer)
         {
             // Destroy the building
             Tile t = (GameWorld as Grid)[PositionInGrid] as Tile;
             t.Building = null;
+
+            owner.AddBuildingLostToStats(id);
 
             // Also re-update the population because that's what should be done after a town is destroyed
             Owner.CalculatePopulation();
@@ -108,7 +110,7 @@ namespace MaxOfEmpires.Buildings
             owner.CalculatePopulation();
         }
 
-        public override void TurnUpdate(uint turn, Player player)
+        public override void TurnUpdate(uint turn, Player player, GameTime time)
         {
             // Check to see if an enemy ARMY is here
             Tile t = (GameWorld as Grid)[PositionInGrid] as Tile;
@@ -128,7 +130,7 @@ namespace MaxOfEmpires.Buildings
             // See if we're being destroyed by the enemy army :/
             if (turnsSeized >= turnsBeforeRazeOnSeize)
             {
-                RazeBuilding();
+                RazeBuilding(t.Unit);
                 return;
             }
 

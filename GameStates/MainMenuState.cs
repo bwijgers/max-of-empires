@@ -16,6 +16,7 @@ namespace MaxOfEmpires.GameStates
         public override void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS)
         {
             overlay.draw(overlayS);
+            base.Draw(time, gameObjectS, overlayS);
         }
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
@@ -26,10 +27,6 @@ namespace MaxOfEmpires.GameStates
         public override void ResetOverlay()
         {
             overlay = new OverlayMainMenu();
-        }
-
-        public override void Update(GameTime time)
-        {
         }
     }
 }

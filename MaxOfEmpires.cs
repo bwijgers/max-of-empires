@@ -130,7 +130,7 @@ namespace MaxOfEmpires
             LoadConfiguration();
 
             // Load players
-            Player blue = new Player("Blue", "Blue", Color.Blue, mainConfiguration.GetProperty<int>("player.startingMoney"));
+            Player blue = new Player("Blue", "Blue", Color.CornflowerBlue, mainConfiguration.GetProperty<int>("player.startingMoney"));
             Player red = new Player("Red", "Red", Color.Red, mainConfiguration.GetProperty<int>("player.startingMoney"));
 
             // Adds battleState to the GamestateManager
@@ -138,6 +138,7 @@ namespace MaxOfEmpires
             GameStateManager.AddState("battle", new BattleState(blue, red));
             GameStateManager.AddState("mainMenu", new MainMenuState());
             GameStateManager.AddState("settingsMenu", new SettingsMenuState());
+            GameStateManager.AddState("playerWin", new PlayerWinState());
             GameStateManager.SwitchState("mainMenu", true);
         }
 

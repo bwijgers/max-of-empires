@@ -15,18 +15,18 @@ namespace MaxOfEmpires.Buildings
         {
         }
 
-        public override void TurnUpdate(uint turn, Player player)
+        public override void TurnUpdate(uint turn, Player player, GameTime time)
         {
-            base.TurnUpdate(turn, player);
+            base.TurnUpdate(turn, player, time);
             if (player == Owner)
             {
                 player.EarnMoney(moneyPerTurn);
             }
         }
 
-        public override void RazeBuilding()
+        public override void RazeBuilding(Unit destroyer)
         {
-            GameStateManager.OnPlayerWinGame(Owner);
+            GameStateManager.OnPlayerWinGame(destroyer.Owner);
         }
 
         public static void LoadFromConfig(Configuration config)
