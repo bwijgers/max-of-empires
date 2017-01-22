@@ -553,7 +553,7 @@
 /processorParam:TextureFormat=Color
 /build:FE-Sprites/SwordsmanRedBAnimation@7x3.png
 
-#begin FE-Sprites/Victoryscreen.png
+#begin Victoryscreen.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -563,5 +563,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:FE-Sprites/Victoryscreen.png
+/build:Victoryscreen.png
 
