@@ -6,6 +6,29 @@ namespace MaxOfEmpires
 {
     class Player
     {
+        public struct Stats
+        {
+            public List<int> money;
+            public List<int> population;
+            public List<TimeSpan> duration;
+            public List<Dictionary<string, int>> units;
+            public List<Dictionary<string, int>> buildings;
+            public int battlesWon;
+            public int battlesLost;
+
+            public Stats(int something)
+            {
+                money = new List<int>();
+                population = new List<int>();
+                duration = new List<TimeSpan>();
+                units = new List<Dictionary<string, int>>();
+                buildings = new List<Dictionary<string, int>>();
+                battlesWon = 0;
+                battlesLost = 0;
+            }
+        }
+
+        public Stats stats;
         private int population;
         private int money;
         private string name;
@@ -25,8 +48,29 @@ namespace MaxOfEmpires
             this.color = color;
             updateMoneyHandlers = new List<Action<Player>>();
             updatePopulationHandlers = new List<Action<Player>>();
+            stats = new Stats(0);
         }
 
+        public void AddBuildingToStats(string id)
+        {
+            if (!stats.buildings[stats.money.Count - 1].ContainsKey(id))
+            {
+                stats.buildings[stats.money.Count - 1][id] = 0;
+            }
+            stats.buildings[stats.money.Count - 1][id]++;
+        }
+
+        public void AddUnits(Dictionary<string,int> unitsAndCounts)
+        {
+            foreach(string k in unitsAndCounts.Keys)
+            {
+                if (!stats.units[stats.money.Count - 1].ContainsKey(k))
+                {
+                    stats.units[stats.money.Count - 1][k] = 0;
+                }
+                stats.units[stats.money.Count - 1][k]+= unitsAndCounts[k];
+            }
+        }
         public void Buy(int cost)
         {
             Money -= cost;

@@ -190,11 +190,11 @@ namespace MaxOfEmpires.Units
             return retVal;
         }
 
-        public override void TurnUpdate(uint turn, Player player)
+        public override void TurnUpdate(uint turn, Player player, GameTime t)
         {
             SelectAllUnits();
             this.moveSpeed = GetSlowestUnit().MoveSpeed;
-            base.TurnUpdate(turn, player);
+            base.TurnUpdate(turn, player,t);
         }
 
         public override void Update(GameTime time)

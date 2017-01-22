@@ -380,12 +380,12 @@ namespace MaxOfEmpires
             }
         }
 
-        public override void TurnUpdate(uint turn, Player player)
+        public override void TurnUpdate(uint turn, Player player, GameTime t)
         {
             // Make sure that anything that was selected no longer is selected.
             SelectTile(InvalidTile);
 
-            base.TurnUpdate(turn, player);
+            base.TurnUpdate(turn, player,t);
 
             // So the grid knows who is the current player. Useful for selecting units that are your own. 
             currentPlayer = player;
