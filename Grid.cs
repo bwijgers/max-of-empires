@@ -49,7 +49,7 @@ namespace MaxOfEmpires
             {
                 if (targetTile != null && !targetTile.Occupied && unit.Move(newPos.X, newPos.Y))
                 {
-                    OnUnitStartMoving((unit as Army).SplitArmy((unit as Army).SelectedUnits), newPos);
+                    OnUnitStartMoving((unit as Army).SplitArmy((unit as Army).SelectedUnits), newPos, false);
                     return true;
                 }
             }
@@ -179,7 +179,7 @@ namespace MaxOfEmpires
         {
         }
 
-        public void OnUnitFinishMoving(Unit u, Point targetPos)
+        public void OnUnitFinishMoving(Unit u, Point targetPos, bool remove)
         {
             // TODO: Call this when the animation is done
 
@@ -189,16 +189,17 @@ namespace MaxOfEmpires
 
             // Move the Unit from its tile to the target tile
             targetTile.SetUnit(u);
-            originTile.SetUnit(null);
+            if(remove)
+                originTile.SetUnit(null);
 
             u.ShouldAnimate = u.HasAction;
         }
 
-        public void OnUnitStartMoving(Unit u, Point targetPos)
+        public void OnUnitStartMoving(Unit u, Point targetPos, bool remove = true)
         {
             // Can make Unit movement animated by not calling this instantly (or from update or something, idk)
             // TODO: Start animating here
-            OnUnitFinishMoving(u, targetPos);
+            OnUnitFinishMoving(u, targetPos,remove);
         }
 
         /// <summary>
