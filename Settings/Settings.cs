@@ -62,38 +62,7 @@ namespace MaxOfEmpires
         public void ApplySettings()
         {
             //Apply the camera settings
-            switch(CameraControl)
-            {
-                case 1:
-                    {
-                        //Makes the camera use the mouse
-                        MaxOfEmpires.camera.UseMouse = true;
-                        MaxOfEmpires.camera.UseBoth = false;
-                        break;
-                    }
-
-                case 2:
-                    {
-                        //Makes the camera use the keyboard
-                        MaxOfEmpires.camera.UseMouse = false;
-                        MaxOfEmpires.camera.UseBoth = false;
-                        break;
-                    }
-
-                case 3:
-                    {
-                        //Makes the camera use both the mouse and the keyboard
-                        MaxOfEmpires.camera.UseBoth = true;
-                        break;
-                    }
-
-                default:
-                    {
-                        //Makes the camera use both the mouse and the keyboard
-                        MaxOfEmpires.camera.UseBoth = true;
-                        break;
-                    }
-            }
+            MaxOfEmpires.camera.ControlMode = CameraControl;
 
             //Apply the fullscreen settings
             switch(Fullscreen)

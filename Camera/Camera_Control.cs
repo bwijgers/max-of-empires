@@ -12,7 +12,7 @@ namespace MaxOfEmpires
         /// <summary>
         /// The horizontal breakoff point for the mouse controlled camera
         /// </summary>
-        private int cameraBreakoffX = (MaxOfEmpires.ScreenSize.X - MaxOfEmpires.ScreenSize.Y);
+        private int cameraBreakoffX = (int)MaxOfEmpires.OverlayPos.X;
 
         /// <summary>
         /// The vertical breakoff point for the mouse controlled camera
@@ -27,18 +27,13 @@ namespace MaxOfEmpires
         /// <summary>
         /// The speed with which the camera moves
         /// </summary>
-        private float cameraMoveSpeed = 10.00f;
+        private float cameraMoveSpeed = 2.00f;
 
         /// <summary>
-        /// A bool which, if true, will let the camera be controlled through both the mouse and the keyboard
+        /// An int determining if the camera should be controlled through the mouse
+        /// 1 means mouse control, 2 means keyboard control, 3 means both
         /// </summary>
-        private bool useBoth = false;
-
-        /// <summary>
-        /// A bool determining if the camera should be controlled through the mouse
-        /// True means mouse controll, False means keyboard controll
-        /// </summary>
-        private bool useMouse = false;
+        private int controlMode = MaxOfEmpires.settings.CameraControl;
 
         /// <summary>
         /// The speed with which the camera zooms
@@ -61,75 +56,95 @@ namespace MaxOfEmpires
         /// </summary>
         /// <param name="useMouse">A boolean that determines if the camera should be controlled through the mouse or keyboard.</param>
         /// <param name="inputHelper">The input helper.</param>
-        public void CheckMousePositionForCamera(bool useMouse, bool useBoth, InputHelper inputHelper, KeyManager keyManager)
+        public void CheckMousePositionForCamera(int controlMode, InputHelper inputHelper, KeyManager keyManager)
         {
-            if (!useMouse || useBoth)
+            switch (controlMode)
             {
-                if (keyManager.IsKeyDown("moveCameraUp", inputHelper))
-                {
-                    MoveCamera("up");
-                }
+                case 1:
+                    {
+                        MouseControlCheck(inputHelper, keyManager);
+                        break;
+                    }
 
-                if (keyManager.IsKeyDown("moveCameraDown", inputHelper))
-                {
-                    MoveCamera("down");
-                }
-
-                if (keyManager.IsKeyDown("moveCameraRight", inputHelper))
-                {
-                    MoveCamera("right");
-                }
-
-                if (keyManager.IsKeyDown("moveCameraLeft", inputHelper))
-                {
-                    MoveCamera("left");
-                }
-
-                if (keyManager.IsKeyDown("zoomCameraIn", inputHelper))
-                {
-                    MoveCamera("in");
-                }
-
-                if (keyManager.IsKeyDown("zoomCameraOut", inputHelper))
-                {
-                    MoveCamera("out");
-                }
+                case 2:
+                    {
+                        KeyControlCheck(inputHelper, keyManager);
+                        break;
+                    }
+                case 3:
+                    {
+                        MouseControlCheck(inputHelper, keyManager);
+                        KeyControlCheck(inputHelper, keyManager);
+                        break;
+                    }
             }
 
-            if (useMouse || useBoth)
+        }
+
+        private void MouseControlCheck(InputHelper inputHelper, KeyManager keyManager)
+        {
+            if (inputHelper.GetMousePosition(false).Y < CameraMouseMargin && inputHelper.GetMousePosition(false).Y >= 0)
             {
-                if (inputHelper.GetMousePosition(false).Y < CameraMouseMargin && inputHelper.GetMousePosition(false).Y >= 0)
-                {
-                    MoveCamera("up");
-                }
-
-                if (inputHelper.GetMousePosition(false).Y > CameraBreakoffY - CameraMouseMargin && inputHelper.GetMousePosition(false).Y <= CameraBreakoffY)
-                {
-                    MoveCamera("down");
-                }
-
-                if (inputHelper.GetMousePosition(false).X < CameraMouseMargin && inputHelper.GetMousePosition(false).X >= 0)
-                {
-                    MoveCamera("left");
-                }
-
-                if (inputHelper.GetMousePosition(false).X > CameraBreakoffX - CameraMouseMargin && inputHelper.GetMousePosition(false).X <= CameraBreakoffX)
-                {
-                    MoveCamera("right");
-                }
-
-                if (inputHelper.MouseScrollUp)
-                {
-                    MoveCamera("in");
-                }
-
-                if (inputHelper.MouseScrollDown)
-                {
-                    MoveCamera("out");
-                }
-            
+                MoveCamera("up");
             }
 
+            if (inputHelper.GetMousePosition(false).Y > CameraBreakoffY - CameraMouseMargin && inputHelper.GetMousePosition(false).Y <= CameraBreakoffY)
+            {
+                MoveCamera("down");
+            }
+
+            if (inputHelper.GetMousePosition(false).X < CameraMouseMargin && inputHelper.GetMousePosition(false).X >= 0)
+            {
+                MoveCamera("left");
+            }
+
+            if (inputHelper.GetMousePosition(false).X > CameraBreakoffX - CameraMouseMargin && inputHelper.GetMousePosition(false).X <= CameraBreakoffX)
+            {
+                MoveCamera("right");
+            }
+
+            if (inputHelper.MouseScrollUp)
+            {
+                MoveCamera("in");
+            }
+
+            if (inputHelper.MouseScrollDown)
+            {
+                MoveCamera("out");
+            }
+        }
+
+        private void KeyControlCheck(InputHelper inputHelper, KeyManager keyManager)
+        {
+            if (keyManager.IsKeyDown("moveCameraUp", inputHelper))
+            {
+                MoveCamera("up");
+            }
+
+            if (keyManager.IsKeyDown("moveCameraDown", inputHelper))
+            {
+                MoveCamera("down");
+            }
+
+            if (keyManager.IsKeyDown("moveCameraRight", inputHelper))
+            {
+                MoveCamera("right");
+            }
+
+            if (keyManager.IsKeyDown("moveCameraLeft", inputHelper))
+            {
+                MoveCamera("left");
+            }
+
+            if (keyManager.IsKeyDown("zoomCameraIn", inputHelper))
+            {
+                MoveCamera("in");
+            }
+
+            if (keyManager.IsKeyDown("zoomCameraOut", inputHelper))
+            {
+                MoveCamera("out");
+            }
         }
 
         /// <summary>
@@ -235,7 +250,7 @@ namespace MaxOfEmpires
         /// <param name="inputHelper">The inputhelper.</param>
         public void Update(GameTime gameTime, InputHelper inputHelper, KeyManager keyManager)
         {
-            CheckMousePositionForCamera(UseMouse, UseBoth, inputHelper, keyManager);
+            CheckMousePositionForCamera(ControlMode, inputHelper, keyManager);
         }
 
         /// <summary>
@@ -302,30 +317,15 @@ namespace MaxOfEmpires
         /// A bool determining if the camera should be controlled through the mouse
         /// True means mouse controll, False means keyboard controll
         /// </summary>
-        public bool UseMouse
+        public int ControlMode
         {
             get
             {
-                return useMouse;
+                return controlMode;
             }
             set
             {
-                useMouse = value;
-            }
-        }
-
-        /// <summary>
-        /// A bool which, if true, will let the camera be controlled through both the mouse and the keyboard
-        /// </summary>
-        public bool UseBoth
-        {
-            get
-            {
-                return useBoth;
-            }
-            set
-            {
-                useBoth = value;
+                controlMode = value;
             }
         }
 

@@ -169,14 +169,7 @@ namespace MaxOfEmpires
             // Update current gamestate
             GameStateManager.Update(gameTime);
             GameStateManager.HandleInput(inputHelper, KeyManager.Instance);
-
-            //TIJDELIJKE CODE TOT WE SETTINGS HEBBEN OM TE SWITCHEN TUSSEN MOUSE EN KEYBOARD CONTROLL VAN DE CAMERA
-            if (inputHelper.KeyPressed(Keys.K))
-            {
-                camera.UseMouse = !camera.UseMouse;
-            }
-            //EINDE TIJDELIJKE CODE
-
+            
             //TIJDELIJKE CODE OMDAT IK GEEN IDEE HEB WAAR IK DIT ANDERS ZOU KUNNEN ZETTEN
             if (inputHelper.KeyPressed(Keys.Escape))
             {

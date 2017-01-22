@@ -229,11 +229,11 @@ namespace MaxOfEmpires
                     Soldier soldier = SoldierRegistry.GetSoldier(s, attacker.Owner);
                     while (!(this[currentX, currentY] as Tile).Passable(soldier))
                     {
-                        ++currentX;
-                        if (currentX >= Width)
+                        --currentX;
+                        if (currentX < 0)
                         {
-                            currentX = 0;
-                            ++currentY;
+                            currentX = Width - 1;
+                            --currentY;
                         }
                     }
                     (this[currentX, currentY] as Tile).SetUnit(soldier);
