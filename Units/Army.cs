@@ -179,7 +179,8 @@ namespace MaxOfEmpires.Units
                 retVal.selectedUnits[s] += unitsAndCounts[s];
                 this.unitsAndCounts[s] -= unitsAndCounts[s];
             }
-
+            UpdateArmySprite();
+            retVal.UpdateArmySprite();
             return retVal;
         }
 
