@@ -169,6 +169,7 @@ namespace MaxOfEmpires
             // TODO: Call this when the animation is done
             
             walkingUnit.DrawPosition = Vector2.Zero;
+            walkingUnit.Moved = false;
             walkingUnit = null;
 
             // Get the tiles to move the Units from/to
@@ -192,7 +193,12 @@ namespace MaxOfEmpires
             //u.DrawPosition = new Vector2(-50, -50);
             targetPosition = targetPos;
             walkingUnit = u;
-            walkingUnit.Vectors.Add(new Vector2(targetPos.X,targetPos.Y));
+            //walkingUnit.Vectors.Add(new Vector2(targetPos.X,targetPos.Y));
+            Point[] tempPath = Pathfinding.GetPath(walkingUnit, targetPosition);
+            foreach (Point p in tempPath)
+            {
+                walkingUnit.Vectors.Add(new Vector2(p.X, p.Y));
+            }
         }
 
         /// <summary>
@@ -358,7 +364,7 @@ namespace MaxOfEmpires
                         Walk(walkingUnit.Vectors[0]);
                     }
                 }
-                if (walkingUnit.Moved)
+                else
                 {
                     OnUnitFinishMoving(walkingUnit, targetPosition);
                 }
@@ -367,9 +373,9 @@ namespace MaxOfEmpires
 
         public void Walk(Vector2 tarPosCoor)
         {
-            Vector2 unitPos = walkingUnit.DrawPosition - new Vector2(walkingUnit.PositionInGrid.X * 32, walkingUnit.PositionInGrid.Y * 32);
+            Vector2 unitPos = walkingUnit.DrawPosition;
             Vector2 velocity = Vector2.Zero;
-            Vector2 tarPos = 32 * (new Vector2(tarPosCoor.X-1,tarPosCoor.Y-1));
+            Vector2 tarPos = 32 * (new Vector2(tarPosCoor.X,tarPosCoor.Y));
             if (tarPos.X > unitPos.X)
             {
                 velocity = new Vector2(1, 0);
@@ -394,7 +400,6 @@ namespace MaxOfEmpires
             {
                 velocity = Vector2.Zero;
                 walkingUnit.Vectors.RemoveAt(0);
-                walkingUnit.Moved = true;
                 //PopSprites = PopSpritesFront;
             }
 
