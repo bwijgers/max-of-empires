@@ -34,7 +34,7 @@ namespace MaxOfEmpires.Units
         /// <summary>
         /// The x and y coords of this Unit. Used for drawing and moving.
         /// </summary>
-        private int x, y;
+        protected int x, y;
 
         public Unit(int x, int y, Player owner, string id = "") : base(false)
         {
