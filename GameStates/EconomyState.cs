@@ -98,6 +98,7 @@ namespace MaxOfEmpires.GameStates
             {
                 p.OnUpdateMoney(UpdateMoneyDisplay);
                 p.OnUpdatePopulation(UpdatePopulationDisplay);
+                p.OnUpdateMoneyPerTurn(UpdateMoneyPerTurnDisplay);
             }
         }
 
@@ -187,11 +188,17 @@ namespace MaxOfEmpires.GameStates
             overlay.LabelCurrentPlayer.setLabelText("Current player: " + CurrentPlayer.Name);
             UpdateMoneyDisplay(CurrentPlayer);
             UpdatePopulationDisplay(CurrentPlayer);
+            UpdateMoneyPerTurnDisplay(CurrentPlayer);
         }
 
         private void UpdateMoneyDisplay(Player p)
         {
             overlay.LabelPlayerMoney.setLabelText("Money: " + p.Money + "G");
+        }
+
+        private void UpdateMoneyPerTurnDisplay(Player p)
+        {
+            overlay.LabelPlayerMoneyPerTurn.setLabelText("Money per turn: " + p.MoneyPerTurn + "G");
         }
 
         public void UpdatePopulationDisplay(Player p)

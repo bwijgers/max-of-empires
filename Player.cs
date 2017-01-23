@@ -31,7 +31,7 @@ namespace MaxOfEmpires
                 battlesLost = 0;
             }
         }
-
+        private int moneyPerTurn;
         public Stats stats;
         private int population;
         private int money;
@@ -46,6 +46,7 @@ namespace MaxOfEmpires
 
         private List<Action<Player>> updateMoneyHandlers;
         private List<Action<Player>> updatePopulationHandlers;
+        private List<Action<Player>> updateMoneyPerTurnHandlers;
 
         public Player(string name, string colorName, Color color, int startingMoney)
         {
@@ -55,6 +56,7 @@ namespace MaxOfEmpires
             this.color = color;
             updateMoneyHandlers = new List<Action<Player>>();
             updatePopulationHandlers = new List<Action<Player>>();
+            updateMoneyPerTurnHandlers = new List<Action<Player>>();
             stats = new Stats(0);
         }
 
@@ -99,6 +101,32 @@ namespace MaxOfEmpires
         public void Buy(int cost)
         {
             Money -= cost;
+        }
+
+        public void CalculateMoneyPerTurn()
+        {
+            int mpt = 0;
+            grid.ForEach(obj => {
+                Tile t = obj as Tile;
+                if (t.BuiltOn && t.Building.Owner == this)
+                {
+                    if (t.Building.id.Equals("building.mine"))
+                    {
+                        mpt += 15;
+                    }
+
+                    if (t.Building.id.Equals("building.capital"))
+                    {
+                        mpt += 5;
+                    }
+
+                    else if (t.Building.id.Equals("building.town"))
+                    {
+                        mpt -= 5;
+                    }
+                }
+            });
+            MoneyPerTurn = mpt;
         }
 
         public void CalculatePopulation()
@@ -148,6 +176,12 @@ namespace MaxOfEmpires
                 updatePopulationHandlers.Add(action);
         }
 
+        public void OnUpdateMoneyPerTurn(Action<Player> action)
+        {
+            if (action != null && action.GetInvocationList().Length > 0)
+                updateMoneyHandlers.Add(action);
+        }
+
         public void ResetCamera()
         {
             EcoCameraPosition = new Vector2(0, 0);
@@ -166,6 +200,14 @@ namespace MaxOfEmpires
         private void UpdatePopulation()
         {
             foreach (Action<Player> handler in updatePopulationHandlers)
+            {
+                handler(this);
+            }
+        }
+
+        private void UpdateMoneyPerTurn()
+        {
+            foreach (Action<Player> handler in updateMoneyPerTurnHandlers)
             {
                 handler(this);
             }
@@ -198,6 +240,19 @@ namespace MaxOfEmpires
             {
                 population = value;
                 UpdatePopulation();
+            }
+        }
+
+        public int MoneyPerTurn
+        {
+            get
+            {
+                return moneyPerTurn;
+            }
+            set
+            {
+                moneyPerTurn = value;
+                UpdateMoneyPerTurn();
             }
         }
 

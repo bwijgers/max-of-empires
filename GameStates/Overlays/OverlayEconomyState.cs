@@ -30,6 +30,7 @@ namespace MaxOfEmpires.GameStates.Overlays
         // Labels
         private GuiLabel labelCurrentPlayer;
         private GuiLabel labelPlayerMoney;
+        private GuiLabel labelPlayerMoneyPerTurn;
         private GuiLabel labelPlayerPopulation;
 
         // Lists
@@ -54,12 +55,15 @@ namespace MaxOfEmpires.GameStates.Overlays
             labelPlayerMoney = GuiLabel.createNewLabel(new Vector2(labelCurrentPlayer.Bounds.Left, labelCurrentPlayer.Bounds.Bottom + 5), "Money: ", "font");
             addElement(labelPlayerMoney);
 
+            labelPlayerMoneyPerTurn = GuiLabel.createNewLabel(new Vector2(labelCurrentPlayer.Bounds.Left, labelPlayerMoney.Bounds.Bottom + 5), "Money per turn: ", "font");
+            addElement(labelPlayerMoneyPerTurn);
+
             // Add a label telling the player how much population they have
-            labelPlayerPopulation = GuiLabel.createNewLabel(new Vector2(labelCurrentPlayer.Bounds.Left, labelPlayerMoney.Bounds.Bottom + 5), "Free Population: 0", "font");
+            labelPlayerPopulation = GuiLabel.createNewLabel(new Vector2(labelCurrentPlayer.Bounds.Left, labelPlayerMoneyPerTurn.Bounds.Bottom + 5), "Free Population: 0", "font");
             addElement(labelPlayerPopulation);
 
             // Add labels for unit stats
-            listArmySoldiers = GuiList.createNewList(new Point(labelPlayerMoney.Bounds.Location.X, labelPlayerPopulation.Bounds.Bottom + 5), 5, new List<GuiElement>(), 300);
+            listArmySoldiers = GuiList.createNewList(new Point(labelPlayerMoneyPerTurn.Bounds.Location.X, labelPlayerPopulation.Bounds.Bottom + 5), 5, new List<GuiElement>(), 300);
             listArmySoldiers.addElement(ElementArmySelection.CreateBuildButton(Point.Zero, "1", null, null)); // Add this so that the size is calculated correctly
             addElement(listArmySoldiers);
 
@@ -109,6 +113,7 @@ namespace MaxOfEmpires.GameStates.Overlays
                     grid.Build(currentBuilder, (Building)Activator.CreateInstance(buildingType, new object[] { currentBuilder.PositionInGrid, currentBuilder.Owner }));
 
                     currentBuilder.Owner.CalculatePopulation();
+                    currentBuilder.Owner.CalculateMoneyPerTurn();
                 }
             };
         }
@@ -230,6 +235,7 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         public GuiLabel LabelCurrentPlayer => labelCurrentPlayer;
         public GuiLabel LabelPlayerMoney => labelPlayerMoney;
+        public GuiLabel LabelPlayerMoneyPerTurn => labelPlayerMoneyPerTurn;
         public GuiLabel LabelPlayerPopulation => labelPlayerPopulation;
     }
 }
