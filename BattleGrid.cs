@@ -11,8 +11,14 @@ namespace MaxOfEmpires
         private Player attackingPlayer;
         private Player defendingPlayer;
 
+        public Tile attackingTile;
+        public Tile defendingTile;
+
+
         public BattleGrid(int width, int height, List<Player> players, string id = "") : base(width, height, players, id) // TODO: make this load from procedural generation.
         {
+            this.attackingTile = attackingTile;
+            this.defendingTile = defendingTile;
         }
 
         /// <summary>

@@ -50,8 +50,10 @@ namespace MaxOfEmpires
         private Heightpoint[] lakeArray;
         private Heightpoint[] mountainArray;
         private double[,] heightMap;
-        private Terrain attackBonusTerrain;
-        private Terrain defenseBonusTerrain;
+        public Terrain attackBonusTerrain;
+        public Terrain defenseBonusTerrain;
+        public Player attackingPlayer;
+        public Player defendingPlayer;
 
         // Double mirrors the grid to create a symmetrical field (with double width and height).
         public void BalancedEconomyGrid(int gridWidth, int gridHeight)
@@ -109,8 +111,10 @@ namespace MaxOfEmpires
         }
 
         // Generates a battlemap: a transition between two economygrid tiles
-        public void BattleGenerate(Terrain attackTerrain, bool attackHills, Terrain defendTerrain, bool defendHills, int gridWidth, int gridHeight)
+        public void BattleGenerate(Terrain attackTerrain, bool attackHills, Terrain defendTerrain, bool defendHills, int gridWidth, int gridHeight, Player attackingPlayer, Player defendingPlayer)
         {
+            this.attackingPlayer = attackingPlayer;
+            this.defendingPlayer = defendingPlayer;
             defenseBonusTerrain = defendTerrain;
             attackBonusTerrain = attackTerrain;
             Configuration file = FileManager.LoadConfig("TerrainGeneration");
