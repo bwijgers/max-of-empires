@@ -83,6 +83,14 @@ namespace MaxOfEmpires.GameObjects
                 }
                 return position - MaxOfEmpires.camera.Position;
             }
+        }
+
+        public Vector2 PositionFromParent
+        {
+            get
+            {
+                return position;
+            }
             set
             {
                 position = value;

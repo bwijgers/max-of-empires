@@ -12,6 +12,24 @@ namespace MaxOfEmpires
 {
     abstract partial class Grid : GameObjectGrid
     {
+        public struct WalkingUnit
+        {
+            private bool removeOnEnd;
+            private Unit movingUnit;
+            private Point targetPosition;
+
+            public WalkingUnit(Unit movingUnit, Point targetPosition, bool removeOnEnd)
+            {
+                this.movingUnit = movingUnit;
+                this.targetPosition = targetPosition;
+                this.removeOnEnd = removeOnEnd;
+            }
+
+            public bool RemoveOnEnd => removeOnEnd;
+            public Unit MovingUnit => movingUnit;
+            public Point TargetPosition => targetPosition;
+        }
+
         protected Player currentPlayer;
         public List<Player> players;
         protected Point[] walkablePositions;
@@ -29,14 +47,21 @@ namespace MaxOfEmpires
         private Point mousePoint;
 
         private Point[] path;
+        
+        private List<WalkingUnit> walkingUnits;
+        private bool removeWalkingUnit;
 
-        public Grid(int width, int height, List<Player> players, string id = "") : base(width, height, id) 
+        private Point targetPosition;
+
+        public Grid(int width, int height, List<Player> players, string id = "") : base(width, height, id)
         {
             selectedTile = InvalidTile;
             currentPlayer = null;
             this.players = players;
             unitTargets = new GameObjectList();
             unitTargets.Parent = this;
+            removeWalkingUnit = false;
+            walkingUnits = new List<WalkingUnit>();
         }
 
         /// <summary>
@@ -146,16 +171,21 @@ namespace MaxOfEmpires
 
         public override void HandleInput(InputHelper helper, KeyManager keyManager)
         {
+            // Check if the overlays should be rendered.
+            if (keyManager.KeyPressed("unitTargetOverlay", helper))
+            {
+                CreateUnitTargetOverlays();
+            }
+
+            if (walkingUnits == null || walkingUnits.Count != 0)
+            {
+                return;
+            }
+
             // Check if the player clicked
             if (helper.MouseLeftButtonPressed)
             {
                 OnLeftClick(helper);
-            }
-
-            // Check if the overlays should be rendered.
-            if(keyManager.KeyPressed("unitTargetOverlay", helper))
-            {
-                CreateUnitTargetOverlays();
             }
 
             if (SelectedTile != null)
@@ -236,27 +266,40 @@ namespace MaxOfEmpires
         {
         }
 
-        public void OnUnitFinishMoving(Unit u, Point targetPos, bool remove)
+        public void OnUnitFinishMoving(WalkingUnit walkingUnit)
         {
-            // TODO: Call this when the animation is done
+            walkingUnit.MovingUnit.PositionFromParent = Vector2.Zero;
+            walkingUnit.MovingUnit.DrawingTexture.SelectRow(0);
 
             // Get the tiles to move the Units from/to
-            Tile targetTile = this[targetPos] as Tile;
-            Tile originTile = this[u.PositionInGrid] as Tile;
+            Tile targetTile = this[walkingUnit.TargetPosition] as Tile;
+            Tile originTile = this[walkingUnit.MovingUnit.PositionInGrid] as Tile;
 
             // Move the Unit from its tile to the target tile
-            targetTile.SetUnit(u);
-            if (remove)
+            targetTile.SetUnit(walkingUnit.MovingUnit);
+            if (walkingUnit.RemoveOnEnd)
                 originTile.SetUnit(null);
-
-            u.ShouldAnimate = u.HasAction;
         }
 
+        /// <summary>
+        /// As soon as you press the button for moving to a target position, this method will be called
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="targetPos">The target position to move to in grid coordinates</param>
         public void OnUnitStartMoving(Unit u, Point targetPos, bool remove = true)
         {
             // Can make Unit movement animated by not calling this instantly (or from update or something, idk)
             // TODO: Start animating here
-            OnUnitFinishMoving(u, targetPos, remove);
+            //u.DrawPosition = new Vector2(-50, -50);
+            targetPosition = targetPos;
+            walkingUnits.Add(new WalkingUnit(u, targetPos, remove));
+
+            //walkingUnit.Vectors.Add(new Vector2(targetPos.X,targetPos.Y));
+            Point[] tempPath = Pathfinding.GetPath(u, targetPosition);
+            foreach (Point p in tempPath)
+            {
+                u.Vectors.Add(new Vector2(p.X, p.Y));
+            }
         }
 
         /// <summary>
@@ -391,7 +434,7 @@ namespace MaxOfEmpires
             currentPlayer = player;
             ForEach(obj => {
                 Tile tile = obj as Tile;
-                if(tile.Occupied)
+                if (tile.Occupied)
                 {
                     // Makes the units go towards their target
                     Unit unit = tile.Unit;
@@ -420,7 +463,80 @@ namespace MaxOfEmpires
                     unitTargets.RemoveChild(obj);
                 }
             });
+
+            //If we have a selected unit; if there is a path to follow, we start walking using Walk(), otherwise we move to target location
+            if (walkingUnits.Count > 0)
+            {
+                for (int i = walkingUnits.Count - 1; i >= 0; --i)
+                {
+                    WalkingUnit walkingUnit = walkingUnits[i];
+                    if (walkingUnit.MovingUnit.Vectors.Count > 0)
+                    {
+                        Walk(walkingUnit.MovingUnit, walkingUnit.MovingUnit.Vectors[0]);
+                    }
+                    else
+                    {
+                        OnUnitFinishMoving(walkingUnit);
+                        walkingUnits.Remove(walkingUnit);
+                    }
+                }
+            }
         }
+
+        /// <summary>
+        /// Check whether the X and Y of the unit are greater of smaller than those of the target position.
+        /// If so, we give it a velocity, making it move towards the target position, if not,
+        /// we conclude the unit has reached its destination so we can remove this destination from our path.
+        /// </summary>
+        /// <param name="tarPosCoor">Coordinates to walk to</param>
+        public void Walk(Unit walkingUnit, Vector2 tarPosCoor)
+        {
+            Vector2 unitPos = walkingUnit.PositionFromParent;
+            Vector2 tarPos = 32 * (new Vector2(tarPosCoor.X,tarPosCoor.Y) - walkingUnit.PositionInGrid.ToVector2());
+            Vector2 direction = tarPos - unitPos;
+            Vector2 velocity = Vector2.Normalize(direction);
+
+            if (direction == Vector2.Zero)
+            {
+                walkingUnit.Vectors.RemoveAt(0);
+                return;
+            }
+
+            int selectedRow = (int) ((velocity.Y == 0) ? (3 - velocity.X) : (2 + velocity.Y));
+            walkingUnit.DrawingTexture.SelectRow(selectedRow);
+
+            /*if (tarPos.X > unitPos.X)
+            {
+                velocity = new Vector2(1, 0);
+                //PopSprites = PopSpritesFront;
+            }
+            else if (tarPos.X < unitPos.X)
+            {
+                velocity = new Vector2(-1, 0);
+                //PopSprites = PopSpritesFront;
+            }
+            else if (tarPos.Y > unitPos.Y)
+            {
+                velocity = new Vector2(0, 1);
+                //PopSprites = PopSpritesFront;
+            }
+            else if (tarPos.Y < unitPos.Y)
+            {
+                velocity = new Vector2(0, -1);
+                //PopSprites = PopSpritesBack;
+            }
+            else
+            {
+                velocity = Vector2.Zero;
+                walkingUnit.Vectors.RemoveAt(0);
+                //PopSprites = PopSpritesFront;
+            }*/
+
+            // Relative position needs to be without the positioningrid
+            walkingUnit.PositionFromParent = walkingUnit.PositionFromParent + velocity * 4;
+        }
+
+        public bool ContainsWalkingUnits => walkingUnits.Count > 0;
 
         /// <summary>
         /// Property defining a position which is invalid. Unselects tiles.

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace MaxOfEmpires.Units
 {
@@ -36,6 +37,13 @@ namespace MaxOfEmpires.Units
         /// </summary>
         protected int x, y;
 
+		
+        /// <summary>
+        /// Whenever the unit needs to move, he will pass these vectors one after another, setting out a path to follow.
+        /// Needs to be empty (constructor) when the unit is created, as there is no initial path to follow.
+        /// </summary>
+        private List<Vector2> vectors;
+
         public Unit(int x, int y, Player owner, string id = "") : base(false)
         {
             this.id = id;
@@ -43,6 +51,8 @@ namespace MaxOfEmpires.Units
             this.y = y;
             this.owner = owner;
             target = new Point(x, y);
+
+            vectors = new List<Vector2>();
         }
 
         /// <summary>
@@ -203,6 +213,18 @@ namespace MaxOfEmpires.Units
                 {
                     target = value;
                 }
+            }
+        }
+
+        public List<Vector2> Vectors
+        {
+            get
+            {
+                return vectors;
+            }
+            set
+            {
+                vectors = value;
             }
         }
     }

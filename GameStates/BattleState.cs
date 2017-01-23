@@ -164,7 +164,7 @@ namespace MaxOfEmpires.GameStates
             battleGrid.Update(time);
 
             // TurnUpdate when requested.
-            if (shouldTurnUpdate)
+            if (shouldTurnUpdate && !battleGrid.ContainsWalkingUnits)
             {
                 shouldTurnUpdate = false;
                 TurnUpdate(time);
