@@ -99,7 +99,7 @@ namespace MaxOfEmpires.Units
         private Vector2 walkLeftDirection = new Vector2(-1, 0);
         private Vector2 walkDirectionZero = new Vector2(0, 0);
 
-        public bool duringAttack = false;
+        public bool duringAttack = false, retaliating = false;
         private bool attacked = false;
         private Soldier attackTarget;
         
@@ -152,36 +152,6 @@ namespace MaxOfEmpires.Units
 
             // Unit has attacked
             hasAttacked = true;
-
-            // TODO: place this somewhere
-            /*
-            
-            OnSoldierStartAttack(enemy, retaliate);
-
-            // Unit has attacked
-            if (enemy.IsDead && Special_Assassin)
-            {
-                // Nothing is true, everything is permitted
-                movesLeft = MoveSpeed;
-                hasAttacked = false;
-            }
-            else
-            {
-                hasAttacked = true;
-                HasMoved = !Special_IsRider;
-            }
-
-            // Don't do anything else if the enemy is dead. 
-            if (enemy.IsDead)
-                return;
-
-            // Enemy can retaliate. Right?
-            if (enemy.IsInRange(PositionInGrid))
-            {
-                // Okay, retaliate. 
-                enemy.OnSoldierStartAttack(this, true);
-            }
-            */
         }
 
         /// <summary>
@@ -351,21 +321,21 @@ namespace MaxOfEmpires.Units
             Vector2.Normalize(ref attackDirection, out normalizedAttackDirection);
 
             // TODO: Adding the walking animations to the attack directions and un-commenting this.
-            /*
-            if(normalizedAttackDirection == walkUpDirection)
-                //Play walking up animation.
-            else if(normalizedAttackDirection == walkDownDirection)
-                //Play walking down animation
-            else if(normalizedAttackDirection == walkRightDirection || normalizedAttackDirection.X > walkDirectionZero.X)
-                //Play walking right animation.
-            else if(normalizedAttackDirection == walkLeftDirection || normalizedAttackDirection.X < walkDirectionZero.X)
-                //Play walking left animation.
-            */
- 
+            if (normalizedAttackDirection == walkUpDirection)
+                DrawingTexture.SelectedSprite = new Point(0, ANIMATION_WALK_UP);
+            else if (normalizedAttackDirection == walkDownDirection)
+                DrawingTexture.SelectedSprite = new Point(0, ANIMATION_WALK_DOWN);
+            else if (normalizedAttackDirection == walkRightDirection || normalizedAttackDirection.X > walkDirectionZero.X)
+                DrawingTexture.SelectedSprite = new Point(0, ANIMATION_WALK_RIGHT);
+            else if (normalizedAttackDirection == walkLeftDirection || normalizedAttackDirection.X < walkDirectionZero.X)
+                DrawingTexture.SelectedSprite = new Point(0, ANIMATION_WALK_LEFT);
+
+
             position = position + (normalizedAttackDirection * 10);
             attackAnimationTimer = 0f;
             attacked = true;
             duringAttack = true;
+            retaliating = retaliate;
         }
 
 
@@ -375,18 +345,32 @@ namespace MaxOfEmpires.Units
             if (attackAnimationTimer > attackAnimationFrames)
             {
                 position = position - (normalizedAttackDirection * 10);
-                DealDamage(attackTarget);
-                attacked = false;
-                duringAttack = false;
+                DealDamage(attackTarget, retaliating);
+                DrawingTexture.SelectedSprite = new Point(0, ANIMATION_IDLE);
+
+                hasAttacked = true;
+                HasMoved = !Special_IsRider;
 
                 if (attackTarget.IsDead)
                 {
                     (GameWorld as BattleGrid).OnKillSoldier(attackTarget);
+                    
+                    // Unit has attacked
+                    if (Special_Assassin)
+                    {
+                        // Nothing is true, everything is permitted
+                        movesLeft = MoveSpeed;
+                        hasAttacked = false;
+                    }
                 }
-                else if (!attackTarget.HasAttacked && attackTarget.IsInRange(PositionInGrid))
+                else if (!retaliating && attackTarget.IsInRange(PositionInGrid))
                 {
-                    attackTarget.OnSoldierStartAttack(this);
+                    attackTarget.OnSoldierStartAttack(this, true);
                 }
+
+                attacked = false;
+                duringAttack = false;
+                retaliating = false;
             }
         }
 
