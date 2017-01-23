@@ -40,9 +40,11 @@ namespace MaxOfEmpires.Units
         /// </summary>
         private int x, y;
 
+        /// <summary>
+        /// Whenever the unit needs to move, he will pass these vectors one after another, setting out a path to follow.
+        /// Needs to be empty (constructor) when the unit is created, as there is no initial path to follow.
+        /// </summary>
         private List<Vector2> vectors;
-
-        private bool moved;
 
         public Unit(int x, int y, bool owner)
         {
@@ -52,7 +54,6 @@ namespace MaxOfEmpires.Units
             target = new Point(x, y);
 
             vectors = new List<Vector2>();
-            moved = false;
         }
 
         /// <summary>
@@ -204,18 +205,6 @@ namespace MaxOfEmpires.Units
             set
             {
                 vectors = value;
-            }
-        }
-
-        public bool Moved
-        {
-            get
-            {
-                return moved;
-            }
-            set
-            {
-                moved = value;
             }
         }
     }

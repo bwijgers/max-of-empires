@@ -169,7 +169,6 @@ namespace MaxOfEmpires
             // TODO: Call this when the animation is done
             
             walkingUnit.DrawPosition = Vector2.Zero;
-            walkingUnit.Moved = false;
             walkingUnit = null;
 
             // Get the tiles to move the Units from/to
@@ -355,14 +354,13 @@ namespace MaxOfEmpires
                     unitTargets.RemoveChild(obj);
                 }
             });
+
+            //If we have a selected unit; if there is a path to follow, we start walking using Walk(), otherwise we move to target location
             if (walkingUnit != null)
             {
                 if (walkingUnit.Vectors.Count != 0)
                 {
-                    if (!walkingUnit.Moved)
-                    {
-                        Walk(walkingUnit.Vectors[0]);
-                    }
+                    Walk(walkingUnit.Vectors[0]);
                 }
                 else
                 {
@@ -371,6 +369,12 @@ namespace MaxOfEmpires
             }
         }
 
+        /// <summary>
+        /// Check whether the X and Y of the unit are greater of smaller than those of the target position.
+        /// If so, we give it a velocity, making it move towards the target position, if not,
+        /// we conclude the unit has reached its destination so we can remove this destination from our path.
+        /// </summary>
+        /// <param name="tarPosCoor">Coordinates to walk to</param>
         public void Walk(Vector2 tarPosCoor)
         {
             Vector2 unitPos = walkingUnit.DrawPosition;
@@ -403,7 +407,8 @@ namespace MaxOfEmpires
                 //PopSprites = PopSpritesFront;
             }
 
-            walkingUnit.DrawPosition = walkingUnit.DrawPosition + velocity - new Vector2(walkingUnit.PositionInGrid.X*32, walkingUnit.PositionInGrid.Y*32);
+            // Relative position needs to be without the positioningrid
+            walkingUnit.DrawPosition = walkingUnit.DrawPosition + velocity * 4 - new Vector2(walkingUnit.PositionInGrid.X*32, walkingUnit.PositionInGrid.Y*32);
         }
 
         /// <summary>
