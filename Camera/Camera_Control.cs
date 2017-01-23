@@ -91,12 +91,12 @@ namespace MaxOfEmpires
 
         private void MouseControlCheck(InputHelper inputHelper, KeyManager keyManager)
         {
-            if (inputHelper.GetMousePosition(false).Y < CameraMouseMargin && inputHelper.GetMousePosition(false).Y >= 0)
+            if (inputHelper.GetMousePosition(false).Y < CameraMouseMargin && inputHelper.GetMousePosition(false).Y >= 0 && inputHelper.GetMousePosition(false).X < cameraBreakoffX)
             {
                 MoveCamera("up");
             }
 
-            if (inputHelper.GetMousePosition(false).Y > CameraBreakoffY - CameraMouseMargin && inputHelper.GetMousePosition(false).Y <= CameraBreakoffY)
+            if (inputHelper.GetMousePosition(false).Y > CameraBreakoffY - CameraMouseMargin && inputHelper.GetMousePosition(false).Y <= CameraBreakoffY && inputHelper.GetMousePosition(false).X < cameraBreakoffX)
             {
                 MoveCamera("down");
             }
