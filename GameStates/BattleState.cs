@@ -159,7 +159,7 @@ namespace MaxOfEmpires.GameStates
             if (turnNum == 1)
             {
                 MaxOfEmpires.camera.Reset();
-                if(CurrentPlayer == players[1])
+                if(CurrentPlayer == battleGrid.AttackingUnit)
                     MaxOfEmpires.camera.setDownRight();
 
             }
