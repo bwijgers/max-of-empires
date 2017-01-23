@@ -121,6 +121,10 @@ namespace MaxOfEmpires.Units
         /// <param name="other">The army to merge into this army.</param>
         public void MergeArmy(Army other)
         {
+            if(GetTotalUnitCount()+other.GetTotalUnitCount() > 20)
+            {
+                return;
+            }
             // Add all units of the other army to this army.
             foreach (string s in other.unitsAndCounts.Keys)
             {
