@@ -67,6 +67,11 @@ namespace MaxOfEmpires.GameStates
                 battleGrid.HandleInput(helper, manager);
             }
 
+            if (manager.KeyPressed("nextTurn", helper))
+            {
+                shouldTurnUpdate = true;
+            }
+
             // Get the selected Unit
             Soldier u = (Soldier)battleGrid.SelectedTile?.Unit;
 
