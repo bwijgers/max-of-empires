@@ -124,6 +124,7 @@ namespace MaxOfEmpires.GameStates
             // Start turn
             TurnUpdate(null);
             TurnUpdate(null);
+
         }
 
         private void SelectNextPlayer()
@@ -154,6 +155,14 @@ namespace MaxOfEmpires.GameStates
         {
             // Change the current player
             SelectNextPlayer();
+
+            if (turnNum == 1)
+            {
+                MaxOfEmpires.camera.Reset();
+                if(CurrentPlayer == players[1])
+                    MaxOfEmpires.camera.setDownRight();
+
+            }
 
             // TurnUpdate the grid
             battleGrid.TurnUpdate(turnNum, CurrentPlayer, t);

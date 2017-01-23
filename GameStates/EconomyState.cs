@@ -168,6 +168,10 @@ namespace MaxOfEmpires.GameStates
             SelectNextPlayer();
             ecoGrid.TurnUpdate(turnNum, CurrentPlayer, t);
             UpdateGuiInformation();
+            if (turnNum == 1 && CurrentPlayer == players[1])
+            {
+                MaxOfEmpires.camera.setDownRight();
+            }
         }
 
         public override void Update(GameTime time)
