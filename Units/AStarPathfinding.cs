@@ -93,7 +93,7 @@ namespace MaxOfEmpires.Units
 
         public static int DistanceTo(Point a, Point b)
         {
-            return Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
+            return (int)new Vector2(Math.Abs(a.X - b.X), Math.Abs(a.Y - b.Y)).Length();
         }
 
         private static List<Point> GetNeighbors(Grid world, Point p)
