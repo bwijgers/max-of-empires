@@ -179,7 +179,7 @@ namespace MaxOfEmpires
         public void OnUpdateMoneyPerTurn(Action<Player> action)
         {
             if (action != null && action.GetInvocationList().Length > 0)
-                updateMoneyHandlers.Add(action);
+                updateMoneyPerTurnHandlers.Add(action);
         }
 
         public void ResetCamera()
