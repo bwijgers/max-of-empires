@@ -97,6 +97,10 @@ namespace MaxOfEmpires.Buildings
             {
                 // Our own army is here, just place it in there :)
                 Army a = currentTile.Unit as Army;
+                if (a.GetTotalUnitCount() > 20)
+                {
+                    return;
+                }
                 a.AddSoldier(SoldierRegistry.GetSoldier(soldierType, owner));
             }
             else
