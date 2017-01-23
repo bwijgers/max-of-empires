@@ -55,7 +55,6 @@ namespace MaxOfEmpires.Buildings
             textureName.Append("@1x2");
 
             DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(textureName.ToString());
-
             DrawingTexture.SelectedSprite = new Point(0, owner.ColorName.ToLower().Equals("blue") ? 0 : 1);
         }
 

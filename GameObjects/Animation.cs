@@ -9,7 +9,7 @@ namespace MaxOfEmpires.GameObjects
         private readonly double TIME_BETWEEN_FRAMES;
         private double timeThisFrame;
 
-        public Animation(Spritesheet sheet, bool advanceRows, double timeBetweenFrames = 0.30D)
+        public Animation(Spritesheet sheet, bool advanceRows, double timeBetweenFrames )
         {
             this.sheet = sheet;
             this.advanceRows = advanceRows;

@@ -351,6 +351,10 @@ namespace MaxOfEmpires.Units
                 hasAttacked = true;
                 HasMoved = !Special_IsRider;
 
+	            HitEffects h = new HitEffects(this.name);
+	            //(GameWorld as Grid).hitEffectList = new GameObjectList();
+	            h.DeterminePosition(enemy.PositionInGrid);
+	            (GameWorld as Grid).hitEffectList.Add(h);
                 if (attackTarget.IsDead)
                 {
                     (GameWorld as BattleGrid).OnKillSoldier(attackTarget);
