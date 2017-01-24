@@ -33,6 +33,7 @@ namespace MaxOfEmpires.GameStates
         public override void ResetOverlay()
         {
             overlay = new OverlayMainMenu();
+            overlay.loadContent(AssetManager.Instance);
         }
     }
 }
