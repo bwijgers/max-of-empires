@@ -20,26 +20,22 @@ namespace MaxOfEmpires.GameStates.Overlays
         public OverlayMainMenu()
         {
             // Quit button
-            //buttonQuit = GuiButton.createButtonWithLabel(new Point(0, MaxOfEmpires.ScreenSize.Y - 100), "Quit?", null, "font");
             buttonQuit = new GuiButton(new Rectangle(new Point(0, MaxOfEmpires.ScreenSize.Y - 200), new Point(300, 200)), "TitleScreen/QuitButton");
             buttonQuit.ClickHandler = () => { buttonQuit.Visible = false; buttonSure.Visible = true; };
             addElement(buttonQuit);
 
             // Are you sure? button
-            //buttonSure = GuiButton.createButtonWithLabel(new Point(0, MaxOfEmpires.ScreenSize.Y - 100), "Are you sure?", null, "font");
             buttonSure = new GuiButton(buttonQuit.Bounds, "TitleScreen/AreYouSureButton");
             buttonSure.ClickHandler = () => { MaxOfEmpires.Quit(); };
             buttonSure.Visible = false;
             addElement(buttonSure);
 
             // Settings button
-            //buttonSettings = GuiButton.createButtonWithLabel(new Point(0, buttonQuit.Bounds.Y - 100), "Settings", "TitleScreen/SettingsButton", "font");
             buttonSettings = new GuiButton(new Rectangle(new Point(0, buttonQuit.Bounds.Y - 150), new Point(300, 200)), "TitleScreen/SettingsButton");
             buttonSettings.ClickHandler = () => GameStateManager.SwitchState("settingsMenu", true);
             addElement(buttonSettings);
 
             // Start button
-            //buttonStart = GuiButton.createButtonWithLabel(new Point(0, buttonSettings.Bounds.Y - 100), "Start Game", null, "font");
             buttonStart = new GuiButton(new Rectangle(new Point(0, buttonSettings.Bounds.Y - 150), new Point(300, 200)), "TitleScreen/StartGameButton");
             buttonStart.ClickHandler = () => GameStateManager.SwitchState("economy", true);
             addElement(buttonStart);
