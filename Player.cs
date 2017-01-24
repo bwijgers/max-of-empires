@@ -112,17 +112,17 @@ namespace MaxOfEmpires
                 {
                     if (t.Building.id.Equals("building.mine"))
                     {
-                        mpt += 15;
+                        mpt += Buildings.Mine.moneyPerTurn;
                     }
 
                     if (t.Building.id.Equals("building.capital"))
                     {
-                        mpt += 5;
+                        mpt += Buildings.Capital.moneyPerTurn;
                     }
 
                     else if (t.Building.id.Equals("building.town"))
                     {
-                        mpt -= 5;
+                        mpt -= Buildings.Town.upkeep;
                     }
                 }
             });

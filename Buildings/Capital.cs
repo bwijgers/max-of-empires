@@ -9,7 +9,7 @@ namespace MaxOfEmpires.Buildings
 {
     class Capital : Building
     {
-        private static int moneyPerTurn;
+        public static int moneyPerTurn;
 
         public Capital(Point positionInGrid, Player owner) : base(positionInGrid, owner, "building.capital")
         {

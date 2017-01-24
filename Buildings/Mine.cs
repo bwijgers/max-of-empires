@@ -17,6 +17,7 @@ namespace MaxOfEmpires.Buildings
             base.TurnUpdate(turn, player, t);
             if (player == Owner)
             {
+                player.EarnMoney(moneyPerTurn);
             }
         }
 
