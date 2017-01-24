@@ -19,10 +19,10 @@ namespace MaxOfEmpires.Buildings
             // Add a button for every trainee
             foreach (string trainee in trainees)
             {
-                AddRecruitingButton(buildingActions, trainee+"."+Owner.UnitTiers[trainee] );
-                if(Owner.UnitTiers[trainee] < 3)
+                AddRecruitingButton(buildingActions, trainee+"."+Owner.soldierTiers[trainee] );
+                if(Owner.soldierTiers[trainee] < 3)
                 {
-                    AddUpgradeButton(buildingActions, trainee, Owner.UnitTiers[trainee], Owner);
+                    AddUpgradeButton(buildingActions, trainee, Owner.soldierTiers[trainee], Owner);
                 }
             }
 

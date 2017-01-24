@@ -39,7 +39,7 @@ namespace MaxOfEmpires.Buildings
         {
             StringBuilder buttonText = new StringBuilder();
             buttonText.Append("upgrade to tier " + (tier+1) + ": (" ); 
-            buttonText.Append(SoldierRegistry.GetUpgradeCost(unitToUpgrade, player.UnitTiers[unitToUpgrade])).Append("G): "); // Soldier ('cost'G)
+            buttonText.Append(SoldierRegistry.GetUpgradeCost(unitToUpgrade, player.soldierTiers[unitToUpgrade])).Append("G): "); // Soldier ('cost'G)
             buildingActions.addElement(ElementBuildButton.CreateBuildButton(buildingActions.Bounds.Location, buttonText.ToString(), () => { TryUpgradeUnit(unitToUpgrade); },"Upgrade"));
         }
 
@@ -124,13 +124,13 @@ namespace MaxOfEmpires.Buildings
 
         protected void TryUpgradeUnit(string soldierType)
         {
-            int cost = SoldierRegistry.GetUpgradeCost(soldierType, owner.UnitTiers[soldierType]);
+            int cost = SoldierRegistry.GetUpgradeCost(soldierType, owner.soldierTiers[soldierType]);
             if (!owner.CanAfford(cost))
             {
                 return;
             }
             owner.Buy(cost);
-            owner.UnitTiers[soldierType]+=1;
+            owner.soldierTiers[soldierType]+=1;
         }
 
         public override void TurnUpdate(uint turn, Player player, GameTime time)
