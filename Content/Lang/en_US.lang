@@ -7,27 +7,33 @@ building.academy=Academy
 
 # Soldiers
 unit.spearman.1=Spearman
+unit.spearman.2=Pikeman
+unit.spearman.3=Halberdier
+
 unit.swordsman.1=Swordsman
-unit.archer.1=Archer
-unit.horse.1=Horseman
-unit.heavy.1=Heavy Infantry
+unit.swordsman.2=Warrior
+unit.swordsman.3=Blademaster
+
 unit.axeman.1=Axeman
+unit.axeman.2=Maceman
+unit.axeman.3=Berserker
+
+unit.archer.1=Archer
+unit.archer.2=Sniper
+unit.archer.3=Quickscoper
+
+unit.heavy.1=Heavy Infantry
+unit.heavy.2=Guardian
+unit.heavy.3=Juggernaut
+
+unit.horse.1=Horseman
+unit.horse.2=Knight
+unit.horse.3=Paladin
+
 unit.mage.1=Mage
+unit.mage.2=Archmage
+unit.mage.3=Thijman
+
 unit.assassin.1=Assassin
-unit.spearman.1=spearman
-unit.spearman.2=pikeman
-unit.spearman.3=halberdier
-unit.swordsman.2=warrior
-unit.swordsman.3=blademaster
-unit.axeman.2=maceman
-unit.axeman.3=berserker
-unit.archer.2=sniper
-unit.archer.3=quickscoper
-unit.heavy.2=guardian
-unit.heavy.3=juggernaut
-unit.horse.2=knight
-unit.horse.3=paladin
-unit.mage.2=archmage
-unit.mage.3=thijman
-unit.assassin.2=slayer
-unit.assassin.3=reaper
+unit.assassin.2=Slayer
+unit.assassin.3=Reaper
