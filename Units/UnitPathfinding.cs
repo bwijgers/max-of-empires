@@ -179,7 +179,7 @@ namespace MaxOfEmpires.Units
         public static Point MoveTowardsTarget(Unit movingUnit)
         {
             // If the target tile is occupied, unset target. 
-            if (((movingUnit.GameWorld as Grid)[movingUnit.TargetPosition] as Tile).Occupied || !((movingUnit.GameWorld as Grid)[movingUnit.TargetPosition] as Tile).Passable(movingUnit))
+            if (!((movingUnit.GameWorld as Grid)[movingUnit.TargetPosition] as Tile).Passable(movingUnit))
             {
                 ClearTargetPosition(movingUnit);
                 return movingUnit.TargetPosition;

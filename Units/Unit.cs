@@ -84,6 +84,10 @@ namespace MaxOfEmpires.Units
         /// <returns>True if the Unit moved to the position, false otherwise.</returns>
         public virtual bool Move(int x, int y)
         {
+            // Can't move to our own spot, right?
+            if (new Point(x, y).Equals(PositionInGrid))
+                return false;
+
             // If we already moved, we can't move anymore. Something like that
             if (HasMoved)
             {
