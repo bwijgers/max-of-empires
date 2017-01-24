@@ -5,7 +5,7 @@ namespace MaxOfEmpires
 {
     class HitEffects : GameObjectAnimated
     {
-        public HitEffects(string damageType) : base(true, 0.10D)
+        public HitEffects(string damageType) : base(false, false, 0.25D)
         {
             LoadTexture(damageType);
             ShouldAnimate = true;

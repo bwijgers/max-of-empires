@@ -10,10 +10,10 @@ namespace MaxOfEmpires.GameObjects
         protected bool shouldAnimate;
         private double animationTime;
 
-        public GameObjectAnimated(bool advanceRows, double animationTime)
+        public GameObjectAnimated(bool advanceRows, bool repeating, double animationTime)
         {
             this.advanceRows = advanceRows;
-            animation = new Animation(DrawingTexture, advanceRows, animationTime);
+            animation = new Animation(DrawingTexture, advanceRows, repeating, animationTime);
             this.animationTime = animationTime;
         }
 
@@ -50,7 +50,7 @@ namespace MaxOfEmpires.GameObjects
 
             set
             {
-                animation = new Animation(value, advanceRows, animationTime);
+                animation = new Animation(value, advanceRows, true, animationTime);
             }
         }
 

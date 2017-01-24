@@ -36,7 +36,7 @@ namespace MaxOfEmpires.Units
         /// </summary>
         protected int x, y;
 
-        public Unit(int x, int y, Player owner, string id = "") : base(false, 0.3D)
+        public Unit(int x, int y, Player owner, string id = "") : base(false, true, 0.3D)
         {
             this.id = id;
             this.x = x;

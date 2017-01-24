@@ -22,6 +22,7 @@ namespace MaxOfEmpires.Units
         private const int ANIMATION_WALK_RIGHT = 2;
         private const int ANIMATION_WALK_DOWN = 3;
         private const int ANIMATION_WALK_LEFT = 4;
+        private HitEffects h;
 
         /// <summary>
         /// Loads a Unit from a configuration. 
@@ -332,6 +333,12 @@ namespace MaxOfEmpires.Units
 
 
             position = position + (normalizedAttackDirection * 10);
+
+            h = new HitEffects(this.name);
+            //(GameWorld as Grid).hitEffectList = new GameObjectList();
+            h.DeterminePosition(enemy.PositionInGrid);
+            (GameWorld as Grid).hitEffectList.Add(h);
+
             attackAnimationTimer = 0f;
             attacked = true;
             duringAttack = true;
@@ -345,16 +352,13 @@ namespace MaxOfEmpires.Units
             if (attackAnimationTimer > attackAnimationFrames)
             {
                 position = position - (normalizedAttackDirection * 10);
+                (GameWorld as Grid).hitEffectList.RemoveChild(h);
                 DealDamage(attackTarget, retaliating);
                 DrawingTexture.SelectedSprite = new Point(0, ANIMATION_IDLE);
 
                 hasAttacked = true;
                 HasMoved = !Special_IsRider;
 
-	            HitEffects h = new HitEffects(this.name);
-	            //(GameWorld as Grid).hitEffectList = new GameObjectList();
-	            h.DeterminePosition(enemy.PositionInGrid);
-	            (GameWorld as Grid).hitEffectList.Add(h);
                 if (attackTarget.IsDead)
                 {
                     (GameWorld as BattleGrid).OnKillSoldier(attackTarget);
