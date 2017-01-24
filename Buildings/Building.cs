@@ -29,10 +29,18 @@ namespace MaxOfEmpires.Buildings
 
         protected void AddRecruitingButton(GuiList buildingActions, string unitToRecruit)
         {
+            StringBuilder labelNextToButtonText = new StringBuilder();
+            labelNextToButtonText.Append(Translations.GetTranslation(unitToRecruit)).Append(" ("); // Soldier (
+            labelNextToButtonText.Append(SoldierRegistry.GetSoldierCost(unitToRecruit)).Append("G): "); // Soldier ('cost'G)
+            buildingActions.addElement(ElementBuildButton.CreateBuildButton(buildingActions.Bounds.Location, labelNextToButtonText.ToString(), () => TrySpawnUnit(unitToRecruit),"Recruit"));
+        }
+
+        protected void AddUpgradeButton(GuiList buildingActions, string unitToUpgrade, int tier, Player player)
+        {
             StringBuilder buttonText = new StringBuilder();
-            buttonText.Append(Translations.GetTranslation(unitToRecruit)).Append(" ("); // Soldier (
-            buttonText.Append(SoldierRegistry.GetSoldierCost(unitToRecruit)).Append("G): "); // Soldier ('cost'G)
-            buildingActions.addElement(ElementBuildButton.CreateBuildButton(buildingActions.Bounds.Location, buttonText.ToString(), () => TrySpawnUnit(unitToRecruit)));
+            buttonText.Append("upgrade to tier " + (tier+1) + ": (" ); 
+            buttonText.Append(SoldierRegistry.GetUpgradeCost(unitToUpgrade, player.UnitTiers[unitToUpgrade])).Append("G): "); // Soldier ('cost'G)
+            buildingActions.addElement(ElementBuildButton.CreateBuildButton(buildingActions.Bounds.Location, buttonText.ToString(), () => { TryUpgradeUnit(unitToUpgrade); },"Upgrade"));
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
@@ -112,6 +120,17 @@ namespace MaxOfEmpires.Buildings
             // Buy the soldier, as we placed it.
             owner.Buy(cost);
             owner.CalculatePopulation();
+        }
+
+        protected void TryUpgradeUnit(string soldierType)
+        {
+            int cost = SoldierRegistry.GetUpgradeCost(soldierType, owner.UnitTiers[soldierType]);
+            if (!owner.CanAfford(cost))
+            {
+                return;
+            }
+            owner.Buy(cost);
+            owner.UnitTiers[soldierType]+=1;
         }
 
         public override void TurnUpdate(uint turn, Player player, GameTime time)

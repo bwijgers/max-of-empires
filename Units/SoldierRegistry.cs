@@ -6,9 +6,11 @@ namespace MaxOfEmpires.Units
     class SoldierRegistry
     {
         private static Dictionary<string, Soldier> unitsByName = new Dictionary<string, Soldier>();
+        private static Dictionary<string, int> unitTiersByName = new Dictionary<string, int>();
         private static Dictionary<string, int> unitCostsByName = new Dictionary<string, int>();
         private static List<Soldier> allSoldiers = new List<Soldier>();
         private static string[] soldierNames = new string[] { "spearman", "swordsman", "archer", "axeman", "horse", "heavy", "mage", "assassin" };
+        private static Dictionary<string,Dictionary<int,int>> UpgradeCosts = new Dictionary<string, Dictionary<int,int>>();
 
         /// <summary>
         /// Gets a Unit by its name, with a specified owner. Position will be (0,0) until set in the Grid at a specified position.
@@ -24,6 +26,11 @@ namespace MaxOfEmpires.Units
         public static int GetSoldierCost(string name)
         {
             return unitCostsByName[name];
+        }
+
+        public static int GetUpgradeCost(string name, int tier)
+        {
+            return UpgradeCosts[name][tier];
         }
 
         /// <summary>
@@ -58,13 +65,23 @@ namespace MaxOfEmpires.Units
         public static void RegisterSoldierFromConfiguration(string name, Configuration c)
         {
             // Create a Unit
-            Soldier u = Soldier.LoadFromConfiguration(c);
+            int tiers = c.GetProperty<int>("tiers");
+            for (int i = 1; i <= tiers; i++)
+            {
+                Soldier u = Soldier.LoadFromConfiguration(c, i);
+                int cost = c.GetProperty<int>("cost");
+                RegisterSoldier(name+"."+i, u, cost);
+            }
 
-            // Get its cost
-            int cost = c.GetProperty<int>("cost");
+            
+            unitTiersByName[name] = tiers;
+            UpgradeCosts[name] = new Dictionary<int, int>();
+            for (int tier = 1; tier < tiers; tier++)
+            {
+                UpgradeCosts[name][tier] = c.GetProperty<int>("upgrade." + tier + ".cost");
+            }
+            
 
-            // Register the Unit
-            RegisterSoldier(name, u, cost);
         }
 
         public IList<Soldier> AllSoldiers => allSoldiers.AsReadOnly();

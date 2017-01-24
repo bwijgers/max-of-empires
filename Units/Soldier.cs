@@ -33,16 +33,17 @@ namespace MaxOfEmpires.Units
         ///   - texture.name (a string)
         /// <param name="config">The configuration file/subsection to load from.</param>
         /// <returns>A Unit as loaded from the configuration.</returns>
-        public static Soldier LoadFromConfiguration(Configuration config)
+        public static Soldier LoadFromConfiguration(Configuration config, int tier)
         {
             // Load stats from config
-            Stats stats = Stats.LoadFromConfiguration(config.GetPropertySection("stats"));
+
+            Stats stats = Stats.LoadFromConfiguration(config.GetPropertySection("stats."+tier));
 
             // Load range from config
-            Range range = Range.LoadFromConfiguration(config.GetPropertySection("range"));
+            Range range = Range.LoadFromConfiguration(config.GetPropertySection("range."+tier));
 
             // Load movespeed from config
-            int moveSpeed = config.GetProperty<int>("moveSpeed");
+            int moveSpeed = config.GetProperty<int>("moveSpeed."+tier);
 
             // Load texture from config file
             string texName = config.GetProperty<string>("texture.name");
@@ -51,7 +52,7 @@ namespace MaxOfEmpires.Units
             // Load all specials of the Unit from config
             int specialsList = config.GetProperty<int>("specialties");
 
-            Soldier prototype = new Soldier(config.GetProperty<string>("name"), 0, 0, new Player("none", "blue", Color.Black, 100), texName, moveSpeed, stats, range);
+            Soldier prototype = new Soldier(config.GetProperty<string>("name."+tier), 0, 0, new Player("none", "blue", Color.Black, 100), texName, moveSpeed, stats, range);
             prototype.Specials = specialsList;
 
             return prototype;
