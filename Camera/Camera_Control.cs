@@ -81,14 +81,22 @@ namespace MaxOfEmpires
 
         }
 
+        public void setDownRight()
+        {
+            position = new Vector2(int.MaxValue, int.MaxValue);
+            Cap();
+        }
+
+
+
         private void MouseControlCheck(InputHelper inputHelper, KeyManager keyManager)
         {
-            if (inputHelper.GetMousePosition(false).Y < CameraMouseMargin && inputHelper.GetMousePosition(false).Y >= 0)
+            if (inputHelper.GetMousePosition(false).Y < CameraMouseMargin && inputHelper.GetMousePosition(false).Y >= 0 && inputHelper.GetMousePosition(false).X < cameraBreakoffX)
             {
                 MoveCamera("up");
             }
 
-            if (inputHelper.GetMousePosition(false).Y > CameraBreakoffY - CameraMouseMargin && inputHelper.GetMousePosition(false).Y <= CameraBreakoffY)
+            if (inputHelper.GetMousePosition(false).Y > CameraBreakoffY - CameraMouseMargin && inputHelper.GetMousePosition(false).Y <= CameraBreakoffY && inputHelper.GetMousePosition(false).X < cameraBreakoffX)
             {
                 MoveCamera("down");
             }
@@ -204,8 +212,13 @@ namespace MaxOfEmpires
                         break;
                     }
             }
-
+            Cap();
             // Calculations needed to cap the camera
+            
+        }
+
+        private void Cap()
+        {
             float cameraGridCompFactorX = 0;
             float cameraGridCompFactorY = 0;
             float cameraGridCalc = 0;
@@ -236,7 +249,7 @@ namespace MaxOfEmpires
                         break;
                     }
             }
-            
+
             // Caps the camera so it wont move past the grid
             float x = MathHelper.Clamp(MaxOfEmpires.camera.Position.X, 0.0f, (int)(cameraGridCalc + cameraGridCompFactorX));
             float y = MathHelper.Clamp(MaxOfEmpires.camera.Position.Y, 0.0f, (int)(cameraGridCalc + cameraGridCompFactorY));

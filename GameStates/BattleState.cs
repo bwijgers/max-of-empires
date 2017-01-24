@@ -43,7 +43,7 @@ namespace MaxOfEmpires.GameStates
             ResetOverlay();
 
             // Reset ourselves
-            Reset();
+            //Reset();
         }
 
         public override void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS)
@@ -108,6 +108,9 @@ namespace MaxOfEmpires.GameStates
         /// <param name="defendingArmy">The army that was attacked.</param>
         public void OnInitiateBattle(Army attackingArmy, Army defendingArmy, Tile attackingTile, Tile defendingTile)
         {
+            players.Clear();
+            players.Add(defendingArmy.Owner);
+            players.Add(attackingArmy.Owner);
             battleGrid.InitField();
             battleGrid.BattleGenerate(attackingTile.Terrain, attackingTile.hills, defendingTile.Terrain, defendingTile.hills,battleGrid.Width,battleGrid.Height, attackingArmy.Owner, defendingArmy.Owner);
             battleGrid.PopulateField(attackingArmy, defendingArmy);
@@ -126,6 +129,7 @@ namespace MaxOfEmpires.GameStates
             // Start turn
             TurnUpdate(null);
             TurnUpdate(null);
+
         }
 
         private void SelectNextPlayer()
@@ -156,6 +160,13 @@ namespace MaxOfEmpires.GameStates
         {
             // Change the current player
             SelectNextPlayer();
+
+            if (turnNum == 1)
+            {
+                MaxOfEmpires.camera.Reset();
+                if (CurrentPlayer == battleGrid.attackingPlayer)
+                    MaxOfEmpires.camera.setDownRight();
+            }
 
             // TurnUpdate the grid
             battleGrid.TurnUpdate(turnNum, CurrentPlayer, t);

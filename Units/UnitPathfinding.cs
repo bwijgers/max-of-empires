@@ -169,7 +169,7 @@ namespace MaxOfEmpires.Units
         /// <returns></returns>
         public static Point[] GetPath(Unit movingUnit, Point target)
         {
-            return ShortestPath(movingUnit, target).path;
+            return ShortestPath(movingUnit, target)?.path;
         }
 
         /// <summary>

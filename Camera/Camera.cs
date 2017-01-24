@@ -59,6 +59,7 @@ namespace MaxOfEmpires
         public void Reset()
         {
             Position = new Vector2(0, 0);
+            zoom = 1.0f;
         }
 
 		// Properties

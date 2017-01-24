@@ -238,6 +238,10 @@ namespace MaxOfEmpires
                             {
                                 mousePoint = p;
                                 Point[] pathWithoutOriginalTile = Pathfinding.GetPath(SelectedTile.Unit, p);
+
+                                if (pathWithoutOriginalTile == null)
+                                    return;
+
                                 path = new Point[pathWithoutOriginalTile.Length + 1];
                                 path[0] = selectedTile;
                                 pathWithoutOriginalTile.CopyTo(path, 1);
@@ -464,6 +468,7 @@ namespace MaxOfEmpires
                     }
                 }
             });
+
         }
 
         public override void Update(GameTime time)
