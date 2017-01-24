@@ -1,6 +1,7 @@
 ﻿using Ebilkill.Gui;
 using Ebilkill.Gui.Elements;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,32 +16,27 @@ namespace MaxOfEmpires.GameStates.Overlays
         private GuiButton buttonStart;
         private GuiButton buttonSettings;
         private GuiButton buttonSure;
-        private GuiLabel labelTitle; 
 
         public OverlayMainMenu()
         {
-            // Add the Game title
-            labelTitle = GuiLabel.createNewLabel(new Vector2(10), "Max of Empires", "titleFont");
-            addElement(labelTitle);
-
             // Quit button
-            buttonQuit = GuiButton.createButtonWithLabel(new Point(0, MaxOfEmpires.ScreenSize.Y - 50), "Quit?", null, "font");
+            buttonQuit = new GuiButton(new Rectangle(new Point(0, MaxOfEmpires.ScreenSize.Y - 200), new Point(300, 200)), "TitleScreen/QuitButton");
             buttonQuit.ClickHandler = () => { buttonQuit.Visible = false; buttonSure.Visible = true; };
             addElement(buttonQuit);
 
             // Are you sure? button
-            buttonSure = GuiButton.createButtonWithLabel(new Point(0, MaxOfEmpires.ScreenSize.Y - 50), "Are you sure?", null, "font");
+            buttonSure = new GuiButton(buttonQuit.Bounds, "TitleScreen/AreYouSureButton");
             buttonSure.ClickHandler = () => { MaxOfEmpires.Quit(); };
             buttonSure.Visible = false;
             addElement(buttonSure);
 
             // Settings button
-            buttonSettings = GuiButton.createButtonWithLabel(new Point(0, buttonQuit.Bounds.Y - 50), "Settings", null, "font");
+            buttonSettings = new GuiButton(new Rectangle(new Point(0, buttonQuit.Bounds.Y - 150), new Point(300, 200)), "TitleScreen/SettingsButton");
             buttonSettings.ClickHandler = () => GameStateManager.SwitchState("settingsMenu", true);
             addElement(buttonSettings);
 
             // Start button
-            buttonStart = GuiButton.createButtonWithLabel(new Point(0, buttonSettings.Bounds.Y - 50), "Start Game", null, "font");
+            buttonStart = new GuiButton(new Rectangle(new Point(0, buttonSettings.Bounds.Y - 150), new Point(300, 200)), "TitleScreen/StartGameButton");
             buttonStart.ClickHandler = () => GameStateManager.SwitchState("economy", true);
             addElement(buttonStart);
 
@@ -50,9 +46,6 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         public void CenterElements()
         {
-            // Title
-            MoveToCenter(labelTitle);
-
             // Buttons
             MoveToCenter(buttonQuit);
             MoveToCenter(buttonStart);
