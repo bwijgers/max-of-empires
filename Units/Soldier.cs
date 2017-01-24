@@ -179,14 +179,14 @@ namespace MaxOfEmpires.Units
         private void DealDamage(Soldier enemy, bool retaliate)
         {
             // Check if we hit at all
-            int enemyDodgeBonus = (enemy.Parent as Tile).DodgeBonus;
-            if (enemy.owner == ((Parent as Tile).Parent as Grid).attackingPlayer)
+            int enemyDodgeBonus = (enemy.Parent as Tile).DodgeBonus * 2;
+            if (enemy.owner == (GameWorld as Grid).attackingPlayer)
             {
-                enemyDodgeBonus += ((Parent as Tile).Parent as BattleGrid).attackingTile.DodgeBonus;
+                enemyDodgeBonus += (GameWorld as BattleGrid).attackingTile.DodgeBonus;
             }
             else
             {
-                enemyDodgeBonus += ((Parent as Tile).Parent as BattleGrid).defendingTile.DodgeBonus;
+                enemyDodgeBonus += (GameWorld as BattleGrid).defendingTile.DodgeBonus;
             }
             int hitChance = stats.hit - (enemy.stats.dodge+ enemyDodgeBonus);
             if (hitChance < 100)
@@ -223,14 +223,14 @@ namespace MaxOfEmpires.Units
             int damageToDeal = attack;
             if (!Special_MagicFighter)
             {
-                int enemyDefenseBonus = (enemy.Parent as Tile).DefenseBonus;
-                if (enemy.owner == ((Parent as Tile).Parent as Grid).attackingPlayer)
+                int enemyDefenseBonus = (enemy.Parent as Tile).DefenseBonus * 2;
+                if (enemy.owner == (GameWorld as Grid).attackingPlayer)
                 {
-                    enemyDefenseBonus += ((Parent as Tile).Parent as BattleGrid).attackingTile.DefenseBonus;
+                    enemyDefenseBonus += (GameWorld as BattleGrid).attackingTile.DefenseBonus;
                 }
                 else
                 {
-                    enemyDefenseBonus += ((Parent as Tile).Parent as BattleGrid).defendingTile.DefenseBonus;
+                    enemyDefenseBonus += (GameWorld as BattleGrid).defendingTile.DefenseBonus;
                 }
                 damageToDeal -= (enemy.stats.def + enemyDefenseBonus);
             }
