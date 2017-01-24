@@ -97,6 +97,7 @@ namespace MaxOfEmpires
             else if (clickedTile.BuiltOn && clickedTile.Building.Owner == currentPlayer)
             {
                 // Select the building
+                SelectTile(InvalidTile);
                 SelectTile(clickedTile.PositionInGrid);
             }
         }

@@ -6,11 +6,34 @@ building.trainingGrounds=Training Grounds
 building.academy=Academy
 
 # Soldiers
-unit.spearman=Spearman
-unit.swordsman=Swordsman
-unit.archer=Archer
-unit.horse=Horseman
-unit.heavy=Heavy Infantry
-unit.axeman=Axeman
-unit.mage=Mage
-unit.assassin=Assassin
+unit.spearman.1=Spearman
+unit.spearman.2=Pikeman
+unit.spearman.3=Halberdier
+
+unit.swordsman.1=Swordsman
+unit.swordsman.2=Warrior
+unit.swordsman.3=Blademaster
+
+unit.axeman.1=Axeman
+unit.axeman.2=Maceman
+unit.axeman.3=Berserker
+
+unit.archer.1=Archer
+unit.archer.2=Sniper
+unit.archer.3=Quickscoper
+
+unit.heavy.1=Heavy Infantry
+unit.heavy.2=Guardian
+unit.heavy.3=Juggernaut
+
+unit.horse.1=Horseman
+unit.horse.2=Knight
+unit.horse.3=Paladin
+
+unit.mage.1=Mage
+unit.mage.2=Archmage
+unit.mage.3=Thijman
+
+unit.assassin.1=Assassin
+unit.assassin.2=Slayer
+unit.assassin.3=Reaper

@@ -31,7 +31,9 @@ namespace MaxOfEmpires
                 battlesLost = 0;
             }
         }
+        
         private int moneyPerTurn;
+        public Dictionary<string, int> soldierTiers;
         public Stats stats;
         private int population;
         private int money;
@@ -58,6 +60,11 @@ namespace MaxOfEmpires
             updatePopulationHandlers = new List<Action<Player>>();
             updateMoneyPerTurnHandlers = new List<Action<Player>>();
             stats = new Stats(0);
+            soldierTiers = new Dictionary<string, int>();
+            foreach(string s in Buildings.BuildingRegistry.GetTrainees("building.trainingGrounds"))
+                soldierTiers[s] = 1;
+            foreach(string s in Buildings.BuildingRegistry.GetTrainees("building.academy"))
+                soldierTiers[s] = 1;
         }
 
         public void AddBuildingToStats(string id)

@@ -34,16 +34,17 @@ namespace MaxOfEmpires.Units
         ///   - texture.name (a string)
         /// <param name="config">The configuration file/subsection to load from.</param>
         /// <returns>A Unit as loaded from the configuration.</returns>
-        public static Soldier LoadFromConfiguration(Configuration config)
+        public static Soldier LoadFromConfiguration(Configuration config, int tier)
         {
             // Load stats from config
-            Stats stats = Stats.LoadFromConfiguration(config.GetPropertySection("stats"));
+
+            Stats stats = Stats.LoadFromConfiguration(config.GetPropertySection("stats."+tier));
 
             // Load range from config
-            Range range = Range.LoadFromConfiguration(config.GetPropertySection("range"));
+            Range range = Range.LoadFromConfiguration(config.GetPropertySection("range."+tier));
 
             // Load movespeed from config
-            int moveSpeed = config.GetProperty<int>("moveSpeed");
+            int moveSpeed = config.GetProperty<int>("moveSpeed."+tier);
 
             // Load texture from config file
             string texName = config.GetProperty<string>("texture.name");
@@ -52,7 +53,7 @@ namespace MaxOfEmpires.Units
             // Load all specials of the Unit from config
             int specialsList = config.GetProperty<int>("specialties");
 
-            Soldier prototype = new Soldier(config.GetProperty<string>("name"), 0, 0, new Player("none", "blue", Color.Black, 100), texName, moveSpeed, stats, range);
+            Soldier prototype = new Soldier(config.GetProperty<string>("name."+tier), 0, 0, new Player("none", "blue", Color.Black, 100), texName, moveSpeed, stats, range);
             prototype.Specials = specialsList;
 
             return prototype;
@@ -179,14 +180,14 @@ namespace MaxOfEmpires.Units
         private void DealDamage(Soldier enemy, bool retaliate)
         {
             // Check if we hit at all
-            int enemyDodgeBonus = (enemy.Parent as Tile).DodgeBonus;
-            if (enemy.owner == ((Parent as Tile).Parent as Grid).attackingPlayer)
+            int enemyDodgeBonus = (enemy.Parent as Tile).DodgeBonus * 2;
+            if (enemy.owner == (GameWorld as Grid).attackingPlayer)
             {
-                enemyDodgeBonus += ((Parent as Tile).Parent as BattleGrid).attackingTile.DodgeBonus;
+                enemyDodgeBonus += (GameWorld as BattleGrid).attackingTile.DodgeBonus;
             }
             else
             {
-                enemyDodgeBonus += ((Parent as Tile).Parent as BattleGrid).defendingTile.DodgeBonus;
+                enemyDodgeBonus += (GameWorld as BattleGrid).defendingTile.DodgeBonus;
             }
             int hitChance = stats.hit - (enemy.stats.dodge+ enemyDodgeBonus);
             if (hitChance < 100)
@@ -223,14 +224,14 @@ namespace MaxOfEmpires.Units
             int damageToDeal = attack;
             if (!Special_MagicFighter)
             {
-                int enemyDefenseBonus = (enemy.Parent as Tile).DefenseBonus;
-                if (enemy.owner == ((Parent as Tile).Parent as Grid).attackingPlayer)
+                int enemyDefenseBonus = (enemy.Parent as Tile).DefenseBonus * 2;
+                if (enemy.owner == (GameWorld as Grid).attackingPlayer)
                 {
-                    enemyDefenseBonus += ((Parent as Tile).Parent as BattleGrid).attackingTile.DefenseBonus;
+                    enemyDefenseBonus += (GameWorld as BattleGrid).attackingTile.DefenseBonus;
                 }
                 else
                 {
-                    enemyDefenseBonus += ((Parent as Tile).Parent as BattleGrid).defendingTile.DefenseBonus;
+                    enemyDefenseBonus += (GameWorld as BattleGrid).defendingTile.DefenseBonus;
                 }
                 damageToDeal -= (enemy.stats.def + enemyDefenseBonus);
             }
