@@ -9,6 +9,7 @@ namespace MaxOfEmpires.Buildings
 
         public Mine(Point positionInGrid, Player owner) : base(positionInGrid, owner, "building.mine")
         {
+            owner.CalculateMoneyPerTurn();
         }
 
         public override void TurnUpdate(uint turn, Player player, GameTime t)

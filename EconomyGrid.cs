@@ -61,6 +61,7 @@ namespace MaxOfEmpires
             foreach (Player p in players)
             {
                 p.CalculatePopulation();
+                p.CalculateMoneyPerTurn();
             }
         }
 

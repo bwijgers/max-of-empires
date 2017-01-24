@@ -73,6 +73,7 @@ namespace MaxOfEmpires.Buildings
 
             // Also re-update the population because that's what should be done after a town is destroyed
             Owner.CalculatePopulation();
+            Owner.CalculateMoneyPerTurn();
         }
 
         protected void TrySpawnUnit(string soldierType)
