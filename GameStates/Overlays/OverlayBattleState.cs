@@ -60,7 +60,7 @@ namespace MaxOfEmpires.GameStates.Overlays
             }
 
             // There is a Unit? Show its stats. 
-            labelUnitHp.Visible = labelUnitAtt.Visible = labelUnitHit.Visible = true;
+            labelUnitHp.Visible = labelUnitAtt.Visible = labelUnitHit.Visible = labelUnitName.Visible = true;
             labelUnitName.setLabelText("Type: " + Translations.GetTranslation(u.Name));
             labelUnitHp.setLabelText("Unit HP/Max: " + u.Stats.hp + '/' + u.Stats.maxHp);
             labelUnitAtt.setLabelText("Unit Att/Def: " + u.Stats.att + '/' + u.Stats.def);
