@@ -64,6 +64,11 @@ namespace MaxOfEmpires
             walkingUnits = new List<WalkingUnit>();
         }
 
+        private bool CanMoveUnitToTargetPosition(Unit u, Point targetPosition)
+        {
+            return !(this[targetPosition] as Tile).Occupied && !walkingUnits.Exists(wu => wu.TargetPosition.Equals(targetPosition));
+        }
+
         /// <summary>
         /// Checks whether a Unit can be moved to a position, and moves it if it's possible.
         /// </summary>
@@ -95,8 +100,17 @@ namespace MaxOfEmpires
                     (unit as Army).MergeArmy(partial);
                 }
             }
-            else if (targetTile != null && !targetTile.Occupied && unit.Move(newPos.X, newPos.Y))
+            else if (targetTile != null && /*!targetTile.Occupied &&*/ unit.Move(newPos.X, newPos.Y))
             {
+                if (!CanMoveUnitToTargetPosition(unit, newPos))
+                {
+                    newPos = GetNearestAccessibleTile(unit, newPos);
+                }
+                if (newPos.Equals(InvalidTile))
+                {
+                    return false;
+                }
+
                 OnUnitStartMoving(unit, newPos);
                 return true;
             }
@@ -135,6 +149,18 @@ namespace MaxOfEmpires
             });
         }
 
+        private void DisplayPath(Point[] path)
+        {
+
+            (this[path[0]] as Tile).DrawArrow(path[1] - path[0], Point.Zero);
+
+            for (int i = 1; i < path.Length - 1; i++)
+            {
+                (this[path[i]] as Tile).DrawArrow(path[i + 1] - path[i], path[i - 1] - path[i]);
+            }
+            (this[path[path.Length - 1]] as Tile).DrawArrow(Point.Zero, path[path.Length - 2] - path[path.Length - 1]);
+        }
+
         public override void Draw(GameTime time, SpriteBatch s)
         {
             ForEach(obj => (obj as Tile).DrawBackground(time, s));
@@ -142,6 +168,20 @@ namespace MaxOfEmpires
 
             // Draw the Unit target overlay, if it exists
             unitTargets.Draw(time, s);
+        }
+
+        private Point GetNearestAccessibleTile(Unit u, Point p)
+        {
+            Point[] path = Pathfinding.GetPath(u, p);
+            int indexInPath = path.Length - 1;
+            for (; indexInPath >= 0; --indexInPath)
+            {
+                if (CanMoveUnitToTargetPosition(u, path[indexInPath]))
+                {
+                    return path[indexInPath];
+                }
+            }
+            return InvalidTile;
         }
 
         /// <summary>
@@ -177,11 +217,6 @@ namespace MaxOfEmpires
                 CreateUnitTargetOverlays();
             }
 
-            if (walkingUnits == null || walkingUnits.Count != 0)
-            {
-                return;
-            }
-
             // Check if the player clicked
             if (helper.MouseLeftButtonPressed)
             {
@@ -215,18 +250,6 @@ namespace MaxOfEmpires
                     });
                 }
             }
-        }
-
-        private void DisplayPath(Point[] path)
-        {
-
-            (this[path[0]] as Tile).DrawArrow(path[1] - path[0], Point.Zero);
-
-            for (int i = 1; i < path.Length - 1; i++)
-            {
-                (this[path[i]] as Tile).DrawArrow(path[i + 1] - path[i], path[i - 1] - path[i]);
-            }
-            (this[path[path.Length-1]] as Tile).DrawArrow(Point.Zero, path[path.Length-2]-path[path.Length-1]);
         }
 
         /// <summary>
@@ -288,14 +311,10 @@ namespace MaxOfEmpires
         /// <param name="targetPos">The target position to move to in grid coordinates</param>
         public void OnUnitStartMoving(Unit u, Point targetPos, bool remove = true)
         {
-            // Can make Unit movement animated by not calling this instantly (or from update or something, idk)
-            // TODO: Start animating here
-            //u.DrawPosition = new Vector2(-50, -50);
-            targetPosition = targetPos;
+            // Add this Unit to the walking Units
             walkingUnits.Add(new WalkingUnit(u, targetPos, remove));
 
-            //walkingUnit.Vectors.Add(new Vector2(targetPos.X,targetPos.Y));
-            Point[] tempPath = Pathfinding.GetPath(u, targetPosition);
+            Point[] tempPath = Pathfinding.GetPath(u, targetPos);
             foreach (Point p in tempPath)
             {
                 u.Vectors.Add(new Vector2(p.X, p.Y));
