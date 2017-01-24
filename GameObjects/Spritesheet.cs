@@ -35,18 +35,21 @@ namespace MaxOfEmpires.GameObjects
             s.Draw(fullTexture, destination, spritePart, color);
         }
 
-        public void SelectNextSprite(bool advanceRows)
+        public void SelectNextSprite(bool advanceRows, bool repeating)
         {
             ++currentColumn;
             if (currentColumn == columns)
             {
-                currentColumn = 0;
-                if (advanceRows)
+                if (repeating)
                 {
-                    ++currentRow;
-                    if (currentRow == rows)
+                    currentColumn = 0;
+                    if (advanceRows)
                     {
-                        currentRow = 0;
+                        ++currentRow;
+                        if (currentRow == rows)
+                        {
+                            currentRow = 0;
+                        }
                     }
                 }
             }

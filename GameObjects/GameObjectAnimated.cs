@@ -8,11 +8,13 @@ namespace MaxOfEmpires.GameObjects
         private bool advanceRows;
         private Animation animation;
         protected bool shouldAnimate;
+        private double animationTime;
 
-        public GameObjectAnimated(bool advanceRows)
+        public GameObjectAnimated(bool advanceRows, bool repeating, double animationTime)
         {
             this.advanceRows = advanceRows;
-            animation = new Animation(DrawingTexture, advanceRows);
+            animation = new Animation(DrawingTexture, advanceRows, repeating, animationTime);
+            this.animationTime = animationTime;
         }
 
         public override void Draw(GameTime time, SpriteBatch s)
@@ -48,7 +50,7 @@ namespace MaxOfEmpires.GameObjects
 
             set
             {
-                animation = new Animation(value, advanceRows);
+                animation = new Animation(value, advanceRows, true, animationTime);
             }
         }
 

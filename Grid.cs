@@ -43,6 +43,7 @@ namespace MaxOfEmpires
         /// The current Unit targets that are displayed.
         /// </summary>
         private GameObjectList unitTargets;
+        public GameObjectList hitEffectList;
 
         private Point mousePoint;
 
@@ -59,6 +60,7 @@ namespace MaxOfEmpires
             currentPlayer = null;
             this.players = players;
             unitTargets = new GameObjectList();
+            hitEffectList = new GameObjectList();
             unitTargets.Parent = this;
             removeWalkingUnit = false;
             walkingUnits = new List<WalkingUnit>();
@@ -168,6 +170,7 @@ namespace MaxOfEmpires
 
             // Draw the Unit target overlay, if it exists
             unitTargets.Draw(time, s);
+            hitEffectList.Draw(time, s);
         }
 
         private Point GetNearestAccessibleTile(Unit u, Point p)
@@ -477,7 +480,7 @@ namespace MaxOfEmpires
 
             // Updates the Unit target overlay
             unitTargets.Update(time);
-
+            hitEffectList.Update(time);
             // Remove unitTargets that are done
             unitTargets.ForEach(obj => {
                 TargetPositionOverlay uto = obj as TargetPositionOverlay;

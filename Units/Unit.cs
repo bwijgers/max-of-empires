@@ -44,7 +44,7 @@ namespace MaxOfEmpires.Units
         /// </summary>
         private List<Vector2> vectors;
 
-        public Unit(int x, int y, Player owner, string id = "") : base(false)
+        public Unit(int x, int y, Player owner, string id = "") : base(false, true, 0.3D)
         {
             this.id = id;
             this.x = x;
