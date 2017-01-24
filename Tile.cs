@@ -4,6 +4,7 @@ using MaxOfEmpires.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
+using MaxOfEmpires.Files;
 
 namespace MaxOfEmpires
 {
@@ -207,70 +208,10 @@ namespace MaxOfEmpires
 
         private void TerrainSpriteSelect()
         {
-            if(terrain == Terrain.Plains&&!hills)
-            {
-                SelectSprite(3, 1);
-            }
-            else if (terrain == Terrain.Plains && hills)
-            {
-                SelectSprite(2, 1);
-            }
-            else if (terrain == Terrain.Forest && hills)
-            {
-                SelectSprite(4, 1);
-            }
-            else if (terrain == Terrain.Forest && !hills)
-            {
-                SelectSprite(5, 1);
-            }
-            else if (terrain == Terrain.Desert && !hills)
-            {
-                SelectSprite(3, 3);
-            }
-            else if (terrain == Terrain.Desert && hills)
-            {
-                SelectSprite(2, 3);
-            }
-            else if (terrain == Terrain.Tundra && !hills)
-            {
-                SelectSprite(3, 2);
-            }
-            else if (terrain == Terrain.Tundra && hills)
-            {
-                SelectSprite(2, 2);
-            }
-            else if (terrain == Terrain.Swamp && !hills)
-            {
-                SelectSprite(5, 2);
-            }
-            else if (terrain == Terrain.Swamp && hills)
-            {
-                SelectSprite(4, 2);
-            }
-            else if (terrain == Terrain.Jungle && !hills)
-            {
-                SelectSprite(5, 3);
-            }
-            else if (terrain == Terrain.Jungle && hills)
-            {
-                SelectSprite(4, 3);
-            }
-            else if (terrain == Terrain.Lake)
-            {
-                SelectSprite(1, 4);
-            }
-            else if (terrain == Terrain.Mountain)
-            {
-                SelectSprite(1, 1);
-            }
-            else if (terrain == Terrain.TundraMountain)
-            {
-                SelectSprite(1, 2);
-            }
-            else if (terrain == Terrain.DesertMountain)
-            {
-                SelectSprite(1, 3);
-            }
+            if (!hills)
+                SelectSprite(terrain.placeInSprite.X, terrain.placeInSprite.Y);
+            else
+                SelectSprite(terrain.placeInSprite.X-1, terrain.placeInSprite.Y);
 
         }
 
@@ -373,6 +314,24 @@ namespace MaxOfEmpires
             }
         }
 
+        int CalculateDodgeBonus(Terrain.TerrainType type, bool containsHills)
+        {
+            Configuration file = FileManager.LoadConfig("configs/terrain/terrainBonusses");
+            int bonus = file.GetProperty<int>(type.ToString().ToLower()+".dodge");
+            if(hills)
+                bonus+= file.GetProperty<int>("hills.dodge");
+            return bonus;
+        }
+
+        int CalculateDefenseBonus(Terrain.TerrainType type, bool containsHIlls)
+        {
+            Configuration file = FileManager.LoadConfig("configs/terrain/terrainBonusses");
+            int bonus = file.GetProperty<int>(type.ToString().ToLower() + ".defense");
+            if (hills)
+                bonus += file.GetProperty<int>("hills.defense");
+            return bonus;
+        }
+
         /// <summary>
         /// Whether there is a Building on this Tile.
         /// </summary>
@@ -387,6 +346,10 @@ namespace MaxOfEmpires
         /// Whether there is a Unit on this Tile.
         /// </summary>
         public bool Occupied => Unit != null;
+
+        public int DefenseBonus => CalculateDefenseBonus(terrain.terrainType, hills);
+
+        public int DodgeBonus => CalculateDodgeBonus(terrain.terrainType, hills);
 
         /// <summary>
         /// True when the attacking overlay on this tile should be shown, false otherwise.

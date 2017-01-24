@@ -52,6 +52,11 @@ namespace MaxOfEmpires.GameObjects
             }
         }
 
+        public void SelectRow(int selectedRow)
+        {
+            currentRow = selectedRow;
+        }
+
         public Point SelectedSprite
         {
             get

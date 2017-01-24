@@ -178,7 +178,7 @@ namespace MaxOfEmpires.GameStates
         {
             base.Update(time);
             ecoGrid.Update(time);
-            if (shouldTurnUpdate)
+            if (shouldTurnUpdate && !ecoGrid.ContainsWalkingUnits)
             {
                 shouldTurnUpdate = false;
                 TurnUpdate(time);
