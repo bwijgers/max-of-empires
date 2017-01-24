@@ -155,31 +155,25 @@ namespace MaxOfEmpires.GameStates.Overlays
         /// <param name="a">The Army of which the information should be printed.</param>
         public void PrintArmyInfo(Army a)
         {
-            currentArmy = a;
             // No Army? Make the info disappear :o
             if (a == null)
             {
+                currentArmy = null;
                 listArmySoldiers.Visible = false;
                 return;
             }
-
-            // Hey, we have an army to print :)
-            listArmySoldiers.Visible = true;
-            listArmySoldiers.clear();
-            foreach (string soldierType in a.UnitsAndCounts.Keys)
+            if (currentArmy != a || a.RefreshInfo)
             {
-                // Create the label to add to the list
-                StringBuilder sb = new StringBuilder();
-                sb.Append(Translations.GetTranslation(soldierType));
-                sb.Append(": ");
-                sb.Append(a.SelectedUnits[soldierType]+"/");
-                sb.Append(a.UnitsAndCounts[soldierType]);
+                // Stop refreshing the army's info 
+                a.RefreshInfo = false;
 
-                // Add this label to the list
-                listArmySoldiers.addElement(ElementArmySelection.CreateBuildButton(Point.Zero, sb.ToString(), AddSelected(soldierType, a), LowerSelected(soldierType, a)));
-//                listArmySoldiers.addElement(GuiLabel.createNewLabel(new Vector2(), sb.ToString(), "font"));
-//                listArmySoldiers.addElement(ElementBuildButton.CreateBuildButton(Point.Zero,"", LowerSelected(soldierType, a)," -"));
-//                listArmySoldiers.addElement(ElementBuildButton.CreateBuildButton(Point.Zero, "", AddSelected(soldierType, a),"+"));
+                // Hey, we have an army to print :)
+                if (currentArmy != a)
+                {
+                    listArmySoldiers.Visible = true;
+                    currentArmy = a;
+                }
+                UpdateArmyInformation(currentArmy);
             }
         }
 
@@ -192,8 +186,6 @@ namespace MaxOfEmpires.GameStates.Overlays
             };
         }
 
-
-
         public GuiButton.OnClickHandler AddSelected(string s, Army a)
         {
             // Return an on click handler
@@ -202,8 +194,6 @@ namespace MaxOfEmpires.GameStates.Overlays
                 refreshArmyInfo = true;
             };
         }
-
-
 
         public void PrintBuilderInfo(Builder builder)
         {
@@ -220,6 +210,23 @@ namespace MaxOfEmpires.GameStates.Overlays
                 building.PopulateBuildingActions(listBuildingActions);
             }
             listBuildingActions.Visible = currentBuilding != null && listBuildingActions.AllLabels.Count > 0;
+        }
+
+        private void UpdateArmyInformation(Army a)
+        {
+            listArmySoldiers.clear();
+            foreach (string soldierType in a.UnitsAndCounts.Keys)
+            {
+                // Create the label to add to the list
+                StringBuilder sb = new StringBuilder();
+                sb.Append(Translations.GetTranslation(soldierType));
+                sb.Append(": ");
+                sb.Append(a.SelectedUnits[soldierType] + "/");
+                sb.Append(a.UnitsAndCounts[soldierType]);
+
+                // Add this label to the list
+                listArmySoldiers.addElement(ElementArmySelection.CreateBuildButton(Point.Zero, sb.ToString(), AddSelected(soldierType, a), LowerSelected(soldierType, a)));
+            }
         }
 
         /// <summary>

@@ -61,7 +61,6 @@ namespace MaxOfEmpires.GameStates
             Unit selectedUnit = ecoGrid.SelectedTile?.Unit;
 
             // Show nothing by default
-            PrintArmyInfo(null);
             PrintBuilderInfo(null);
 
             // ... and print their information if it's an Army...
@@ -69,9 +68,13 @@ namespace MaxOfEmpires.GameStates
             {
                 PrintArmyInfo((Army)unitUnderMouse);
             }
-            if (selectedUnit is Army)
+            else if (selectedUnit is Army)
             {
                 PrintArmyInfo((Army)selectedUnit);
+            }
+            else
+            {
+                PrintArmyInfo(null);
             }
 
             // ... or set the building information if it's a Builder... 

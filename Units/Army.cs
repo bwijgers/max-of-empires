@@ -36,6 +36,8 @@ namespace MaxOfEmpires.Units
 
         private Dictionary<string, int> selectedUnits;
 
+        private bool refreshInfo;
+
         /// <summary>
         /// Creates a new empty Army.
         /// </summary>
@@ -237,6 +239,8 @@ namespace MaxOfEmpires.Units
 
             unitsAndCounts = newUAC;
             selectedUnits = newSelected;
+
+            refreshInfo = true;
         }
 
         public void SelectAllUnits()
@@ -272,6 +276,18 @@ namespace MaxOfEmpires.Units
         public bool AllUnitsSelected => AreAllUnitsSelected();
 
         public Dictionary<string, int> UnitsAndCounts => unitsAndCounts;
+
+        public bool RefreshInfo
+        {
+            get
+            {
+                return refreshInfo;
+            }
+            set
+            {
+                refreshInfo = value;
+            }
+        }
 
         public Dictionary<string, int> SelectedUnits => selectedUnits;
     }
