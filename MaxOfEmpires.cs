@@ -95,15 +95,16 @@ namespace MaxOfEmpires
             // Initialize main configuration file
             mainConfiguration = FileManager.LoadConfig("Main");
 
-            // Initialize units
-            Configuration unitConfiguration = mainConfiguration.GetPropertySection("unit");
-            SoldierRegistry.Init(unitConfiguration);
-
             // Initialize buildings
             Configuration buildingConfiguration = mainConfiguration.GetPropertySection("building");
             BuildingRegistry.InitBuildings(buildingConfiguration);
 
             Building.LoadFromConfig(buildingConfiguration);
+
+            // Initialize units
+            Configuration unitConfiguration = mainConfiguration.GetPropertySection("unit");
+            SoldierRegistry.Init(unitConfiguration);
+
 
             // Initialize language file
             Translations.LoadLanguage("en_US");
