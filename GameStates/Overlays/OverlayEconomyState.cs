@@ -40,6 +40,8 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         // Overlay background color
         public Color playerColor;
+        public Color oldColor;
+        public double timeSinceSwitch;
 
         public OverlayEconomyState()
         {
@@ -120,12 +122,17 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         public override void draw(SpriteBatch spriteBatch)
         {
-            //if (refreshArmyInfo)
-            //{
-            //    PrintArmyInfo(currentArmy);
-            //    refreshArmyInfo = false;
-            //}
-            DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle(MaxOfEmpires.overlayPos.ToPoint(), MaxOfEmpires.ScreenSize), playerColor);
+            Color drawColor;
+            if (timeSinceSwitch <= 1)
+            {
+                drawColor = Color.Lerp(oldColor, playerColor, (float)timeSinceSwitch);
+            }
+            else
+            {
+                drawColor = playerColor;
+            }
+
+            DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle(MaxOfEmpires.overlayPos.ToPoint(), MaxOfEmpires.ScreenSize), drawColor);
             base.draw(spriteBatch);
         }
 

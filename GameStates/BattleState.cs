@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MaxOfEmpires.Units;
 using System.Collections.Generic;
+using System;
 
 namespace MaxOfEmpires.GameStates
 {
@@ -180,6 +181,7 @@ namespace MaxOfEmpires.GameStates
 
             // Update the grid
             battleGrid.Update(time);
+            overlay.timeSinceSwitch = Math.Min(overlay.timeSinceSwitch + time.ElapsedGameTime.TotalSeconds * 5, 1.1D);
 
             // TurnUpdate when requested.
             if (shouldTurnUpdate && !battleGrid.ContainsWalkingUnits)
@@ -191,6 +193,11 @@ namespace MaxOfEmpires.GameStates
 
         private void UpdateOverlayInformation()
         {
+            // Sidebar color
+            overlay.oldColor = overlay.playerColor;
+            overlay.playerColor = CurrentPlayer.Color;
+            overlay.timeSinceSwitch = 0.0D;
+
             // Show whose turn it is in the overlay
             overlay.LabelCurrentPlayer.setLabelText("Current player: " + CurrentPlayer.Name);
             overlay.playerColor = CurrentPlayer.Color;

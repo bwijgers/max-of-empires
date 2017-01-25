@@ -182,6 +182,7 @@ namespace MaxOfEmpires.GameStates
         {
             base.Update(time);
             ecoGrid.Update(time);
+            overlay.timeSinceSwitch = Math.Min(overlay.timeSinceSwitch + time.ElapsedGameTime.TotalSeconds * 5, 1.1D);
             if (shouldTurnUpdate && !ecoGrid.ContainsWalkingUnits)
             {
                 shouldTurnUpdate = false;
@@ -191,7 +192,12 @@ namespace MaxOfEmpires.GameStates
 
         private void UpdateGuiInformation()
         {
+            // Sidebar color
+            overlay.oldColor = overlay.playerColor;
             overlay.playerColor = CurrentPlayer.Color;
+            overlay.timeSinceSwitch = 0.0D;
+
+            // Sidebar info
             overlay.LabelCurrentPlayer.setLabelText("Current player: " + CurrentPlayer.Name);
             UpdateMoneyDisplay(CurrentPlayer);
             UpdatePopulationDisplay(CurrentPlayer);

@@ -16,7 +16,10 @@ namespace MaxOfEmpires.GameStates.Overlays
         private GuiLabel labelUnitHp;
         private GuiLabel labelUnitName;
 
+        // Overlay background color
         public Color playerColor;
+        public Color oldColor;
+        public double timeSinceSwitch;
 
         public OverlayBattleState()
         {
@@ -42,7 +45,17 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         public override void draw(SpriteBatch spriteBatch)
         {
-            DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle((int)MaxOfEmpires.OverlayPos.X, 0, MaxOfEmpires.ScreenSize.X, MaxOfEmpires.ScreenSize.Y), playerColor);
+            Color drawColor;
+            if (timeSinceSwitch <= 1)
+            {
+                drawColor = Color.Lerp(oldColor, playerColor, (float)timeSinceSwitch);
+            }
+            else
+            {
+                drawColor = playerColor;
+            }
+
+            DrawingHelper.Instance.DrawRectangle(spriteBatch, new Rectangle(MaxOfEmpires.overlayPos.ToPoint(), MaxOfEmpires.ScreenSize), drawColor);
             base.draw(spriteBatch);
         }
 
