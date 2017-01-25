@@ -12,6 +12,8 @@ namespace MaxOfEmpires.GameStates
         private Texture2D mainMenuTex = AssetManager.Instance.getAsset<Texture2D>("TitleScreen/titlescreen" + (r.Next(0, 3) +1 ).ToString());
         private Texture2D settingsButton = AssetManager.Instance.getAsset<Texture2D>("TitleScreen/SettingsButton");
 
+        
+
         public MainMenuState()
         {
             ResetOverlay();

@@ -1,6 +1,8 @@
 ﻿using MaxOfEmpires.GameObjects;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 
@@ -79,6 +81,19 @@ namespace MaxOfEmpires
                 width = height = 1;
             }
             return new Spritesheet(tex, width, height);
+        }
+
+        public void PlaySound(string name)
+        {
+            SoundEffect snd = content.Load<SoundEffect>(name);
+            snd.Play();
+        }
+
+        public void PlayMusic(string name, bool repeat = true)
+        {
+            MediaPlayer.IsRepeating = repeat;
+            MediaPlayer.Play(content.Load<Song>(name));
+            MediaPlayer.Volume = 0.5F;
         }
 
         /// <summary>

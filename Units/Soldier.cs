@@ -321,6 +321,7 @@ namespace MaxOfEmpires.Units
 
         public void OnDeath()
         {
+            AssetManager.Instance.PlaySound("Music/Soldierfade");
             owner.AddUnitLostToStats(id);
             animateDeath = true;
         }
@@ -373,6 +374,7 @@ namespace MaxOfEmpires.Units
                 position = position - (normalizedAttackDirection * 10);
                 (GameWorld as Grid).hitEffectList.RemoveChild(h);
                 DealDamage(attackTarget, retaliating);
+                AssetManager.Instance.PlaySound("Music/Slash");
                 DrawingTexture.SelectedSprite = new Point(0, ANIMATION_IDLE);
 
                 hasAttacked = true;

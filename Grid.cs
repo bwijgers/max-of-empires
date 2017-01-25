@@ -309,6 +309,7 @@ namespace MaxOfEmpires
             targetTile.SetUnit(walkingUnit.MovingUnit);
             if (walkingUnit.RemoveOnEnd)
                 originTile.SetUnit(null);
+
         }
 
         /// <summary>
@@ -326,6 +327,10 @@ namespace MaxOfEmpires
             {
                 u.Vectors.Add(new Vector2(p.X, p.Y));
             }
+
+            AssetManager.Instance.PlaySound("Music/WalkSound");
+
+
         }
 
         /// <summary>
@@ -518,6 +523,7 @@ namespace MaxOfEmpires
         /// <param name="tarPosCoor">Coordinates to walk to</param>
         public void Walk(Unit walkingUnit, Vector2 tarPosCoor)
         {
+            
             Vector2 unitPos = walkingUnit.PositionFromParent;
             Vector2 tarPos = 32 * (new Vector2(tarPosCoor.X,tarPosCoor.Y) - walkingUnit.PositionInGrid.ToVector2());
             Vector2 direction = tarPos - unitPos;
