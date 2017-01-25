@@ -84,7 +84,7 @@ namespace MaxOfEmpires.GameStates
             state.FadeIn = true;
             SwitchState("playerWin", false);
 
-            AssetManager.Instance.PlayMusic("Music/FEvictory");
+            AssetManager.Instance.PlayMusic("Music/FEvictory", false);
 
         }
 
@@ -94,6 +94,8 @@ namespace MaxOfEmpires.GameStates
 
             GetState("mainMenu").FadeIn = true;
             SwitchState("mainMenu", false);
+
+            AssetManager.Instance.PlayMusic("Music/Village of Emerdale");
         }
 
         /// <summary>

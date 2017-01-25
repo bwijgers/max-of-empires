@@ -319,6 +319,7 @@ namespace MaxOfEmpires.Units
 
         public void OnDeath()
         {
+            AssetManager.Instance.PlaySound("Music/Soldierfade");
             owner.AddUnitLostToStats(id);
             animateDeath = true;
         }
@@ -409,7 +410,6 @@ namespace MaxOfEmpires.Units
 
             if (IsDead)
             {
-                AssetManager.Instance.PlaySound("Music/Soldierfade");
                 animateDeathCounter += time.ElapsedGameTime.TotalSeconds / 2.0D;
                 DrawColor = new Color(DrawColor, (float)(Math.Cos(animateDeathCounter / 2.0D * Math.PI)));
                 if (DrawColor.A <= 10)
