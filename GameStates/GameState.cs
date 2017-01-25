@@ -52,6 +52,7 @@ namespace MaxOfEmpires.GameStates
 
         public virtual void Reset()
         {
+            ResetOverlay();
         }
 
         public virtual void ResetOverlay()

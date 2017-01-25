@@ -93,7 +93,7 @@ namespace MaxOfEmpires.GameStates
             CurrentState.FadeOut = true;
 
             GetState("mainMenu").FadeIn = true;
-            SwitchState("mainMenu", false);
+            SwitchState("mainMenu", true);
 
             AssetManager.Instance.PlayMusic("Music/Village of Emerdale");
         }

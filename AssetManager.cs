@@ -58,6 +58,11 @@ namespace MaxOfEmpires
                 return (T)LoadSpritesheet(name);
             }
 
+            if (typeof(T).Equals(typeof(SoundEffectInstance)))
+            {
+                return (T)LoadSoundEffect(name);
+            }
+
             assetDict[name] = content.Load<T>(name);
             return (T)assetDict[name];
         }
@@ -83,9 +88,21 @@ namespace MaxOfEmpires
             return new Spritesheet(tex, width, height);
         }
 
+        private object LoadSoundEffect(string name)
+        {
+            SoundEffect sound = content.Load<SoundEffect>(name);
+            SoundEffectInstance sei = sound.CreateInstance();
+            assetDict[name] = sei;
+            return sei;
+        }
+
         public void PlaySound(string name)
         {
-            SoundEffect snd = content.Load<SoundEffect>(name);
+            SoundEffectInstance snd = getAsset<SoundEffectInstance>(name);
+            if (snd.State == SoundState.Playing)
+            {
+                return;
+            }
             snd.Play();
         }
 

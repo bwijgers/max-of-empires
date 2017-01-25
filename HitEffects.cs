@@ -18,11 +18,15 @@ namespace MaxOfEmpires
                 case "unit.healer":
                     DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(@"FE-Sprites\HitEffects\Heal@4x1");
                     break;
-                case "unit.mage":
+                case "unit.mage.1":
+                case "unit.mage.2":
+                case "unit.mage.3":
+                    AssetManager.Instance.PlaySound("Music/Fireball");
                     DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(@"FE-Sprites\HitEffects\Fire@4x1");
                     break;
                 default:
-                    DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(@"FE-Sprites\HitEffects\Slash@4x1"); ;
+                    AssetManager.Instance.PlaySound("Music/Slash");
+                    DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(@"FE-Sprites\HitEffects\Slash@4x1");
                     break;
             }
         }

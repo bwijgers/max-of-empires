@@ -344,10 +344,13 @@ namespace MaxOfEmpires.Units
             // TODO: Adding the walking animations to the attack directions and un-commenting this.
             if (normalizedAttackDirection == walkUpDirection)
                 DrawingTexture.SelectedSprite = new Point(0, ANIMATION_WALK_UP);
+
             else if (normalizedAttackDirection == walkDownDirection)
                 DrawingTexture.SelectedSprite = new Point(0, ANIMATION_WALK_DOWN);
+
             else if (normalizedAttackDirection == walkRightDirection || normalizedAttackDirection.X > walkDirectionZero.X)
                 DrawingTexture.SelectedSprite = new Point(0, ANIMATION_WALK_RIGHT);
+
             else if (normalizedAttackDirection == walkLeftDirection || normalizedAttackDirection.X < walkDirectionZero.X)
                 DrawingTexture.SelectedSprite = new Point(0, ANIMATION_WALK_LEFT);
 
@@ -374,7 +377,6 @@ namespace MaxOfEmpires.Units
                 position = position - (normalizedAttackDirection * 10);
                 (GameWorld as Grid).hitEffectList.RemoveChild(h);
                 DealDamage(attackTarget, retaliating);
-                AssetManager.Instance.PlaySound("Music/Slash");
                 DrawingTexture.SelectedSprite = new Point(0, ANIMATION_IDLE);
 
                 hasAttacked = true;
