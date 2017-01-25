@@ -28,6 +28,8 @@ namespace MaxOfEmpires.GameStates
             ecoGrid = new EconomyGrid(50, 50, players);
 
             ResetOverlay();
+
+            AssetManager.Instance.PlayMusic("Music/Village of Emerdale");
         }
 
         public override void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS)

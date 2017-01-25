@@ -8,6 +8,8 @@ namespace MaxOfEmpires.GameStates
     {
         private OverlayMainMenu overlay;
 
+        
+
         public MainMenuState()
         {
             ResetOverlay();

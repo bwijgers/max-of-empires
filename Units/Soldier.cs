@@ -364,6 +364,7 @@ namespace MaxOfEmpires.Units
             {
                 position = position - (normalizedAttackDirection * 10);
                 DealDamage(attackTarget, retaliating);
+                AssetManager.Instance.PlaySound("Music/Slash");
                 DrawingTexture.SelectedSprite = new Point(0, ANIMATION_IDLE);
 
                 hasAttacked = true;
@@ -408,6 +409,7 @@ namespace MaxOfEmpires.Units
 
             if (IsDead)
             {
+                AssetManager.Instance.PlaySound("Music/Soldierfade");
                 animateDeathCounter += time.ElapsedGameTime.TotalSeconds / 2.0D;
                 DrawColor = new Color(DrawColor, (float)(Math.Cos(animateDeathCounter / 2.0D * Math.PI)));
                 if (DrawColor.A <= 10)
