@@ -189,7 +189,7 @@ namespace MaxOfEmpires.GameStates.Overlays
             // Return an on click handler
             return () => {
                 a.LowerSelected(s);
-                refreshArmyInfo = true;
+                a.RefreshInfo = true;
             };
         }
 
@@ -198,7 +198,7 @@ namespace MaxOfEmpires.GameStates.Overlays
             // Return an on click handler
             return () => {
                 a.AddSelected(s);
-                refreshArmyInfo = true;
+                a.RefreshInfo = true;
             };
         }
 
