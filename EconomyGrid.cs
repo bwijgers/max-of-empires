@@ -122,12 +122,21 @@ namespace MaxOfEmpires
                     // Hey, let's merge the armies :)
                     if (mainUnit)
                     {
-                        (clickedTile.Unit as Army).MergeArmy((selectedTile.Unit as Army));
-                        selectedTile.SetUnit(null);
+                        if((clickedTile.Unit as Army).MergeArmy((selectedTile.Unit as Army)))
+                        {
+                            selectedTile.SetUnit(null);
+                        }
+                        
                     }
                     else
                     {
-                        (clickedTile.Unit as Army).MergeArmy((selectedTile.Unit as Army).SplitArmy((selectedTile.Unit as Army).SelectedUnits));
+                        Army selectedArmy = selectedTile.Unit as Army;
+                        Army splitArmy = selectedArmy.SplitArmy(selectedArmy.SelectedUnits);
+                        Army clickedArmy = (clickedTile.Unit as Army);
+                        if (!clickedArmy.MergeArmy(splitArmy))
+                        {
+                            selectedArmy.MergeArmy(splitArmy);
+                        }
                     }
                     SelectTile(InvalidTile);
                     return;
