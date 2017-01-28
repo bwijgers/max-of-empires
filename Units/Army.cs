@@ -123,7 +123,7 @@ namespace MaxOfEmpires.Units
         /// <param name="other">The army to merge into this army.</param>
         public bool MergeArmy(Army other)
         {
-            if(GetTotalUnitCount()+other.GetTotalUnitCount() > 19)
+            if(GetTotalUnitCount()+other.GetTotalUnitCount() > 20)
             {
                 return false;
             }
