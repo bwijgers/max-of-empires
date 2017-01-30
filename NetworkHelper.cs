@@ -29,7 +29,10 @@ namespace MaxOfEmpires
         Socket listener;
         Socket handler;
 
-        public void StartHost()
+        TcpListener tcplistner;
+        TcpClient tcpclient;
+
+        /*public void StartHost()
         {
             permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", port);
             byte[] ip = new byte[4]
@@ -38,12 +41,27 @@ namespace MaxOfEmpires
             };
             IPHostEntry ipHost = Dns.GetHostEntry("");
             //IPAddress address = new IPAddress(ip);
-            IPAddress address = ipHost.AddressList[0];
+            IPAddress address = ipHost.AddressList[1];
             startSocket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             t = new IPEndPoint(address, port);
             startSocket.Bind(t);
             startSocket.Listen(10);
             AsyncCallback a = new AsyncCallback(AcceptConnection);
+        }*/
+
+        public void StartHost()
+        {
+            permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", SocketPermission.AllPorts);
+            connection = null;
+            permission.Demand();
+            IPHostEntry ipHost = Dns.GetHostEntry(""); // not working
+            IPAddress ipAddr = ipHost.AddressList[0];
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 4510);
+            connection = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            connection.Bind(ipEndPoint);
+            connection.Listen(10);
+            AsyncCallback a = new AsyncCallback(AcceptConnection);
+            connection.BeginAccept(a, connection);
         }
 
         public void AcceptConnection(IAsyncResult ar)
@@ -53,17 +71,39 @@ namespace MaxOfEmpires
             handler.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveMessage), "");
         }
 
-        public void StartClient(byte[] ip)
+        /*public void StartClient(byte[] ip)
         {
-            permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", port);
+            permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", SocketPermission.AllPorts);
+            permission.Demand();
             hostEndPoint = new IPEndPoint(new IPAddress(ip), port);
-            IPHostEntry ipHost = Dns.GetHostEntry("");
+            IPHostEntry thing = Dns.GetHostEntry(new IPAddress(ip));
+            IPHostEntry ipHost = Dns.GetHostEntry("192.168.100.151");
             IPAddress address = ipHost.AddressList[0];
             connection = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             t = new IPEndPoint(address, port);
-            connection.Bind(t);
-            connection.Connect(hostEndPoint);
+            //connection.Bind(t);
+            connection.NoDelay = false;
+            //connection.Connect(new IPAddress(ip),port);
+            connection.BeginConnect(ipHost.AddressList[0], port, new AsyncCallback(ConnectCallback), "");
+        }*/
+
+        public void StartClient(byte[] ip)
+        {
+            SocketPermission permission = new SocketPermission(NetworkAccess.Connect, TransportType.Tcp, "", SocketPermission.AllPorts);
+            permission.Demand();
+            IPHostEntry ipHost = Dns.GetHostEntry(new IPAddress(ip)); // not working
+            IPAddress ipAddr = ipHost.AddressList[0];
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 4510);
+            connection = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            connection.NoDelay = false;
+            connection.Connect(ipEndPoint);
+        }
+
+        public void ConnectCallback(IAsyncResult ar)
+        {
+            System.Console.WriteLine("Connected to " + connection.RemoteEndPoint.ToString());
             connection.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveMessage), "");
+            System.Console.WriteLine("LOL STUFF IS KINDA NOT BROKEN ANYMORE");
         }
 
         public void CheckConnection()
