@@ -78,6 +78,7 @@
     <Compile Include="GameObjects\GameObjectGrid.cs" />
     <Compile Include="GameObjects\GameObjectList.cs" />
     <Compile Include="HitEffects.cs" />
+    <Compile Include="NetworkHelper.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Units\Army.cs" />

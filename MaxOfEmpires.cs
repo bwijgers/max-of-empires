@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-
+using System.Net;
 namespace MaxOfEmpires
 {
     /// <summary>
@@ -16,6 +16,8 @@ namespace MaxOfEmpires
     public class MaxOfEmpires : Game
     {
         #region statics
+        public NetworkHelper networkHelper = new NetworkHelper();
+        public static bool server = false;
         public static Camera camera;
         private static GraphicsDeviceManager graphics;
         private static Random random = new Random((int)DateTime.Now.Ticks);
@@ -26,6 +28,10 @@ namespace MaxOfEmpires
         public static Vector2 overlayPos;
         public static Settings settings;
         private static Vector2 windowSize = new Vector2(1280, 768);
+        byte[] connectIP = new byte[4]
+        {
+            192,168,100,151
+        };
 
         /// <summary>
         /// Quits the game. Effectively closes the game.
@@ -54,6 +60,7 @@ namespace MaxOfEmpires
         }
         #endregion
 
+
         private SpriteBatch gameObjectSpriteBatch;
         private Configuration mainConfiguration;
         private SpriteBatch overlaySpriteBatch;
@@ -77,6 +84,11 @@ namespace MaxOfEmpires
         /// </summary>
         protected override void Initialize()
         {
+            networkHelper.server = server;
+            if (server)
+                networkHelper.StartHost();
+            else
+                networkHelper.StartClient(connectIP);
             inputHelper = new InputHelper();
             IsMouseVisible = true;
 
@@ -159,6 +171,10 @@ namespace MaxOfEmpires
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (!networkHelper.connected)
+            {
+                networkHelper.CheckConnection();
+            }
             if (!running)
             {
                 Exit();
@@ -231,6 +247,7 @@ namespace MaxOfEmpires
             KeyManager.Instance.RegisterKey("zoomCameraOut", (Keys)config.GetProperty<int>("moveCameraOut"));
             KeyManager.Instance.RegisterKey("nextTurn", (Keys)config.GetProperty<int>("nextTurn"));
         }
+
 
         private static void ToggleFullScreen()
         {

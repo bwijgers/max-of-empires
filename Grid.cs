@@ -30,7 +30,7 @@ namespace MaxOfEmpires
             public Point TargetPosition => targetPosition;
         }
 
-        protected Player currentPlayer;
+        public Player currentPlayer;
         public List<Player> players;
         protected Point[] walkablePositions;
 
