@@ -10,18 +10,22 @@ namespace MaxOfEmpires
 {
     class Terrain
     {
+        private static Dictionary<byte, Terrain> allTerrain = new Dictionary<byte, Terrain>();
+        private static Terrain plains = new Terrain(TerrainType.PLAINS, 1, 3, 1);
+        private static Terrain jungle = new Terrain(TerrainType.JUNGLE, 3, 5, 3);
+        private static Terrain desert = new Terrain(TerrainType.DESERT, 2, 3, 3);
+        private static Terrain forest = new Terrain(TerrainType.FOREST, 2,5, 1);
+        private static Terrain tundra = new Terrain(TerrainType.TUNDRA, 1, 3, 2);
+        private static Terrain swamp = new Terrain(TerrainType.SWAMP, 3, 5, 2);
+        private static Terrain lake = new Terrain(TerrainType.LAKE, 100, 1, 4);
+        private static Terrain mountain = new Terrain(TerrainType.MOUNTAIN, 100, 1, 1);
+        private static Terrain tundramountain = new Terrain(TerrainType.TUNDRAMOUNTAIN, 100, 1, 2);
+        private static Terrain desertmountain = new Terrain(TerrainType.DESERTMOUNTAIN, 100, 1, 3);
 
-        public Point placeInSprite;
-        private static Terrain plains = new Terrain(TerrainType.PLAINS,1 ,3 ,1 );
-        private static Terrain jungle = new Terrain(TerrainType.JUNGLE,3 ,5 ,3 );
-        private static Terrain desert = new Terrain(TerrainType.DESERT,2 ,3 ,3 );
-        private static Terrain forest = new Terrain(TerrainType.FOREST,2 ,5, 1 );
-        private static Terrain tundra = new Terrain(TerrainType.TUNDRA,1 ,3 ,2 );
-        private static Terrain swamp = new Terrain(TerrainType.SWAMP,3 ,5 ,2 );
-        private static Terrain lake = new Terrain(TerrainType.LAKE,100 ,1 ,4 );
-        private static Terrain mountain = new Terrain(TerrainType.MOUNTAIN,100 ,1 ,1 );
-        private static Terrain tundramountain = new Terrain(TerrainType.TUNDRAMOUNTAIN,100 ,1 ,2 );
-        private static Terrain desertmountain = new Terrain(TerrainType.DESERTMOUNTAIN,100 ,1 ,3 );
+        public static Terrain FromTerrainID(byte ID)
+        {
+            return allTerrain[ID];
+        }
 
         public static Terrain Plains => plains;
         public static Terrain Jungle => jungle;
@@ -34,7 +38,7 @@ namespace MaxOfEmpires
         public static Terrain TundraMountain => tundramountain;
         public static Terrain DesertMountain => desertmountain;
 
-        public enum TerrainType
+        public enum TerrainType : byte
         {
             PLAINS,
             JUNGLE,
@@ -49,6 +53,7 @@ namespace MaxOfEmpires
         }
 
         public int cost;
+        public Point placeInSprite;
         public TerrainType terrainType;
         private Texture2D tex;
 
@@ -60,6 +65,7 @@ namespace MaxOfEmpires
             string texName = terrainType.ToString().ToLower();
         //    tex = AssetManager.Instance.getAsset<Texture2D>(@"FE-Sprites\" + texName);
             tex = AssetManager.Instance.getAsset<Texture2D>(@"FE-Sprites\plains");
+            allTerrain.Add((byte)terrainType, this);
         }
 
         public int Cost

@@ -25,6 +25,7 @@ namespace MaxOfEmpires.Buildings
         }
 
         private static Dictionary<string, BuildingInformation> buildingInfo = new Dictionary<string, BuildingInformation>();
+        public static Dictionary<string, Type> buildingTypeById = new Dictionary<string, Type>();
 
         /// <summary>
         /// Gets the cost of the specified Building.

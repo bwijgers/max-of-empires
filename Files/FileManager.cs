@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaxOfEmpires.GameStates;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -75,6 +76,31 @@ namespace MaxOfEmpires.Files
             // Add the configuration to the dictionary and then return it
             loadedConfigurations[configName] = config;
             return config;
+        }
+
+        public static void LoadGame(string fileName, byte[] fileHeader, SaveGame savegame)
+        {
+            if (!Directory.Exists("saves/"))
+                return;
+
+            using (var saveFile = File.OpenRead("saves/" + fileName + ".bin"))
+            {
+                using (var reader = new BinaryReader(saveFile))
+                {
+                    byte[] foundHeader = new byte[6];
+                    reader.Read(foundHeader, 0, foundHeader.Length);
+
+                    for (int i = 0; i < foundHeader.Length; ++i)
+                    {
+                        if (foundHeader[i] != fileHeader[i])
+                        {
+                            throw new Exception("Not a Max of Empires save file.");
+                        }
+                    }
+
+                    savegame.LoadFromFile(reader);
+                }
+            }
         }
 
         /// <summary>
@@ -237,6 +263,21 @@ namespace MaxOfEmpires.Files
 
             // No errors? Sad. Just return the list already :c
             return retVal;
+        }
+
+        public static void SaveGame(string fileName, byte[] fileHeader, SaveGame savegame)
+        {
+            if (!Directory.Exists("saves/"))
+                Directory.CreateDirectory("saves/");
+
+            using (var saveFile = File.Create("saves/" + fileName + ".bin"))
+            {
+                using (var writer = new BinaryWriter(saveFile))
+                {
+                    writer.Write(fileHeader, 0, fileHeader.Length);
+                    savegame.WriteToFile(writer);
+                }
+            }
         }
     }
 }

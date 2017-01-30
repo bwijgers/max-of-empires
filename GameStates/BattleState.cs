@@ -56,7 +56,6 @@ namespace MaxOfEmpires.GameStates
 
         public override void HandleInput(InputHelper helper, KeyManager manager)
         {
-            // TODO make sure bounds stay correct based on how much is drawn and stuff
             if (new Rectangle(MaxOfEmpires.overlayPos.ToPoint(), MaxOfEmpires.ScreenSize).Contains(helper.GetMousePosition(false)))
             {
                 // Update the overlay

@@ -1,6 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MaxOfEmpires.Files;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace MaxOfEmpires
 {
@@ -61,9 +64,9 @@ namespace MaxOfEmpires
             updateMoneyPerTurnHandlers = new List<Action<Player>>();
             stats = new Stats(0);
             soldierTiers = new Dictionary<string, int>();
-            foreach(string s in Buildings.BuildingRegistry.GetTrainees("building.trainingGrounds"))
+            foreach (string s in Buildings.BuildingRegistry.GetTrainees("building.trainingGrounds"))
                 soldierTiers[s] = 1;
-            foreach(string s in Buildings.BuildingRegistry.GetTrainees("building.academy"))
+            foreach (string s in Buildings.BuildingRegistry.GetTrainees("building.academy"))
                 soldierTiers[s] = 1;
         }
 
@@ -117,17 +120,17 @@ namespace MaxOfEmpires
                 Tile t = obj as Tile;
                 if (t.BuiltOn && t.Building.Owner == this)
                 {
-                    if (t.Building.id.Equals("building.mine"))
+                    if (t.Building.buildingName.Equals("building.mine"))
                     {
                         mpt += Buildings.Mine.moneyPerTurn;
                     }
 
-                    if (t.Building.id.Equals("building.capital"))
+                    if (t.Building.buildingName.Equals("building.capital"))
                     {
                         mpt += Buildings.Capital.moneyPerTurn;
                     }
 
-                    else if (t.Building.id.Equals("building.town"))
+                    else if (t.Building.buildingName.Equals("building.town"))
                     {
                         mpt -= Buildings.Town.upkeep;
                     }
@@ -143,12 +146,12 @@ namespace MaxOfEmpires
                 Tile t = obj as Tile;
                 if (t.BuiltOn && t.Building.Owner == this)
                 {
-                    if (t.Building.id.Equals("building.capital"))
+                    if (t.Building.buildingName.Equals("building.capital"))
                     {
                         pop += 10;
                     }
 
-                    else if (t.Building.id.Equals("building.town"))
+                    else if (t.Building.buildingName.Equals("building.town"))
                     {
                         pop += 5;
                     }
@@ -169,6 +172,33 @@ namespace MaxOfEmpires
         public void EarnMoney(int amount)
         {
             Money += amount;
+        }
+
+        public static Player LoadFromFile(BinaryReader stream)
+        {
+            // Read information we need to create a Player
+            string name = stream.ReadString();
+            string colorName = stream.ReadString();
+            Color color = new Color(stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
+
+            // Create the player
+            Player retVal = new Player(name, colorName, color, 0);
+
+            // Read cameras
+            // Battlecam
+            retVal.battleCamPos = new Vector2(stream.ReadSingle(), stream.ReadSingle());
+
+            // Ecocam
+            retVal.ecoCamPos = new Vector2(stream.ReadSingle(), stream.ReadSingle());
+
+            // Zoom
+            retVal.zoomValue = stream.ReadSingle();
+
+            // Read money
+            retVal.money = stream.ReadInt32();
+         
+            // TODO Read soldier tiers and stats later
+            return retVal;
         }
 
         public void OnUpdateMoney(Action<Player> action)
@@ -218,6 +248,34 @@ namespace MaxOfEmpires
             {
                 handler(this);
             }
+        }
+
+        public void WriteToFile(BinaryWriter stream)
+        {
+            // TODO: Write soldierTiers, stats
+
+            // Write name
+            stream.Write(name);
+
+            // Write colorName
+            stream.Write(colorName);
+
+            // Write color
+            stream.Write(color.R);
+            stream.Write(color.G);
+            stream.Write(color.B);
+
+            // Write cameras
+            stream.Write(battleCamPos.X);
+            stream.Write(battleCamPos.Y);
+            stream.Write(ecoCamPos.X);
+            stream.Write(ecoCamPos.Y);
+            stream.Write(zoomValue);
+
+            // Write money
+            stream.Write(money);
+
+            // Write soldier tiers and stats later
         }
 
         public string ColorName => colorName;

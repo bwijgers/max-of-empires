@@ -221,7 +221,40 @@ namespace MaxOfEmpires.GameStates
             overlay.LabelPlayerPopulation.setLabelText("Free Population: " + p.Population);
         }
 
+        public List<Player> Players
+        {
+            get
+            {
+                return players;
+            }
+            set
+            {
+                players = value;
+                foreach (Player p in players)
+                {
+                    p.OnUpdateMoney(UpdateMoneyDisplay);
+                    p.OnUpdatePopulation(UpdatePopulationDisplay);
+                    p.OnUpdateMoneyPerTurn(UpdateMoneyPerTurnDisplay);
+                    p.CalculateMoneyPerTurn();
+                    p.CalculatePopulation();
+                }
+                EconomyGrid.CurrentPlayer = CurrentPlayer;
+            }
+        }
+
         private Player CurrentPlayer => players[currentPlayer];
-        public EconomyGrid EconomyGrid => ecoGrid;
+
+        public EconomyGrid EconomyGrid
+        {
+            get
+            {
+                return ecoGrid;
+            }
+            set
+            {
+                ecoGrid = value;
+                ResetOverlay();
+            }
+        }
     }
 }

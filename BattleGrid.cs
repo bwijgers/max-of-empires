@@ -12,7 +12,7 @@ namespace MaxOfEmpires
         public Tile defendingTile;
 
 
-        public BattleGrid(int width, int height, List<Player> players, string id = "") : base(width, height, players, id) // TODO: make this load from procedural generation.
+        public BattleGrid(int width, int height, List<Player> players, string id = "") : base(width, height, players, id)
         {
         }
 
@@ -130,7 +130,7 @@ namespace MaxOfEmpires
             }
 
             // Check if the player clicked a tile with a Unit on it, and select it if it's there. 
-            else if (clickedTile.Occupied && clickedTile.Unit.Owner == currentPlayer && clickedTile.Unit.HasAction)
+            else if (clickedTile.Occupied && clickedTile.Unit.Owner == CurrentPlayer && clickedTile.Unit.HasAction)
             {
                 // If the Unit can walk, show where it is allowed to walk. 
                 if (!clickedTile.Unit.HasMoved)
@@ -258,7 +258,7 @@ namespace MaxOfEmpires
 
             // And clear all target positions after we populated the field.
             ClearAllTargetPositions();
-            currentPlayer = attacker.Owner;
+            CurrentPlayer = attacker.Owner;
         }
     }
 }

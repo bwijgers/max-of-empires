@@ -83,10 +83,7 @@ namespace MaxOfEmpires
                 }
             }
 
-            // Hey let's place the Capital and the builders now
-            // TODO PLACE CAPITAL :D
-
-            // Generate 2 armies and place them on the field.
+            // Generate a builder and the capital for each player
             bool placedBuilder = false;
             for (int y = 0; y < Height; ++y)
             {

@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using MaxOfEmpires.Buildings;
 using System;
+using MaxOfEmpires.Files;
+using System.IO;
 
 namespace MaxOfEmpires
 {
@@ -65,6 +67,62 @@ namespace MaxOfEmpires
             }
         }
 
+        public static EconomyGrid LoadFromFile(BinaryReader reader)
+        {
+            // Read the size of the Grid
+            short width = reader.ReadInt16();
+            short height = reader.ReadInt16();
+            byte playerCount = reader.ReadByte();
+
+            List<Player> players = new List<Player>();
+            for (byte b = 0; b < playerCount; ++b)
+            {
+                players.Add(Player.LoadFromFile(reader));
+            }
+
+            EconomyGrid grid = new EconomyGrid(width, height, players);
+
+            // Read the terrain
+            for (int x = 0; x < grid.Width; ++x)
+            {
+                for (int y = 0; y < grid.Height; ++y)
+                {
+                    Tile t = Tile.LoadFromFile(reader, x, y);
+                    grid[x, y] = t;
+                }
+            }
+
+            // Load the buildings
+            int buildingCount = reader.ReadInt32();
+            for (int i = 0; i < buildingCount; ++i)
+            {
+                Building b = Building.LoadFromFile(reader, players);
+                Tile t = grid[b.PositionInGrid] as Tile;
+                t.Building = b;
+                b.Parent = t;
+            }
+
+            // Load the builders
+            int builderCount = reader.ReadInt32();
+            for (int i = 0; i < builderCount; ++i)
+            {
+                Builder b = Builder.LoadFromFile(reader, players);
+                Tile t = grid[b.PositionInGrid] as Tile;
+                t.SetUnit(b);
+            }
+
+            // Load the armies
+            int armyCount = reader.ReadInt32();
+            for (int i = 0; i < armyCount; ++i)
+            {
+                Army a = Army.LoadFromFile(reader, players);
+                Tile t = grid[a.PositionInGrid] as Tile;
+                t.SetUnit(a);
+            }
+
+            return grid;
+        }
+
         public override void OnLeftClick(InputHelper helper)
         {
             // Get the current Tile under the mouse
@@ -81,7 +139,7 @@ namespace MaxOfEmpires
             }
 
             // Check if the player clicked a tile with a Unit on it, and select it if it's there. 
-            else if (clickedTile.Occupied && clickedTile.Unit.Owner == currentPlayer && !clickedTile.Unit.HasMoved)
+            else if (clickedTile.Occupied && clickedTile.Unit.Owner == CurrentPlayer && !clickedTile.Unit.HasMoved)
             {
                 // If the Unit can walk, show where it is allowed to walk. 
                 walkablePositions = Pathfinding.ReachableTiles(clickedTile.Unit,Width,Height);
@@ -94,7 +152,7 @@ namespace MaxOfEmpires
             }
 
             // Check if the player clicked a tile with a Building they own
-            else if (clickedTile.BuiltOn && clickedTile.Building.Owner == currentPlayer)
+            else if (clickedTile.BuiltOn && clickedTile.Building.Owner == CurrentPlayer)
             {
                 // Select the building
                 SelectTile(InvalidTile);
@@ -194,7 +252,7 @@ namespace MaxOfEmpires
             base.TurnUpdate(turn, player,t);
             foreach(Player p in players)
             {
-                if (p!= currentPlayer)
+                if (p!= CurrentPlayer)
                 {
                     if (t != null)
                     {
@@ -214,7 +272,7 @@ namespace MaxOfEmpires
                         ForEach(obj => {
                             Tile tile = (obj as Tile);
                             if (tile.BuiltOn && tile.Building.Owner == p)
-                                p.AddBuildingToStats(tile.Building.id);
+                                p.AddBuildingToStats(tile.Building.buildingName);
                             if(tile.Occupied && tile.Unit.Owner == p && tile.Unit is Army)
                                 p.AddUnits((tile.Unit as Army).UnitsAndCounts);
 
@@ -235,13 +293,96 @@ namespace MaxOfEmpires
             (this[battlePosition] as Tile).SetUnit(remainingArmy);
             battlePosition = InvalidTile;
 
-            foreach(Player p in players)
+            foreach (Player p in players)
             {
                 if (p == remainingArmy.Owner)
                     p.stats.battlesWon++;
                 else
                     p.stats.battlesLost++;
                 p.CalculatePopulation();
+            }
+        }
+
+        public void WriteToFile(BinaryWriter stream)
+        {
+            // Write player table
+            stream.Write((short)Width);
+            stream.Write((short)Height);
+
+            // Start with player count
+            stream.Write((byte)(players.Count & 255));
+
+            // Add players
+            for (int i = 0; i < players.Count; ++i)
+            {
+                players[i].WriteToFile(stream);
+            }
+
+            // Write the terrain
+            ForEach(obj => {
+                Tile t = obj as Tile;
+                t.WriteToFile(stream);
+            });
+
+            // Write the Buildings and the Units
+            // Make a list of all buildings on grid...
+            List<Building> buildingsToSave = new List<Building>();
+
+            // ... make a list of all builders on the grid...
+            List<Builder> builders = new List<Builder>();
+
+            // ... and a list of all the Armies on the grid...
+            List<Army> armies = new List<Army>();
+
+            // ... and find all the Units and Buildings, and add them to their corresponding lists
+            ForEach(obj =>
+            {
+                Tile t = obj as Tile;
+
+                // Building here?
+                if (t.BuiltOn)
+                    buildingsToSave.Add(t.Building);
+
+                // Unit here?
+                if (t.Occupied)
+                {
+                    // Builder here?
+                    if (t.Unit is Builder)
+                    {
+                        builders.Add(t.Unit as Builder);
+                    }
+                    else if (t.Unit is Army)
+                    {
+                        armies.Add(t.Unit as Army);
+                    }
+                }
+            });
+
+            // Write the amount of buildings
+            stream.Write(buildingsToSave.Count);
+
+            // Write the actual buildings
+            foreach (Building b in buildingsToSave)
+            {
+                b.WriteToFile(stream);
+            }
+
+            // Write the amount of builders
+            stream.Write(builders.Count);
+
+            // Write the actual builders
+            foreach (Builder b in builders)
+            {
+                b.WriteToFile(stream);
+            }
+
+            // Write the amount of armies
+            stream.Write(armies.Count);
+
+            // Write the actual armies
+            foreach (Army a in armies)
+            {
+                a.WriteToFile(stream);
             }
         }
     }

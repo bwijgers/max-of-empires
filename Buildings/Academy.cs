@@ -10,14 +10,16 @@ namespace MaxOfEmpires.Buildings
 {
     class Academy : Building
     {
-        public Academy(Point positionInGrid, Player owner) : base(positionInGrid, owner, "building.academy")
+        public const string BUILDING_ID = "building.academy";
+
+        public Academy(Point positionInGrid, Player owner) : base(positionInGrid, owner, BUILDING_ID)
         {
         }
 
         public override void PopulateBuildingActions(GuiList buildingActions)
         {
             // Get this building's trainees
-            IList<string> trainees = BuildingRegistry.GetTrainees("building.academy");
+            IList<string> trainees = BuildingRegistry.GetTrainees(BUILDING_ID);
 
             // Add a button for every trainee
             foreach (string trainee in trainees)

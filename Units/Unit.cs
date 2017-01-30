@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MaxOfEmpires.Units
 {
@@ -120,6 +121,20 @@ namespace MaxOfEmpires.Units
             ShouldAnimate = player == owner;
         }
 
+        public virtual void WriteToFile(BinaryWriter writer)
+        {
+            // Write the x, y, and owner
+            writer.Write((short)x);
+            writer.Write((short)y);
+            writer.Write(owner.Name);
+
+            // Write moves left, id, and target
+            writer.Write((byte)movesLeft);
+            writer.Write(id);
+            writer.Write((short)target.X);
+            writer.Write((short)target.Y);
+        }
+
         /// <summary>
         /// Whether this unit can still perform an action this turn. 
         /// </summary>
@@ -213,7 +228,7 @@ namespace MaxOfEmpires.Units
             }
             set
             {
-                if ((GameWorld as Grid).IsInGrid(value))
+                if ((GameWorld == null || GameWorld is Unit) || (GameWorld as Grid).IsInGrid(value))
                 {
                     target = value;
                 }

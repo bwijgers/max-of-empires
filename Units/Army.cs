@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MaxOfEmpires.Units
 {
@@ -28,6 +29,33 @@ namespace MaxOfEmpires.Units
             return retVal;
         }
 
+        public static Army LoadFromFile(BinaryReader reader, List<Player> players)
+        {
+            // Get information to recreate the Army
+            Point positionInGrid = new Point(reader.ReadInt16(), reader.ReadInt16());
+            string owner = reader.ReadString();
+
+            // Create the Army from this information
+            Army retVal = new Army(positionInGrid.X, positionInGrid.Y, players.Find(p => p.Name.Equals(owner)));
+
+            // Update the Army's fields
+            retVal.movesLeft = reader.ReadByte();
+            retVal.id = reader.ReadString();
+            retVal.TargetPosition = new Point(reader.ReadInt16(), reader.ReadInt16());
+
+            // Get the actual army part of the Army
+            byte soldierTypeCount = reader.ReadByte();
+            for (int i = 0; i < soldierTypeCount; ++i)
+            {
+                retVal.unitsAndCounts[reader.ReadString()] = reader.ReadByte();
+            }
+
+            // Load the army sprite
+            retVal.UpdateArmySprite();
+
+            // I think we're done. Return the Army
+            return retVal;
+        }
 
         /// <summary>
         /// The Soldiers and the amount of each Soldier in this Army.
@@ -66,6 +94,12 @@ namespace MaxOfEmpires.Units
             }
         }
 
+        public void AddSelected(string s)
+        {
+            if (selectedUnits[s] < unitsAndCounts[s])
+                selectedUnits[s]++;
+        }
+
         public void AddSoldier(Soldier s)
         {
             if (!unitsAndCounts.ContainsKey(s.Name))
@@ -77,6 +111,19 @@ namespace MaxOfEmpires.Units
             ++selectedUnits[s.Name];
 
             UpdateArmySprite();
+        }
+
+        private bool AreAllUnitsSelected()
+        {
+            foreach (string name in unitsAndCounts.Keys)
+            {
+                if (selectedUnits[name] != unitsAndCounts[name])
+                {
+                    return false;
+                }
+            }
+            return true;
+
         }
 
         /// <summary>
@@ -117,6 +164,12 @@ namespace MaxOfEmpires.Units
             return amount;
         }
 
+        public void LowerSelected(string s)
+        {
+            if (selectedUnits[s] > 0)
+                selectedUnits[s]--;
+        }
+
         /// <summary>
         /// Merges an army into this army. 
         /// </summary>
@@ -148,16 +201,12 @@ namespace MaxOfEmpires.Units
             return true;
         }
 
-        public void LowerSelected(string s)
+        public void SelectAllUnits()
         {
-            if (selectedUnits[s] > 0)
-                selectedUnits[s]--;
-        }
-
-        public void AddSelected(string s)
-        {
-            if (selectedUnits[s] < unitsAndCounts[s])
-                selectedUnits[s]++;
+            foreach (string soldierType in unitsAndCounts.Keys)
+            {
+                selectedUnits[soldierType] = unitsAndCounts[soldierType];
+            }
         }
 
         public Army SplitArmy(Dictionary<string, int> unitsAndCounts)
@@ -244,25 +293,16 @@ namespace MaxOfEmpires.Units
             refreshInfo = true;
         }
 
-        public void SelectAllUnits()
+        public override void WriteToFile(BinaryWriter writer)
         {
-            foreach (string soldierType in unitsAndCounts.Keys)
-            {
-                selectedUnits[soldierType] = unitsAndCounts[soldierType];
-            }
-        }
+            base.WriteToFile(writer);
 
-        private bool AreAllUnitsSelected()
-        {
-            foreach (string name in unitsAndCounts.Keys)
+            writer.Write((byte)(unitsAndCounts.Count & 255));
+            foreach (string soldierName in unitsAndCounts.Keys)
             {
-                if (selectedUnits[name] != unitsAndCounts[name])
-                {
-                    return false;
-                }
+                writer.Write(soldierName);
+                writer.Write((byte) (unitsAndCounts[soldierName] & 255));
             }
-            return true; 
-
         }
 
         /// <summary>
@@ -270,12 +310,11 @@ namespace MaxOfEmpires.Units
         /// </summary>
         private Tile CurrentTile => (GameWorld as Grid)[PositionInGrid] as Tile;
 
+        public bool AllUnitsSelected => AreAllUnitsSelected();
+
         /// <summary>
         /// The Soldiers and the amount of each Soldier in this Army.
         /// </summary>
-        /// 
-        public bool AllUnitsSelected => AreAllUnitsSelected();
-
         public Dictionary<string, int> UnitsAndCounts => unitsAndCounts;
 
         public bool RefreshInfo

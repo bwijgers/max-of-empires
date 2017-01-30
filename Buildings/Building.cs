@@ -6,6 +6,9 @@ using MaxOfEmpires.GameStates.Overlays;
 using MaxOfEmpires.Units;
 using System.Text;
 using MaxOfEmpires.Files;
+using System.IO;
+using System;
+using System.Collections.Generic;
 
 namespace MaxOfEmpires.Buildings
 {
@@ -13,17 +16,17 @@ namespace MaxOfEmpires.Buildings
     {
         private Player owner;
         private Point positionInGrid;
-        public readonly string id;
-        public int turnsSeized;
+        public readonly string buildingName;
+        private int turnsSeized;
         protected int turnsBeforeRazeOnSeize;
 
-        public Building(Point positionInGrid, Player owner, string id)
+        public Building(Point positionInGrid, Player owner, string buildingName)
         {
             this.positionInGrid = positionInGrid;
             this.owner = owner;
-            this.id = id;
+            this.buildingName = buildingName;
             turnsSeized = 0;
-            turnsBeforeRazeOnSeize = BuildingRegistry.GetRazeTime(id);
+            turnsBeforeRazeOnSeize = BuildingRegistry.GetRazeTime(buildingName);
             LoadTexture();
         }
 
@@ -38,7 +41,7 @@ namespace MaxOfEmpires.Buildings
         protected void AddUpgradeButton(GuiList buildingActions, string unitToUpgrade, int tier, Player player)
         {
             StringBuilder buttonText = new StringBuilder();
-            buttonText.Append("upgrade to tier " + (tier+1) + ": (" ); 
+            buttonText.Append("Upgrade to tier ").Append(tier+1).Append(": (");
             buttonText.Append(SoldierRegistry.GetUpgradeCost(unitToUpgrade, player.soldierTiers[unitToUpgrade])).Append("G): "); // Soldier ('cost'G)
             buildingActions.addElement(ElementBuildButton.CreateBuildButton(buildingActions.Bounds.Location, buttonText.ToString(), () => { TryUpgradeUnit(unitToUpgrade); },"Upgrade"));
         }
@@ -55,11 +58,31 @@ namespace MaxOfEmpires.Buildings
             Mine.LoadFromConfig(buildingConfiguration);
         }
 
+        public static Building LoadFromFile(BinaryReader reader, List<Player> players)
+        {
+            // Read the position of the Building
+            short x = reader.ReadInt16();
+            short y = reader.ReadInt16();
+
+            // Read who the owner is
+            string owner = reader.ReadString();
+
+            // Read which building it is
+            string buildingID = reader.ReadString();
+
+            Building building = (Building)Activator.CreateInstance(BuildingRegistry.buildingTypeById[buildingID], new object[] { new Point(x, y), players.Find(p => p.Name.Equals(owner)) });
+            
+            // Everything in constructor has been loaded, so just the time we've been seized left
+            building.turnsSeized = reader.ReadInt16();
+
+            return building;
+        }
+
         private void LoadTexture()
         {
             StringBuilder textureName = new StringBuilder();
             textureName.Append("FE-Sprites/Buildings/");
-            textureName.Append(BuildingRegistry.GetTextureName(id));
+            textureName.Append(BuildingRegistry.GetTextureName(buildingName));
             textureName.Append("@1x2");
 
             DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(textureName.ToString());
@@ -76,7 +99,7 @@ namespace MaxOfEmpires.Buildings
             Tile t = (GameWorld as Grid)[PositionInGrid] as Tile;
             t.Building = null;
 
-            owner.AddBuildingLostToStats(id);
+            owner.AddBuildingLostToStats(buildingName);
 
             // Also re-update the population because that's what should be done after a town is destroyed
             Owner.CalculatePopulation();
@@ -159,6 +182,22 @@ namespace MaxOfEmpires.Buildings
 
             // Omg no we're being seized D:
             ++turnsSeized;
+        }
+
+        public void WriteToFile(BinaryWriter stream)
+        {
+            // Write the position
+            stream.Write((short)PositionInGrid.X);
+            stream.Write((short)PositionInGrid.Y);
+
+            // Write the owning player's name
+            stream.Write(owner.Name);
+
+            // Write which building this is
+            stream.Write(buildingName);
+
+            // Write how long it's been seized already
+            stream.Write((short)turnsSeized);
         }
 
         public Player Owner => owner;

@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using MaxOfEmpires.Units;
 using System;
+using MaxOfEmpires.Files;
+using Microsoft.Xna.Framework.Input;
 
 namespace MaxOfEmpires.GameStates
 {
@@ -34,6 +36,26 @@ namespace MaxOfEmpires.GameStates
         public static void HandleInput(InputHelper helper, KeyManager keys)
         {
             CurrentState?.HandleInput(helper, keys);
+
+            EconomyGrid economyGrid = ((EconomyState)GetState("economy")).EconomyGrid;
+            SaveGame sg = new SaveGame(economyGrid);
+
+            int f1 = (int)Keys.F1;
+            int f12 = (int)Keys.F12;
+            for (int i = f1; i < f12; ++i)
+            {
+                if (helper.KeyPressed((Keys)i) && (helper.IsKeyDown(Keys.LeftShift) || helper.IsKeyDown(Keys.RightShift)))
+                {
+                    FileManager.SaveGame("savegametest-" + i, new byte[] { 0x42, 0x10, 0x28, 0x64, 0xFF, 0xEB }, sg);
+                }
+                if (helper.KeyPressed((Keys)i))
+                {
+                    FileManager.LoadGame("savegametest-" + i, new byte[] { 0x42, 0x10, 0x28, 0x64, 0xFF, 0xEB }, sg);
+                    EconomyState ecoState = (EconomyState)GetState("economy");
+                    ecoState.EconomyGrid = sg.EcoGrid;
+                    ecoState.Players = sg.EcoGrid.players;
+                }
+            }
         }
 
         /// <summary>

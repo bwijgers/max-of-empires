@@ -43,7 +43,7 @@ namespace MaxOfEmpires.Buildings
         {
             // Check if the player can afford this soldier
             int cost = 500;
-            if (!Owner.CanAfford(cost) || Owner.Population <= 0)
+            if (!Owner.CanAfford(cost))
             {
                 return;
             }

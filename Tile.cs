@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Ebilkill.Gui;
 using MaxOfEmpires.Files;
+using System.IO;
 
 namespace MaxOfEmpires
 {
@@ -64,6 +65,11 @@ namespace MaxOfEmpires
             arrowTexture = AssetManager.Instance.getAsset<Texture2D>("FE-Sprites/Arrow@7x2");
         }
 
+        private void ArrowDraw(SpriteBatch s)
+        {
+            s.Draw(arrowTexture, DrawPosition, arrowSource, Color.White);
+        }
+
         /// <summary>
         /// The movement cost for a specified Unit to move to this Tile.
         /// </summary>
@@ -75,7 +81,7 @@ namespace MaxOfEmpires
             {
                 return int.MaxValue;
             }
-            if (unit.id == "builder")
+            if (unit.id == "unit.builder")
             {
                 return 1;
             }
@@ -201,9 +207,30 @@ namespace MaxOfEmpires
             }
         }
 
+        public static Tile LoadFromFile(BinaryReader reader, int xPos, int yPos)
+        {
+            byte data = reader.ReadByte();
+            bool hills = (data & 0x80) == 0x80;
+            Terrain.TerrainType type = (Terrain.TerrainType)(data & (0x80 ^ 0xFF));
+
+            Tile retVal = new Tile(Terrain.FromTerrainID((byte)type), xPos, yPos);
+            retVal.hills = hills;
+            return retVal;
+        }
+
         private void SelectArrowSprite(int x, int y)
         {
             arrowSource = new Rectangle((x - 1) * 32, (y - 1) * 32, 32, 32);
+        }
+
+        private void SelectSprite(int x, int y)
+        {
+            terrainSource = new Rectangle((x - 1) * 32, (y - 1) * 32, 32, 32);
+        }
+
+        private void TerrainDraw(SpriteBatch s)
+        {
+            s.Draw(terrainTexture, DrawPosition, terrainSource, Color.White);
         }
 
         private void TerrainSpriteSelect()
@@ -212,22 +239,6 @@ namespace MaxOfEmpires
                 SelectSprite(terrain.placeInSprite.X, terrain.placeInSprite.Y);
             else
                 SelectSprite(terrain.placeInSprite.X-1, terrain.placeInSprite.Y);
-
-        }
-
-        private void SelectSprite(int x,int y)
-        {
-            terrainSource = new Rectangle((x-1) * 32, (y-1) * 32, 32, 32);
-        }
-
-        private void TerrainDraw(SpriteBatch s)
-        {
-            s.Draw(terrainTexture, DrawPosition, terrainSource, Color.White);
-        }
-
-        private void ArrowDraw(SpriteBatch s)
-        {
-            s.Draw(arrowTexture, DrawPosition, arrowSource, Color.White);
         }
 
         /// <summary>
@@ -295,6 +306,13 @@ namespace MaxOfEmpires
         {
             building?.Update(time);
             unit?.Update(time);
+        }
+
+        public void WriteToFile(BinaryWriter writer)
+        {
+            byte data = (byte)terrain.terrainType;
+            data |= (byte)(hills ? 0x80 : 0);
+            writer.Write(data);
         }
 
         /// <summary>

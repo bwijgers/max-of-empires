@@ -30,7 +30,7 @@ namespace MaxOfEmpires
             public Point TargetPosition => targetPosition;
         }
 
-        protected Player currentPlayer;
+        private Player currentPlayer;
         public List<Player> players;
         protected Point[] walkablePositions;
 
@@ -153,7 +153,11 @@ namespace MaxOfEmpires
 
         private void DisplayPath(Point[] path)
         {
+            // Make sure there is a path to display first
+            if (path == null || path.Length == 0)
+                return;
 
+            // There's a path? Display it :)
             (this[path[0]] as Tile).DrawArrow(path[1] - path[0], Point.Zero);
 
             for (int i = 1; i < path.Length - 1; i++)
@@ -486,6 +490,7 @@ namespace MaxOfEmpires
             // Updates the Unit target overlay
             unitTargets.Update(time);
             hitEffectList.Update(time);
+
             // Remove unitTargets that are done
             unitTargets.ForEach(obj => {
                 TargetPositionOverlay uto = obj as TargetPositionOverlay;
@@ -570,6 +575,18 @@ namespace MaxOfEmpires
         }
 
         public bool ContainsWalkingUnits => walkingUnits.Count > 0;
+
+        public Player CurrentPlayer
+        {
+            get
+            {
+                return currentPlayer;
+            }
+            set
+            {
+                currentPlayer = value;
+            }
+        }
 
         /// <summary>
         /// Property defining a position which is invalid. Unselects tiles.

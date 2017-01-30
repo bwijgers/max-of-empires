@@ -54,10 +54,10 @@ namespace MaxOfEmpires.GameStates.Overlays
             addElement(labelCurrentPlayer);
 
             // Add a label telling the player how much money they have
-            labelPlayerMoney = GuiLabel.createNewLabel(new Vector2(labelCurrentPlayer.Bounds.Left, labelCurrentPlayer.Bounds.Bottom + 5), "Money: ", "font");
+            labelPlayerMoney = GuiLabel.createNewLabel(new Vector2(labelCurrentPlayer.Bounds.Left, labelCurrentPlayer.Bounds.Bottom + 5), "Money: 0G", "font");
             addElement(labelPlayerMoney);
 
-            labelPlayerMoneyPerTurn = GuiLabel.createNewLabel(new Vector2(labelCurrentPlayer.Bounds.Left, labelPlayerMoney.Bounds.Bottom + 5), "Money per turn: ", "font");
+            labelPlayerMoneyPerTurn = GuiLabel.createNewLabel(new Vector2(labelCurrentPlayer.Bounds.Left, labelPlayerMoney.Bounds.Bottom + 5), "Money per turn: 0G", "font");
             addElement(labelPlayerMoneyPerTurn);
 
             // Add a label telling the player how much population they have
@@ -77,10 +77,16 @@ namespace MaxOfEmpires.GameStates.Overlays
 
         private void AddBuilderButton(EconomyGrid grid, GuiList listBuilderActions, string buildingName, Type buildingType)
         {
+            // Create the label for the element
             StringBuilder label = new StringBuilder();
             label.Append(Translations.GetTranslation(buildingName)).Append(" (");
             label.Append(BuildingRegistry.GetCost(buildingName)).Append("G): ");
+
+            // Create the element using the label, and add a BuildBuilding clickhandler
             listBuilderActions.addElement(ElementBuildButton.CreateBuildButton(listBuilderActions.Bounds.Location, label.ToString(), BuildBuilding(grid, buildingName, buildingType)));
+
+            // Also add this buildingID-Type pair to the BuildingRegistry
+            BuildingRegistry.buildingTypeById[buildingName] = buildingType;
         }
 
         private GuiButton.OnClickHandler BuildBuilding(EconomyGrid grid, string buildingName, Type buildingType)
@@ -146,6 +152,9 @@ namespace MaxOfEmpires.GameStates.Overlays
             AddBuilderButton(grid, listBuilderActions, "building.mine", typeof(Mine));
             AddBuilderButton(grid, listBuilderActions, "building.trainingGrounds", typeof(TrainingGrounds));
             AddBuilderButton(grid, listBuilderActions, "building.academy", typeof(Academy));
+
+            // Also add the capital to the building registry, for saving and loading from files
+            BuildingRegistry.buildingTypeById["building.capital"] = typeof(Capital);
 
             // Make sure the list knows how big it is and add it to the screen
             listBuilderActions.calculateElementPositions();
