@@ -173,7 +173,7 @@ namespace MaxOfEmpires
         {
             if (!networkHelper.connected)
             {
-                networkHelper.CheckConnection();
+                //networkHelper.CheckConnection();
             }
             if (!running)
             {

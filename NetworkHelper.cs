@@ -16,37 +16,54 @@ namespace MaxOfEmpires
         Socket connection;
         public bool server = true;
         byte[] typeBuffer = new byte[1];
+        byte[] buffer = new byte[1];
         bool receivedGrid;
         int otherPlayerID;
         string otherPlayerName;
         EconomyGrid ecoGrid;
         IPAddress ConnectionAdress;
         EndPoint hostEndPoint;
-        int port = 1000;
+        int port = 25565;
         EndPoint t;
-        
-
+        SocketPermission permission;
+        Socket listener;
+        Socket handler;
 
         public void StartHost()
         {
-            startSocket = new Socket(SocketType.Stream,ProtocolType.Tcp);
+            permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", port);
             byte[] ip = new byte[4]
             {
                 127,0,0,1
             };
-            IPAddress address = new IPAddress(ip);
+            IPHostEntry ipHost = Dns.GetHostEntry("");
+            //IPAddress address = new IPAddress(ip);
+            IPAddress address = ipHost.AddressList[0];
+            startSocket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             t = new IPEndPoint(address, port);
-            startSocket.Blocking = false;
             startSocket.Bind(t);
-            startSocket.Listen(1);
+            startSocket.Listen(10);
+            AsyncCallback a = new AsyncCallback(AcceptConnection);
+        }
 
+        public void AcceptConnection(IAsyncResult ar)
+        {
+            listener = (Socket)ar.AsyncState;
+            handler = listener.EndAccept(ar);
+            handler.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveMessage), "");
         }
 
         public void StartClient(byte[] ip)
         {
-            connection = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", port);
             hostEndPoint = new IPEndPoint(new IPAddress(ip), port);
-            connection.Blocking = false;
+            IPHostEntry ipHost = Dns.GetHostEntry("");
+            IPAddress address = ipHost.AddressList[0];
+            connection = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            t = new IPEndPoint(address, port);
+            connection.Bind(t);
+            connection.Connect(hostEndPoint);
+            connection.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveMessage), "");
         }
 
         public void CheckConnection()
@@ -55,6 +72,7 @@ namespace MaxOfEmpires
             {
                 try
                 {
+                    connection.Listen(1);
                     connection = startSocket.Accept();
                     connected = true;
                 }
@@ -69,6 +87,7 @@ namespace MaxOfEmpires
                 try
                 {
                     connection.Connect(hostEndPoint);
+                    connected = true;
                 }
                 catch (SocketException)
                 {
@@ -133,7 +152,7 @@ namespace MaxOfEmpires
 
         }
 
-        public void ReceiveMessage()
+        public void ReceiveMessage(IAsyncResult ar)
         {
             int bytes = connection.Receive(typeBuffer, 1, SocketFlags.None);
             while (bytes > 0)
