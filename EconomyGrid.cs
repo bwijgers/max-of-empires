@@ -264,9 +264,9 @@ namespace MaxOfEmpires
                         p.stats.lostBuildings.Add(new Dictionary<string, int>());
 
                         if (onTurnStart == null)
-                            p.stats.duration.Add(t.TotalGameTime);
+                            p.stats.durationInMinutes.Add(t.TotalGameTime.TotalMinutes);
                         else
-                            p.stats.duration.Add(t.TotalGameTime - onTurnStart);
+                            p.stats.durationInMinutes.Add((t.TotalGameTime - onTurnStart).TotalMinutes);
                         onTurnStart = t.TotalGameTime;
                     
                         ForEach(obj => {

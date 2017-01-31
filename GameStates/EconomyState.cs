@@ -11,6 +11,9 @@ namespace MaxOfEmpires.GameStates
 {
     class EconomyState : GameState
     {
+        public const int GRID_WIDTH = 36;
+        public const int GRID_HEIGHT = 36;
+
         private List<Player> players;
         private int currentPlayer;
         private EconomyGrid ecoGrid;
@@ -24,8 +27,6 @@ namespace MaxOfEmpires.GameStates
             players.Add(blue);
             players.Add(red);
             currentPlayer = 0;
-
-            ecoGrid = new EconomyGrid(36, 36, players);
 
             ResetOverlay();
 
@@ -133,7 +134,12 @@ namespace MaxOfEmpires.GameStates
 
         public override void Reset()
         {
+            // Reset the players
+            foreach (Player p in players)
+                p.Reset();
+
             // Initialize the field
+            EconomyGrid = new EconomyGrid(GRID_WIDTH, GRID_HEIGHT, players);
             ecoGrid.InitField();
 
             // Player 1 starts

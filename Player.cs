@@ -5,19 +5,92 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using UnitDict = System.Collections.Generic.Dictionary<string, int>;
+
 namespace MaxOfEmpires
 {
     class Player
     {
         public struct Stats
         {
+            public static Stats LoadFromFile(BinaryReader reader)
+            {
+                // Create the return value
+                Stats retVal = new Stats(0);
+
+                // Read money
+                ushort moneyCount = reader.ReadUInt16();
+                for (ushort i = 0; i < moneyCount; ++i)
+                {
+                    retVal.money.Add(reader.ReadInt32());
+                }
+
+                // Read the population
+                ushort populationCount = reader.ReadUInt16();
+                for (ushort i = 0; i < populationCount; ++i)
+                {
+                    retVal.population.Add(reader.ReadUInt16());
+                }
+
+                // Read all turn durations
+                ushort durationCount = reader.ReadUInt16();
+                for (ushort i = 0; i < durationCount; ++i)
+                {
+                    retVal.durationInMinutes.Add(reader.ReadDouble());
+                }
+
+                // Read all Units
+                retVal.units = ReadUnitOrBuildingDataList(reader);
+
+                // Read all Buildings
+                retVal.buildings = ReadUnitOrBuildingDataList(reader);
+
+                // Read all lost Units
+                retVal.lostUnits = ReadUnitOrBuildingDataList(reader);
+
+                // Read all lost Buildings
+                retVal.lostBuildings = ReadUnitOrBuildingDataList(reader);
+
+                // Read amount of battles won and lost
+                retVal.battlesWon = reader.ReadUInt16();
+                retVal.battlesLost = reader.ReadUInt16();
+
+                return retVal;
+            }
+
+            private static List<UnitDict> ReadUnitOrBuildingDataList(BinaryReader reader)
+            {
+                // Create the return value list
+                List<UnitDict> retVal = new List<UnitDict>();
+
+                // Fill the list
+                ushort listCount = reader.ReadUInt16();
+                for (ushort i = 0; i < listCount; ++i)
+                {
+                    // Create the new dict
+                    UnitDict dict = new UnitDict();
+
+                    // Get the amount in this dict
+                    ushort dictCount = reader.ReadByte();
+
+                    // Add every (key, value) pair to the current dict
+                    for (ushort j = 0; j < dictCount; ++j)
+                    {
+                        dict[reader.ReadString()] = reader.ReadInt32();
+                    }
+                    retVal.Add(dict);
+                }
+
+                return retVal;
+            }
+
             public List<int> money;
             public List<int> population;
-            public List<TimeSpan> duration;
-            public List<Dictionary<string, int>> units;
-            public List<Dictionary<string, int>> buildings;
-            public List<Dictionary<string, int>> lostUnits;
-            public List<Dictionary<string, int>> lostBuildings;
+            public List<double> durationInMinutes;
+            public List<UnitDict> units;
+            public List<UnitDict> buildings;
+            public List<UnitDict> lostUnits;
+            public List<UnitDict> lostBuildings;
             public int battlesWon;
             public int battlesLost;
 
@@ -25,13 +98,76 @@ namespace MaxOfEmpires
             {
                 money = new List<int>();
                 population = new List<int>();
-                duration = new List<TimeSpan>();
-                units = new List<Dictionary<string, int>>();
-                buildings = new List<Dictionary<string, int>>();
-                lostUnits = new List<Dictionary<string, int>>();
-                lostBuildings = new List<Dictionary<string, int>>();
+                durationInMinutes = new List<double>();
+                units = new List<UnitDict>();
+                buildings = new List<UnitDict>();
+                lostUnits = new List<UnitDict>();
+                lostBuildings = new List<UnitDict>();
                 battlesWon = 0;
                 battlesLost = 0;
+            }
+
+            public void WriteToFile(BinaryWriter stream)
+            {
+                // Write all moneys
+                stream.Write((ushort)(money.Count & 65535));
+                for (int i = 0; i < money.Count; ++i)
+                {
+                    stream.Write(money[i]);
+                }
+
+                // Write all populations
+                stream.Write((ushort)(population.Count & 65535));
+                for (int i = 0; i < population.Count; ++i)
+                {
+                    stream.Write((ushort)population[i]);
+                }
+
+                // Write all turn durations
+                stream.Write((ushort)(durationInMinutes.Count & 65535));
+                for (int i = 0; i < durationInMinutes.Count; ++i)
+                {
+                    stream.Write(durationInMinutes[i]);
+                }
+
+                // Write all Units
+                WriteUnitOrBuildingDataList(units, stream);
+
+                // Write all Buildings
+                WriteUnitOrBuildingDataList(buildings, stream);
+
+                // Write all lost Units
+                WriteUnitOrBuildingDataList(lostUnits, stream);
+
+                // Write all lost Buildings
+                WriteUnitOrBuildingDataList(lostBuildings, stream);
+
+                // Write the amount of battles won and lost
+                ushort battlesWon = (ushort)(this.battlesWon & 65535);
+                ushort battlesLost = (ushort)(this.battlesLost & 65535);
+                stream.Write(battlesWon);
+                stream.Write(battlesLost);
+            }
+
+            private void WriteUnitOrBuildingDataList(List<UnitDict> toWrite, BinaryWriter writer)
+            {
+                // Write the amount of dicts
+                writer.Write((ushort)toWrite.Count);
+                for (int i = 0; i < toWrite.Count; ++i)
+                {
+                    // The current dictionary to write to file
+                    UnitDict dict = toWrite[i];
+
+                    // Write the amount in this dict
+                    writer.Write((byte)dict.Count);
+
+                    // Write everything in this dict
+                    foreach (string name in dict.Keys)
+                    {
+                        writer.Write(name);
+                        writer.Write(dict[name]);
+                    }
+                }
             }
         }
         
@@ -39,6 +175,7 @@ namespace MaxOfEmpires
         public Dictionary<string, int> soldierTiers;
         public Stats stats;
         private int population;
+        private readonly int startingMoney;
         private int money;
         private string name;
         private string colorName;
@@ -55,19 +192,14 @@ namespace MaxOfEmpires
 
         public Player(string name, string colorName, Color color, int startingMoney)
         {
-            money = startingMoney;
+            money = this.startingMoney = startingMoney;
             this.colorName = colorName;
             this.name = name;
             this.color = color;
             updateMoneyHandlers = new List<Action<Player>>();
             updatePopulationHandlers = new List<Action<Player>>();
             updateMoneyPerTurnHandlers = new List<Action<Player>>();
-            stats = new Stats(0);
-            soldierTiers = new Dictionary<string, int>();
-            foreach (string s in Buildings.BuildingRegistry.GetTrainees("building.trainingGrounds"))
-                soldierTiers[s] = 1;
-            foreach (string s in Buildings.BuildingRegistry.GetTrainees("building.academy"))
-                soldierTiers[s] = 1;
+            Reset();
         }
 
         public void AddBuildingToStats(string id)
@@ -196,8 +328,12 @@ namespace MaxOfEmpires
 
             // Read money
             retVal.money = stream.ReadInt32();
-         
-            // TODO Read soldier tiers and stats later
+
+            // Read stats
+            retVal.stats = Stats.LoadFromFile(stream);
+
+            // TODO: Read soldier tiers
+            
             return retVal;
         }
 
@@ -217,6 +353,18 @@ namespace MaxOfEmpires
         {
             if (action != null && action.GetInvocationList().Length > 0)
                 updateMoneyPerTurnHandlers.Add(action);
+        }
+
+        public void Reset()
+        {
+        	money = startingMoney;
+            ResetCamera();
+            stats = new Stats(0);
+            soldierTiers = new Dictionary<string, int>();
+            foreach (string s in Buildings.BuildingRegistry.GetTrainees("building.trainingGrounds"))
+                soldierTiers[s] = 1;
+            foreach (string s in Buildings.BuildingRegistry.GetTrainees("building.academy"))
+                soldierTiers[s] = 1;
         }
 
         public void ResetCamera()
@@ -252,8 +400,6 @@ namespace MaxOfEmpires
 
         public void WriteToFile(BinaryWriter stream)
         {
-            // TODO: Write soldierTiers, stats
-
             // Write name
             stream.Write(name);
 
@@ -275,7 +421,10 @@ namespace MaxOfEmpires
             // Write money
             stream.Write(money);
 
-            // Write soldier tiers and stats later
+            // Write stats
+            stats.WriteToFile(stream);
+
+            // TODO: Write soldier tiers
         }
 
         public string ColorName => colorName;

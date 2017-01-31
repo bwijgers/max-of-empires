@@ -42,13 +42,13 @@ namespace MaxOfEmpires.GameStates
 
             int f1 = (int)Keys.F1;
             int f12 = (int)Keys.F12;
-            for (int i = f1; i < f12; ++i)
+            for (int i = f1; i <= f12; ++i)
             {
                 if (helper.KeyPressed((Keys)i) && (helper.IsKeyDown(Keys.LeftShift) || helper.IsKeyDown(Keys.RightShift)))
                 {
                     FileManager.SaveGame("savegametest-" + i, new byte[] { 0x42, 0x10, 0x28, 0x64, 0xFF, 0xEB }, sg);
                 }
-                if (helper.KeyPressed((Keys)i))
+                else if (helper.KeyPressed((Keys)i))
                 {
                     FileManager.LoadGame("savegametest-" + i, new byte[] { 0x42, 0x10, 0x28, 0x64, 0xFF, 0xEB }, sg);
                     EconomyState ecoState = (EconomyState)GetState("economy");
