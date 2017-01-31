@@ -37,6 +37,9 @@ namespace MaxOfEmpires
         /// <param name="defender">The Army that is being attacked.</param>
         private void InitBattle(Army attacker, Army defender, bool split = false)
         {
+            //Make sure that an army containing only healers can not engage in combat to avoid infinite battles.
+            if (HealerCheck(attacker))
+                return;
             // Save the square on which the battle is occuring (the defender's square)
             battlePosition = defender.PositionInGrid;
 
@@ -52,6 +55,17 @@ namespace MaxOfEmpires
 
             // Tell the battle state that we want to initiate a battle
             GameStateManager.OnInitiateBattle(attacker, defender, attackingTile, defendingTile);
+        }
+
+        //Check if the attacking army contains any other units besides healers
+        private bool HealerCheck(Army attacker)
+        {
+            bool result = true;
+
+            foreach (String k in attacker.UnitsAndCounts.Keys)
+                if (k != "unit.healer.1" && k != "unit.healer.2" && k != "unit.healer.3")
+                    return false;
+            return result;
         }
 
         public override void InitField()
@@ -87,7 +101,8 @@ namespace MaxOfEmpires
                 walkablePositions = Pathfinding.ReachableTiles(clickedTile.Unit,Width,Height);
                 SetUnitWalkingOverlay(walkablePositions);
                 if (clickedTile.Unit is Army)
-                    SetArmyAttackingOverlay((Army)clickedTile.Unit);
+                    if(!HealerCheck((Army)clickedTile.Unit))
+                        SetArmyAttackingOverlay((Army)clickedTile.Unit);
 
                 // This unit can be selected. Show the player it is selected too
                 SelectTile(clickedTile.PositionInGrid);

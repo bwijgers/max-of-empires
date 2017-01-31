@@ -22,6 +22,7 @@ namespace MaxOfEmpires.Units
         private const int ANIMATION_WALK_RIGHT = 2;
         private const int ANIMATION_WALK_DOWN = 3;
         private const int ANIMATION_WALK_LEFT = 4;
+        private int tier;
         private HitEffects h;
 
         /// <summary>
@@ -37,7 +38,6 @@ namespace MaxOfEmpires.Units
         public static Soldier LoadFromConfiguration(Configuration config, int tier)
         {
             // Load stats from config
-
             Stats stats = Stats.LoadFromConfiguration(config.GetPropertySection("stats."+tier));
 
             // Load range from config
@@ -53,9 +53,8 @@ namespace MaxOfEmpires.Units
             // Load all specials of the Unit from config
             int specialsList = config.GetProperty<int>("specialties");
 
-            Soldier prototype = new Soldier(config.GetProperty<string>("name."+tier), 0, 0, new Player("none", "blue", Color.Black, 100), texName, moveSpeed, stats, range);
+            Soldier prototype = new Soldier(config.GetProperty<string>("name."+tier), 0, 0, new Player("none", "blue", Color.Black, 100), texName, moveSpeed, stats, range, tier);
             prototype.Specials = specialsList;
-
             return prototype;
         }
 
@@ -103,11 +102,12 @@ namespace MaxOfEmpires.Units
 
         public bool duringAttack = false, retaliating = false;
         private bool attacked = false;
+        private bool healed = false;
         private Soldier attackTarget;
         
         private string texName;
 
-        private Soldier(string name, int x, int y, Player owner, string resName, int moveSpeed, Stats stats, Range range) : base(x, y, owner)
+        private Soldier(string name, int x, int y, Player owner, string resName, int moveSpeed, Stats stats, Range range, int tier) : base(x, y, owner)
         {
             // Set parameters
             this.name = name;
@@ -116,6 +116,7 @@ namespace MaxOfEmpires.Units
             texName = resName;
             this.moveSpeed = moveSpeed;
             animateDeath = false;
+            this.tier = tier;
         }
 
         /// <summary>
@@ -123,7 +124,7 @@ namespace MaxOfEmpires.Units
         /// </summary>
         /// <param name="original">The original to make a copy of.</param>
         /// <param name="owner">The owner of the copy of this Unit.</param>
-        public Soldier(Soldier original, Player owner) : this(new string(original.name.ToCharArray()), original.PositionInGrid.X, original.PositionInGrid.Y, owner, original.texName, original.moveSpeed, original.stats.Copy(), original.range.Copy())
+        public Soldier(Soldier original, Player owner) : this(new string(original.name.ToCharArray()), original.PositionInGrid.X, original.PositionInGrid.Y, owner, original.texName, original.moveSpeed, original.stats.Copy(), original.range.Copy(), original.tier)
         {
             specials = original.specials;
         }
@@ -152,7 +153,46 @@ namespace MaxOfEmpires.Units
             // Calls a certain method, which sets the damage calculation in action
             OnSoldierStartAttack(enemy, retaliate);
 
-            // Unit has attacked
+            // Unit has attacked. Healer shouldn't lose their attack since they can't attack.
+            if(!Special_Healer)
+                hasAttacked = true;
+        }
+
+        //Like Attack, but for healers.
+        public void Heal(Tile healPos)
+        {
+            //Make sure that only the healers can heal.
+            if (!Special_Healer)
+            {
+                return;
+            }
+
+            if (!healPos.Occupied)
+            {
+                return; 
+            }
+
+            Unit u = healPos.Unit;
+
+            if(!(u is Soldier))
+            {
+                return;
+            }
+
+            Soldier ally = u as Soldier;
+
+            //Start the animation.
+            h = new HitEffects(this.name);
+            h.DeterminePosition(ally.PositionInGrid);
+            (GameWorld as Grid).hitEffectList.Add(h);
+
+            //Make sure the animation runs for the appropriate amount of time.
+            attackAnimationTimer = 0;
+            healed = true;
+
+            HealDamage(ally);
+
+            //Make sure the healer can only heal once.
             hasAttacked = true;
         }
 
@@ -243,6 +283,25 @@ namespace MaxOfEmpires.Units
             }
         }
 
+        // Like DealDamage, but with an H.
+        private void HealDamage(Soldier ally)
+        {
+            int missingHp = ally.stats.maxHp - ally.stats.hp;
+
+            //Here we determine the amount that will be healed which is a third of the maxHp of the target being healed times the tier of the healer. We can divide by 3 because all maxHps are multiples of 6
+            int heal = (ally.stats.maxHp / 3) *tier;
+
+            // Dont heal past the maximum hp.
+            if (missingHp > heal)
+            {
+                ally.stats.hp += heal;
+            }
+            else
+            {
+                ally.stats.hp = ally.stats.maxHp;
+            }
+        }
+
         public override void Draw(GameTime time, SpriteBatch s)
         {
             base.Draw(time, s);
@@ -328,6 +387,9 @@ namespace MaxOfEmpires.Units
 
         public void OnSoldierStartAttack(Soldier enemy, bool retaliate)
         {
+            // Healers can't fight :'C
+            if (Special_Healer)
+                return;
             // Magic fighters can't retaliate D:
             if (Special_MagicFighter && retaliate)
                 return;
@@ -341,7 +403,6 @@ namespace MaxOfEmpires.Units
             Vector2 attackDirection = tPos-cPos;
             Vector2.Normalize(ref attackDirection, out normalizedAttackDirection);
 
-            // TODO: Adding the walking animations to the attack directions and un-commenting this.
             if (normalizedAttackDirection == walkUpDirection)
                 DrawingTexture.SelectedSprite = new Point(0, ANIMATION_WALK_UP);
 
@@ -354,11 +415,9 @@ namespace MaxOfEmpires.Units
             else if (normalizedAttackDirection == walkLeftDirection || normalizedAttackDirection.X < walkDirectionZero.X)
                 DrawingTexture.SelectedSprite = new Point(0, ANIMATION_WALK_LEFT);
 
-
             position = position + (normalizedAttackDirection * 10);
 
             h = new HitEffects(this.name);
-            //(GameWorld as Grid).hitEffectList = new GameObjectList();
             h.DeterminePosition(enemy.PositionInGrid);
             (GameWorld as Grid).hitEffectList.Add(h);
 
@@ -405,6 +464,17 @@ namespace MaxOfEmpires.Units
             }
         }
 
+        // Like UpdateAttack but, for healers.
+        public void UpdateHeal()
+        {
+            if (attackAnimationTimer > attackAnimationFrames)
+            {
+                (GameWorld as Grid).hitEffectList.RemoveChild(h);
+                healed = false;
+            }
+
+        }
+
         public override void TurnUpdate(uint turn, Player player, GameTime t)
         {
             base.TurnUpdate(turn, player, t);
@@ -418,6 +488,8 @@ namespace MaxOfEmpires.Units
 
             if (attacked)
                 UpdateAttack();
+            if (healed)
+                UpdateHeal();
 
             if (IsDead)
             {
@@ -467,6 +539,7 @@ namespace MaxOfEmpires.Units
         public bool Special_Tank => (specials & 8) == 8;
         public bool Special_TankBuster => (specials & 16) == 16;
         public bool Special_Assassin => (specials & 32) == 32;
+        public bool Special_Healer => (specials & 64) == 64;
 
         private int Specials
         {
