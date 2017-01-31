@@ -247,7 +247,7 @@ namespace MaxOfEmpires
             }
         }
 
-        public override void TurnUpdate(uint turn, Player player,GameTime t)
+        public override void TurnUpdate(uint turn, Player player, GameTime t)
         {
             base.TurnUpdate(turn, player,t);
             foreach(Player p in players)
