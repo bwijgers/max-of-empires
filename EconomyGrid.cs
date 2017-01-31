@@ -158,9 +158,9 @@ namespace MaxOfEmpires
 
                 }
 
-                // If it's an enemy Builder, kill it and overwrite it
+                // If it's an enemy Builder or an army consisting of only healers, kill it and overwrite it
                 Unit enemy = clickedTile.Unit;
-                if (enemy is Builder)
+                if (enemy is Builder || (enemy is Army && HealerCheck((Army)enemy)))
                 {
                     if (mainUnit)
                     {
