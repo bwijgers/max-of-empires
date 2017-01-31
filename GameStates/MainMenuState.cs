@@ -11,10 +11,15 @@ namespace MaxOfEmpires.GameStates
         private static Random r = new Random();
         private Texture2D mainMenuTex = AssetManager.Instance.getAsset<Texture2D>("TitleScreen/titlescreen" + (r.Next(0, 3) +1 ).ToString());
         private Texture2D settingsButton = AssetManager.Instance.getAsset<Texture2D>("TitleScreen/SettingsButton");
+        private Player Blue;
+        private Player Red;
 
-        public MainMenuState()
+        public MainMenuState(Player blue, Player red)
         {
             ResetOverlay();
+            Blue = blue;
+            Red = red;
+
         }
 
         public override void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS)
@@ -31,7 +36,7 @@ namespace MaxOfEmpires.GameStates
 
         public override void ResetOverlay()
         {
-            overlay = new OverlayMainMenu();
+            overlay = new OverlayMainMenu(Blue, Red);
             overlay.loadContent(AssetManager.Instance);
         }
     }

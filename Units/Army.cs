@@ -22,8 +22,12 @@ namespace MaxOfEmpires.Units
             Random rand = MaxOfEmpires.Random;
 
             // Get the amount of Swordsmen and Archers we should have in this army
-            retVal.unitsAndCounts["unit.swordsman"] = rand.Next(1, 2);
-            retVal.unitsAndCounts["unit.archer"] = rand.Next(1, 3);
+            retVal.unitsAndCounts["unit.swordsman.2"] = rand.Next(1, 2);
+            retVal.unitsAndCounts["unit.archer.2"] = rand.Next(1, 3);
+            retVal.unitsAndCounts["unit.mage.2"] = rand.Next(1, 3);
+            retVal.unitsAndCounts["unit.horse.2"] = rand.Next(1, 3);
+            retVal.unitsAndCounts["unit.heavy.2"] = rand.Next(1, 3);
+            retVal.unitsAndCounts["unit.assassin.2"] = rand.Next(1, 3);
 
             // Return the newly generated Army
             return retVal;

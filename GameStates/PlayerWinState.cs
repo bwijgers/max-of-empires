@@ -36,7 +36,7 @@ namespace MaxOfEmpires.GameStates
             displayTime += time.ElapsedGameTime.TotalSeconds;
             if (displayTime >= TOTAL_DISPLAY_TIME && !switchingState)
             {
-                GameStateManager.OnRequestStatistics();
+                //GameStateManager.OnRequestStatistics();
                 switchingState = true;
             }
         }

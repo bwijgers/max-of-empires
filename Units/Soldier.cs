@@ -322,7 +322,7 @@ namespace MaxOfEmpires.Units
         public void OnDeath()
         {
             AssetManager.Instance.PlaySound("Music/Soldierfade");
-            owner.AddUnitLostToStats(id);
+            //owner.AddUnitLostToStats(id);
             animateDeath = true;
         }
 

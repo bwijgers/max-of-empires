@@ -40,14 +40,14 @@ namespace MaxOfEmpires
                 case 2:
                     {
                         cameraBreakoffY = 768;
-                        zoomMin = 24 / GameStateManager.GridSize.X;
+                        zoomMin = 15 / GameStateManager.GridSize.X;
                         break;
                     }
                 //1920 x 1080
                 case 3:
                     {
                         cameraBreakoffY = 1080;
-                        zoomMin = 33.75f / GameStateManager.GridSize.X;
+                        zoomMin = 15 / GameStateManager.GridSize.X;
                         break;
                     }
             }

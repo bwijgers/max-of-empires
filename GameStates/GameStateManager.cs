@@ -85,13 +85,16 @@ namespace MaxOfEmpires.GameStates
         /// <param name="remainingArmy">The remaining Army on the battle field.</param>
         public static void OnPlayerWinBattle(Army remainingArmy)
         {
+            OnPlayerWinGame(remainingArmy.Owner);
+            /*
             CurrentState.FadeOut = true;
             EconomyState state = GetState("economy") as EconomyState;
             state.OnPlayerWinBattle(remainingArmy);
             state.FadeIn = true;
             SwitchState("economy", false);
-
+            
             AssetManager.Instance.PlayMusic("Music/Village of Emerdale");
+            */
         }
 
         public static void OnPlayerWinGame(Player owner)
@@ -112,7 +115,7 @@ namespace MaxOfEmpires.GameStates
 
         public static void OnRequestStatistics()
         {
-            CurrentState.FadeOut = true;
+            //CurrentState.FadeOut = true;
 
             GetState("mainMenu").FadeIn = true;
             SwitchState("mainMenu", true);

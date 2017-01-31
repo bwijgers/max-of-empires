@@ -37,7 +37,7 @@ namespace MaxOfEmpires.GameStates
             currentPlayer = 0;
 
             // Initialize the battlefield.
-            battleGrid = new BattleGrid(35, 35, players);
+            battleGrid = new BattleGrid(34, 34, players);
             battleGrid.InitField();
 
             // Initialize the overlay.

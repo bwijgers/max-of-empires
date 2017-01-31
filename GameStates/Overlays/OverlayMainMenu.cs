@@ -16,9 +16,15 @@ namespace MaxOfEmpires.GameStates.Overlays
         private GuiButton buttonStart;
         private GuiButton buttonSettings;
         private GuiButton buttonSure;
+        private GuiLabel demoLabel;
+        private Tile tile1 = new Tile(Terrain.Forest, 1, 1);
+        private Tile tile2 = new Tile(Terrain.Plains, 1, 2);
 
-        public OverlayMainMenu()
+        public OverlayMainMenu(Player blue, Player red)
         {
+            demoLabel = GuiLabel.createNewLabel(new Vector2(10), "Demo", "titleFont");
+            addElement(demoLabel);
+
             // Quit button
             buttonQuit = new GuiButton(new Rectangle(new Point(0, MaxOfEmpires.ScreenSize.Y - 200), new Point(300, 200)), "TitleScreen/QuitButton");
             buttonQuit.ClickHandler = () => { buttonQuit.Visible = false; buttonSure.Visible = true; };
@@ -37,7 +43,7 @@ namespace MaxOfEmpires.GameStates.Overlays
 
             // Start button
             buttonStart = new GuiButton(new Rectangle(new Point(0, buttonSettings.Bounds.Y - 150), new Point(300, 200)), "TitleScreen/StartGameButton");
-            buttonStart.ClickHandler = () => GameStateManager.SwitchState("economy", true);
+            buttonStart.ClickHandler = () => GameStateManager.OnInitiateBattle(Units.Army.GenerateArmy(blue), Units.Army.GenerateArmy(red), tile1, tile2);
             addElement(buttonStart);
 
             // Set everything to the center of the screen

@@ -137,7 +137,7 @@ namespace MaxOfEmpires
             // Adds battleState to the GamestateManager
             GameStateManager.AddState("economy", new EconomyState(blue, red));
             GameStateManager.AddState("battle", new BattleState(blue, red));
-            GameStateManager.AddState("mainMenu", new MainMenuState());
+            GameStateManager.AddState("mainMenu", new MainMenuState(blue, red));
             GameStateManager.AddState("settingsMenu", new SettingsMenuState());
             GameStateManager.AddState("playerWin", new PlayerWinState());
             GameStateManager.SwitchState("mainMenu", true);
@@ -174,7 +174,7 @@ namespace MaxOfEmpires
             //TIJDELIJKE CODE OMDAT IK GEEN IDEE HEB WAAR IK DIT ANDERS ZOU KUNNEN ZETTEN
             if (inputHelper.KeyPressed(Keys.Escape))
             {
-                ToggleFullScreen();
+                GameStateManager.OnRequestStatistics();
             }
             //EINDE TIJDELIJKE CODE
 
