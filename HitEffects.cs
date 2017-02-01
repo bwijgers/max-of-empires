@@ -15,7 +15,10 @@ namespace MaxOfEmpires
         {
             switch (damageType)
             {
-                case "unit.healer":
+                case "unit.healer.1":
+                case "unit.healer.2":
+                case "unti.healer.3":
+                    AssetManager.Instance.PlaySound("Music/Heal");
                     DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(@"FE-Sprites\HitEffects\Heal@4x1");
                     break;
                 case "unit.mage.1":

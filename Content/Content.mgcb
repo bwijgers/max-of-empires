@@ -787,6 +787,7 @@
 /processorParam:Quality=Best
 /build:Music/Walksound.wav
 
+
 #begin Music/Village of Emerdale - low volume.wav
 /importer:WavImporter
 /processor:SongProcessor
@@ -798,4 +799,22 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Music/Legend of the Dark Lord - low volume.wav
+
+#begin FE-Sprites/HitEffects/Heal@4x1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:FE-Sprites/HitEffects/Heal@4x1.png
+
+#begin Music/Heal.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/Heal.wav
 

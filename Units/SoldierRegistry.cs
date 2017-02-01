@@ -9,7 +9,7 @@ namespace MaxOfEmpires.Units
         private static Dictionary<string, int> unitTiersByName = new Dictionary<string, int>();
         private static Dictionary<string, int> unitCostsByName = new Dictionary<string, int>();
         private static List<Soldier> allSoldiers = new List<Soldier>();
-        private static string[] soldierNames = new string[] { "spearman", "swordsman", "archer", "axeman", "horse", "heavy", "mage", "assassin" };
+        private static string[] soldierNames = new string[] { "spearman", "swordsman", "archer", "axeman", "horse", "heavy", "mage", "assassin", "healer" };
         private static Dictionary<string,Dictionary<int,int>> UpgradeCosts = new Dictionary<string, Dictionary<int,int>>();
 
         /// <summary>
