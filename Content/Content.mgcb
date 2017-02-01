@@ -589,17 +589,6 @@
 /processorParam:TextureFormat=Color
 /build:FE-Sprites/HitEffects/Slash@4x1.png
 
-#begin FE-Sprites/HitEffects/Heal@4x1.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-
 #begin TitleScreen/Titlescreen1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -768,18 +757,6 @@
 /processorParam:TextureFormat=Color
 /build:TitleScreen/QuitPressed.png
 
-#begin Music/Legend of the Dark Lord.wav
-/importer:WavImporter
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Music/Legend of the Dark Lord.wav
-
-#begin Music/Village of Emerdale.wav
-/importer:WavImporter
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Music/Village of Emerdale.wav
-
 #begin Music/FEvictory.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
@@ -809,4 +786,35 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Music/Walksound.wav
+
+
+#begin Music/Village of Emerdale - low volume.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Village of Emerdale - low volume.wav
+
+#begin Music/Legend of the Dark Lord - low volume.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Legend of the Dark Lord - low volume.wav
+
+#begin FE-Sprites/HitEffects/Heal@4x1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:FE-Sprites/HitEffects/Heal@4x1.png
+
+#begin Music/Heal.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/Heal.wav
 

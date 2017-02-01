@@ -110,7 +110,6 @@ namespace MaxOfEmpires
         {
             MediaPlayer.IsRepeating = repeat;
             MediaPlayer.Play(content.Load<Song>(name));
-            MediaPlayer.Volume = 0.5F;
         }
 
         /// <summary>

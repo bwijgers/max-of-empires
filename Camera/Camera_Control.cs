@@ -124,22 +124,22 @@ namespace MaxOfEmpires
 
         private void KeyControlCheck(InputHelper inputHelper, KeyManager keyManager)
         {
-            if (keyManager.IsKeyDown("moveCameraUp", inputHelper))
+            if (keyManager.IsKeyDown("moveCameraUp", inputHelper) || keyManager.IsKeyDown("moveCameraUp2", inputHelper))
             {
                 MoveCamera("up");
             }
 
-            if (keyManager.IsKeyDown("moveCameraDown", inputHelper))
+            if (keyManager.IsKeyDown("moveCameraDown", inputHelper) || keyManager.IsKeyDown("moveCameraDown2", inputHelper))
             {
                 MoveCamera("down");
             }
 
-            if (keyManager.IsKeyDown("moveCameraRight", inputHelper))
+            if (keyManager.IsKeyDown("moveCameraRight", inputHelper) || keyManager.IsKeyDown("moveCameraRight2", inputHelper))
             {
                 MoveCamera("right");
             }
 
-            if (keyManager.IsKeyDown("moveCameraLeft", inputHelper))
+            if (keyManager.IsKeyDown("moveCameraLeft", inputHelper) || keyManager.IsKeyDown("moveCameraLeft2", inputHelper))
             {
                 MoveCamera("left");
             }

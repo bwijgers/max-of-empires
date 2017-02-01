@@ -397,7 +397,10 @@ namespace MaxOfEmpires
                 ForEach(obj => {
                     Tile t = obj as Tile;
                     if (t != null)
+                    {
                         t.OverlayAttack = false;
+                        t.OverlayHeal = false;
+                    }
                 });
 
                 return;
@@ -421,7 +424,7 @@ namespace MaxOfEmpires
                     Tile t = this[x, y] as Tile;
 
                     // If there is a Unit we can attack, set that overlay to true
-                    if (t != null && t.Occupied && t.Unit.Owner != u.Owner)
+                    if (t != null && t.Occupied && t.Unit.Owner != u.Owner && !u.Special_Healer)
                     {
                         // Check if the enemy is in range
                         if (u.IsInRange(new Point(x, y)))
@@ -429,6 +432,15 @@ namespace MaxOfEmpires
                             t.OverlayAttack = true;
                         }
                     }
+                    // The healer needs a seperate overlay since it cannot attack units, but it can heal allies. To add: Show OverlayHeal only in battlestate
+                    else if(t!=null&&t.Occupied && t.Unit.Owner == u.Owner && u.Special_Healer)
+                    {
+                        if(u.IsInRange(new Point(x, y)))
+                        {
+                            t.OverlayHeal = true;
+                        }
+                    }
+
                 }
             }
         }

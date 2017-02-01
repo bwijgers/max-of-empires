@@ -65,7 +65,7 @@ namespace MaxOfEmpires.GameStates
         /// <param name="defendingArmy">The army that was attacked.</param>
         public static void OnInitiateBattle(Army attackingArmy, Army defendingArmy, Tile attackingTile, Tile defendingTile)
         {
-            AssetManager.Instance.PlayMusic("Music/Legend of the Dark Lord");
+            AssetManager.Instance.PlayMusic("Music/Legend of the Dark Lord - low volume");
 
             CurrentState.FadeOut = true;
             // Get the battle state
@@ -92,9 +92,8 @@ namespace MaxOfEmpires.GameStates
             state.OnPlayerWinBattle(remainingArmy);
             state.FadeIn = true;
             SwitchState("economy", false);
-            
-            AssetManager.Instance.PlayMusic("Music/Village of Emerdale");
-            */
+
+            AssetManager.Instance.PlayMusic("Music/Village of Emerdale - low volume");
         }
 
         public static void OnPlayerWinGame(Player owner)
@@ -120,7 +119,7 @@ namespace MaxOfEmpires.GameStates
             GetState("mainMenu").FadeIn = true;
             SwitchState("mainMenu", true);
 
-            AssetManager.Instance.PlayMusic("Music/Village of Emerdale");
+            AssetManager.Instance.PlayMusic("Music/Village of Emerdale - low volume");
         }
 
         /// <summary>

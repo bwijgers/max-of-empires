@@ -29,7 +29,7 @@ namespace MaxOfEmpires
         /// <summary>
         /// Whether certain overlays should be drawn.
         /// </summary>
-        private bool overlayAttack, overlayWalk;
+        private bool overlayAttack, overlayHeal, overlayWalk;
 
         /// <summary>
         /// The x and y positions of this Tile in the containing Grid.
@@ -116,10 +116,16 @@ namespace MaxOfEmpires
                 DrawingHelper.Instance.DrawRectangle(s, Bounds, new Color(0x00, 0x00, 0xFF, 0x88));
             }
 
-            // Draw an attacking overlay if it should be drawn
+            // Draw an attacking overlay if it should be drawn.
             if (overlayAttack)
             {
                 DrawingHelper.Instance.DrawRectangle(s, Bounds, new Color(0xFF, 0x00, 0x00, 0x88));
+            }
+
+            //Draw a healing overlay if it should be drawn.
+            if (overlayHeal)
+            {
+                DrawingHelper.Instance.DrawRectangle(s, Bounds, new Color(0x00, 0xFF, 0x00, 0x88));
             }
         }
 
@@ -396,6 +402,18 @@ namespace MaxOfEmpires
             set
             {
                 overlayWalk = value;
+            }
+        }
+
+        public bool OverlayHeal
+        {
+            get
+            {
+                return overlayHeal;
+            }
+            set
+            {
+                overlayHeal = value;
             }
         }
 

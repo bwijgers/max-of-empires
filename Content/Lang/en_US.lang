@@ -37,3 +37,7 @@ unit.mage.3=thijman
 unit.assassin.1=Assassin
 unit.assassin.2=Slayer
 unit.assassin.3=Reaper
+
+unit.healer.1=Support
+unit.healer.2=Medic
+unit.healer.3=Miraculist

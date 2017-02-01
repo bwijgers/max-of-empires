@@ -30,7 +30,7 @@ namespace MaxOfEmpires.GameStates
 
             ResetOverlay();
 
-            AssetManager.Instance.PlayMusic("Music/Village of Emerdale");
+            AssetManager.Instance.PlayMusic("Music/Village of Emerdale - low volume");
         }
 
         public override void Draw(GameTime time, SpriteBatch gameObjectS, SpriteBatch overlayS)
