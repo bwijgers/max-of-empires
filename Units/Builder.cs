@@ -10,7 +10,7 @@ namespace MaxOfEmpires.Units
         public Builder(int x, int y, Player owner) : base(x, y, owner,"builder")
         {
             DrawingTexture = AssetManager.Instance.getAsset<Spritesheet>(@"FE-Sprites\Units\Builder" + owner.ColorName + "@4x5");
-            moveSpeed = 1;
+            moveSpeed = 2;
         }
         
         public override bool Passable(Terrain terrain)

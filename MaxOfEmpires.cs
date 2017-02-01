@@ -131,8 +131,8 @@ namespace MaxOfEmpires
             LoadConfiguration();
 
             // Load players
-            Player blue = new Player("Blue", "Blue", Color.CornflowerBlue, mainConfiguration.GetProperty<int>("player.startingMoney"));
-            Player red = new Player("Red", "Red", Color.Red, mainConfiguration.GetProperty<int>("player.startingMoney"));
+            Player blue = new Player("Blue", "Blue", Color.SteelBlue, mainConfiguration.GetProperty<int>("player.startingMoney")); //Were CornFlowerBlue and Red
+            Player red = new Player("Red", "Red", Color.IndianRed, mainConfiguration.GetProperty<int>("player.startingMoney"));
 
             // Adds battleState to the GamestateManager
             GameStateManager.AddState("economy", new EconomyState(blue, red));
@@ -223,10 +223,10 @@ namespace MaxOfEmpires
         private void InitializeKeys(Configuration config)
         {
             KeyManager.Instance.RegisterKey("unitTargetOverlay", (Keys)config.GetProperty<int>("unitTargetOverlay"));
-            KeyManager.Instance.RegisterKey("moveCameraUp", (Keys)config.GetProperty<int>("moveCameraUp"));
-            KeyManager.Instance.RegisterKey("moveCameraDown", (Keys)config.GetProperty<int>("moveCameraDown"));
-            KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft"));
-            KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight"));
+            KeyManager.Instance.RegisterKey("moveCameraUp", (Keys)config.GetProperty<int>("moveCameraUp")); KeyManager.Instance.RegisterKey("moveCameraUp2", (Keys)config.GetProperty<int>("moveCameraUp2"));
+            KeyManager.Instance.RegisterKey("moveCameraDown", (Keys)config.GetProperty<int>("moveCameraDown")); KeyManager.Instance.RegisterKey("moveCameraDown2", (Keys)config.GetProperty<int>("moveCameraDown2"));
+            KeyManager.Instance.RegisterKey("moveCameraLeft", (Keys)config.GetProperty<int>("moveCameraLeft")); KeyManager.Instance.RegisterKey("moveCameraLeft2", (Keys)config.GetProperty<int>("moveCameraLeft2"));
+            KeyManager.Instance.RegisterKey("moveCameraRight", (Keys)config.GetProperty<int>("moveCameraRight")); KeyManager.Instance.RegisterKey("moveCameraRight2", (Keys)config.GetProperty<int>("moveCameraRight2"));
             KeyManager.Instance.RegisterKey("zoomCameraIn", (Keys)config.GetProperty<int>("moveCameraIn"));
             KeyManager.Instance.RegisterKey("zoomCameraOut", (Keys)config.GetProperty<int>("moveCameraOut"));
             KeyManager.Instance.RegisterKey("nextTurn", (Keys)config.GetProperty<int>("nextTurn"));
