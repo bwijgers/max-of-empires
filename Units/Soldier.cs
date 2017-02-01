@@ -261,8 +261,13 @@ namespace MaxOfEmpires.Units
                 attack += (int)(stats.att * 0.5F);
             }
 
+            // The damageFalloff function makes it so ranged attacks for non-magical ranged units decay in strenght when attacking an enemy far away. Is used in the damage calculation below.
+            double damageFalloff = (((Math.Abs(DrawPosition.X - enemy.DrawPosition.X) / 36) + (Math.Abs(DrawPosition.Y - enemy.DrawPosition.Y) / 36)));
+            double calculatedFalloff = Math.Pow(0.95, damageFalloff);
+            
+
             int damageToDeal = attack;
-            if (!Special_MagicFighter)
+            if (!Special_MagicFighter && !Special_Bowman)
             {
                 int enemyDefenseBonus = (enemy.Parent as Tile).DefenseBonus * 2;
                 if (enemy.owner == (GameWorld as Grid).attackingPlayer)
@@ -273,8 +278,27 @@ namespace MaxOfEmpires.Units
                 {
                     enemyDefenseBonus += (GameWorld as BattleGrid).defendingTile.DefenseBonus;
                 }
-                damageToDeal -= (enemy.stats.def + enemyDefenseBonus);
+                int baseDefense = (enemy.stats.def + enemyDefenseBonus);
+                damageToDeal -= baseDefense;
+
             }
+            else if (Special_Bowman)
+            {
+                int enemyDefenseBonus = (enemy.Parent as Tile).DefenseBonus * 2;
+                if (enemy.owner == (GameWorld as Grid).attackingPlayer)
+                {
+                    enemyDefenseBonus += (GameWorld as BattleGrid).attackingTile.DefenseBonus;
+                }
+                else
+                {
+                    enemyDefenseBonus += (GameWorld as BattleGrid).defendingTile.DefenseBonus;
+                }
+                int baseDefense = (enemy.stats.def + enemyDefenseBonus);
+                damageToDeal = ((int)(damageToDeal * calculatedFalloff) - baseDefense);
+            }
+
+            
+             
             
             // If there is no damage to deal, don't actually *heal* the enemy Unit.
             if (damageToDeal > 0)
@@ -540,6 +564,7 @@ namespace MaxOfEmpires.Units
         public bool Special_TankBuster => (specials & 16) == 16;
         public bool Special_Assassin => (specials & 32) == 32;
         public bool Special_Healer => (specials & 64) == 64;
+        public bool Special_Bowman => (specials & 128) == 128;
 
         private int Specials
         {
