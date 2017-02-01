@@ -48,6 +48,24 @@ namespace MaxOfEmpires
             // After a battle, check if there are dead Units, and remove these if they are dead
             Soldier defender = toAttack.Unit as Soldier;
 
+            return true;
+        }
+
+        //LikeCheckAttackSoldier, but for healers.
+        public bool CheckHealHealer(Point tileToHeal, Soldier healingUnit)
+        {
+            if (healingUnit.HasAttacked)
+                return false;
+
+            Tile toHeal = this[tileToHeal] as Tile;
+
+            if (!toHeal.Occupied || toHeal.Unit.Owner != healingUnit.Owner)
+                return false;
+
+            if (!healingUnit.IsInRange(tileToHeal))
+                return false;
+
+            healingUnit.Heal(toHeal);
 
             return true;
         }
@@ -122,7 +140,7 @@ namespace MaxOfEmpires
                 SelectedTile.Unit.TargetPosition = clickedTile.PositionInGrid;
                 Point movePos = Pathfinding.MoveTowardsTarget(SelectedTile.Unit);
 
-                if (CheckMoveUnit(movePos, SelectedTile.Unit) || CheckAttackSoldier(clickedTile.PositionInGrid, (Soldier)SelectedTile.Unit) || movePos.Equals(SelectedTile.Unit.PositionInGrid))
+                if (CheckMoveUnit(movePos, SelectedTile.Unit) || CheckAttackSoldier(clickedTile.PositionInGrid, (Soldier)SelectedTile.Unit) || CheckHealHealer(clickedTile.PositionInGrid, (Soldier)SelectedTile.Unit)|| movePos.Equals(SelectedTile.Unit.PositionInGrid))
                 {
                     SelectTile(InvalidTile);
                     return;
